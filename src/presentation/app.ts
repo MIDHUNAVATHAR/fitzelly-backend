@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; 
+import cookieParser from "cookie-parser";
 import indexRouter from "./routes/indexroute";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { logger } from "../infrastructure/logger/logger";
@@ -16,7 +16,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 
 app.use((req, res, next) => {
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
 
 /* ROUTES */
-app.use("/api", indexRouter);
+app.use("/", indexRouter);
 
 //health check
 app.get("/", (req, res) => {

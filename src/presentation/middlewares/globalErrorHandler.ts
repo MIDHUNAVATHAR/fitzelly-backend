@@ -14,7 +14,7 @@ export function globalErrorHandler(err: Error, req: Request, res: Response, next
         })
     }
 
-    //unknown errors like db operations fail 
+    //unknown errors like db/service operations fail 
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status: ResponseStatus.ERROR,
         message: "something went wrong. please try again later"

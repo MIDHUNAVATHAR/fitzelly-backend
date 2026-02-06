@@ -15,15 +15,20 @@ export class JwtServiceImpl implements ITokenService {
     verifyRefrshToken(token: string): JwtPayload {
 
         try {
-
             const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET!);
-            if (typeof decoded === "object") {
-                return decoded as JwtPayload
-            }
-            throw new Error("Invalid refresh token")
+            return decoded as JwtPayload
+
         } catch {
             throw new Error("expired refresh token")
         }
 
+    }
+    verifyAccessToken(token: string): JwtPayload {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
+            return decoded as JwtPayload;
+        } catch (error) {
+            throw new Error("expired access token")
+        }
     }
 }

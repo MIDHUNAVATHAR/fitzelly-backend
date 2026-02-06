@@ -12,7 +12,6 @@ export class TokenRefreshController {
         try {
             const refreshToken: string = req.cookies.refreshToken;
             const result = await this._tokenRefreshUseCase.execute({ refreshToken });
-
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: "token refresh successfull",

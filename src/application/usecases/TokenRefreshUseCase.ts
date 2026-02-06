@@ -1,5 +1,6 @@
 import { ITokenService } from "../../domain/services/ITokenService";
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
+import { ISuperAdminRepository } from "../../domain/repositories/ISuperAdminRepository";
 import { AuthenticationFailedError } from "../errors/AppError";
 import { TokenRefreshResponseDTO, TokenRefreshRequestDTO } from "../dtos/TokenRefreshDTO";
 import { ROLES } from "../../constants/roles.constants";
@@ -9,7 +10,7 @@ export class TokenRefreshUseCase {
     constructor(
         private _tokenService: ITokenService,
         private _gymRepository: IGymRepository,
-
+        private _superAdminRepository: ISuperAdminRepository
     ) { }
 
     async execute(request: TokenRefreshRequestDTO): Promise<TokenRefreshResponseDTO> {
@@ -28,8 +29,11 @@ export class TokenRefreshUseCase {
         let user = null
         if (payload.role == ROLES.GYM) {
             user = await this._gymRepository.findById(payload.id);
+        } else if (payload.role == ROLES.SUPERADMIN) {
+            user = await this._superAdminRepository.findById(payload.id);
         }
 
+        
         if (!user) {
             throw new AuthenticationFailedError("User cannot find")
         }
