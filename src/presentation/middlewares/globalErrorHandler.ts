@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { AppError } from "../../application/errors/AppError";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { logger } from "../../infrastructure/logger/logger";
 
 
-export function globalErrorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+export function globalErrorHandler(err: Error, req: Request, res: Response) {
     logger.error("Error : ", err);
 
     if (err instanceof AppError) {

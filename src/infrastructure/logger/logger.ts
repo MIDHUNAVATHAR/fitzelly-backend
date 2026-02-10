@@ -1,6 +1,6 @@
 import winston from "winston";
 
-const { combine, timestamp, printf, colorize, json } = winston.format;
+const { combine, timestamp, printf, colorize } = winston.format;
 
 const isProd = process.env.NODE_ENV === "production";
 

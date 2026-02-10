@@ -8,7 +8,7 @@ export async function connectDB() {
         await mongoose.connect(process.env.MONGO_URI!);
         logger.info("mongodb connected");
         await seedSuperAdmin();
-    } catch (error) {
+    } catch {
         logger.error("mongodb connection failed");
         process.exit(1);
     }

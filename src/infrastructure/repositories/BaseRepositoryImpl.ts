@@ -21,7 +21,7 @@ export abstract class BaseRepositoryImpl<T extends object, D> implements IBaseRe
     }
 
     async findById(id: string): Promise<T | null> {
-        let doc = await this.model.findById(id);
+        const doc = await this.model.findById(id);
         return doc ? this.toEntity(doc) : null;
     }
 

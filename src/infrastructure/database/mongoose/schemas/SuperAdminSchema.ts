@@ -15,6 +15,30 @@ export const SuperAdminSchema = new Schema<ISuperAdminDocument>({
     role: {
         type: String,
         default: ROLES.SUPERADMIN
+    },
+    logoUrl: {
+        type: String,
+        default: ""
+    },
+    appName: {
+        type: String,
+        default: ""
+    },
+    caption: {
+        type: String,
+        default: ""
+    },
+    contactEmail: {
+        type: String,
+        default: ""
+    },
+    phoneNumber: {
+        type: String,
+        default: ""
+    },
+    description: {
+        type: String,
+        default: ""
     }
 }, { timestamps: true })
 

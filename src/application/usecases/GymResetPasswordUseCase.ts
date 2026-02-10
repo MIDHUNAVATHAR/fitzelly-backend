@@ -25,7 +25,7 @@ export class GymResetPasswordUseCase implements IResetPasswordUseCase {
 
         try {
             await this._gymRepository.updatePassword(request.email, newpassword);
-        } catch (error) {
+        } catch {
             throw new ServiceUnavailableError("unable to reset password. please try again");
         }
     }

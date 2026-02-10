@@ -32,7 +32,7 @@ export const protect = (roles: string[]) => (req: AuthRequest, res: Response, ne
         req.user = payload;
         next();
 
-    } catch (error) {
+    } catch {
         return res.status(HttpStatus.UNAUTHORIZED).json({
             status: ResponseStatus.ERROR,
             message: "Access token invalid"

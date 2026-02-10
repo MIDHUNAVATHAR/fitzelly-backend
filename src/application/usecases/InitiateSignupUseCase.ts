@@ -33,7 +33,7 @@ export class InitiateSignupUseCase implements IInitiateSignupUseCase {
         try {
             await this._emailService.sendOtp(request.email, otp);
 
-        } catch (error) {
+        } catch {
             throw new ServiceUnavailableError("unable to send otp, plaase try again later")
         }
     }

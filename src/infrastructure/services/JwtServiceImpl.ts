@@ -27,7 +27,7 @@ export class JwtServiceImpl implements ITokenService {
         try {
             const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
             return decoded as JwtPayload;
-        } catch (error) {
+        } catch {
             throw new Error("expired access token")
         }
     }

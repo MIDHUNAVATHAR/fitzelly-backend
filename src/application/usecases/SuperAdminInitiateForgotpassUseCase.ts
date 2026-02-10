@@ -27,7 +27,7 @@ export class SuperAdminInitiateForgotpassUseCase implements IInitiateForgotPassw
 
         try {
             await this._emailService.sendOtp(request.email, otp);
-        } catch (error) {
+        } catch {
             throw new ServiceUnavailableError("unable to send otp, please try again later");
         }
     }

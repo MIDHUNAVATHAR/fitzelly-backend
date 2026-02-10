@@ -1,9 +1,9 @@
-import { GymProfileResponseDTO } from "../dtos/GymProfileDTO";
+import { GymProfileDTO } from "../dtos/GymProfileDTO";
 import { Gym } from "../../domain/entities/Gym";
 
 
 export class GymProfileMapper {
-    static toDTO(gym: Gym): GymProfileResponseDTO {
+    static toDTO(gym: Gym): GymProfileDTO {
         return {
             logoUrl: gym.logoUrl ?? "",
             gymName: gym.gymName ?? "",

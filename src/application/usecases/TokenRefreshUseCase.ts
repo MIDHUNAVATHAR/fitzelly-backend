@@ -21,7 +21,7 @@ export class TokenRefreshUseCase {
         let payload;
         try {
             payload = this._tokenService.verifyRefrshToken(request.refreshToken);
-        } catch (error) {
+        } catch {
             throw new AuthenticationFailedError("Token expired");
         }
 
@@ -33,7 +33,7 @@ export class TokenRefreshUseCase {
             user = await this._superAdminRepository.findById(payload.id);
         }
 
-        
+
         if (!user) {
             throw new AuthenticationFailedError("User cannot find")
         }

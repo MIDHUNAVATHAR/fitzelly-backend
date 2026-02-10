@@ -15,15 +15,28 @@ export class SuperAdminRepositoryImpl extends BaseRepositoryImpl<SuperAdmin, ISu
             doc._id.toString(),
             doc.email,
             doc.password,
-            doc.role
+            doc.role,
+            doc.logoUrl,
+            doc.appName,
+            doc.caption,
+            doc.contactEmail,
+            doc.phoneNumber,
+            doc.description
         )
     }
     protected toDocument(entity: SuperAdmin): Partial<ISuperAdminDocument> {
-        return {
-            email: entity.email,
-            password: entity.password,
-            role: entity.role
-        }
+        const doc: Partial<ISuperAdminDocument> = {};
+        if (entity.email) doc.email = entity.email;
+        if (entity.password) doc.password = entity.password;
+        if (entity.role) doc.role = entity.role;
+        if (entity.logoUrl) doc.logoUrl = entity.logoUrl;
+        if (entity.appName) doc.appName = entity.appName;
+        if (entity.caption) doc.caption = entity.caption;
+        if (entity.contactEmail) doc.contactEmail = entity.contactEmail;
+        if (entity.phoneNumber) doc.phoneNumber = entity.phoneNumber;
+        if (entity.description) doc.description = entity.description;
+
+        return doc;
     }
 
     async findByEmail(email: string): Promise<SuperAdmin | null> {
@@ -35,6 +48,25 @@ export class SuperAdminRepositoryImpl extends BaseRepositoryImpl<SuperAdmin, ISu
 
     async updatePassword(email: string, password: string): Promise<void> {
         await this.model.findOneAndUpdate({ email }, { password });
+    }
+
+    async update(id: string, superAdminData: SuperAdmin): Promise<SuperAdmin> {
+        const superAdminDoc = this.toDocument(superAdminData)
+
+        const updatedDoc = await this.model.findByIdAndUpdate(id, superAdminDoc, { new: true });
+        if (!updatedDoc) {
+            throw new Error("Superadmin not found");
+        }
+        return this.toEntity(updatedDoc);
+    }
+
+    async updateLogo(id: string, logoUrl: string): Promise<string> {
+        const superAdminDoc = await this.model.findByIdAndUpdate(id, { logoUrl }, { new: true });
+       
+        if(!superAdminDoc){
+            throw Error("Super admin not found");
+        }
+        return superAdminDoc?.logoUrl; 
     }
 
 }

@@ -23,7 +23,7 @@ export class GymInitiateForgotpassUseCase implements IInitiateForgotPasswordUseC
 
         try {
             await this._emailService.sendOtp(request.email, otp);
-        } catch (error) {
+        } catch{
             throw new ServiceUnavailableError("Unable to send otp, please try again later")
         }
 

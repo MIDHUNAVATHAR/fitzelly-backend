@@ -4,13 +4,14 @@ import { IGetGymProfileUseCase } from "../../application/IUseCases/IGetGymProfil
 import { IUpdateGymProfileUseCase } from "../../application/IUseCases/IUpdateGymProfileUseCase";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { IUpdateGymLogoUseCase } from "../../application/IUseCases/IUpdateGymLogoUseCase";
+import { IS3Service } from "../../domain/services/IS3Service";
 
 export class GymProfileController {
     constructor(
         private _getGymProfileUseCase: IGetGymProfileUseCase,
         private _updateGymProfileUseCase: IUpdateGymProfileUseCase,
         private _updateGymLogoUseCase: IUpdateGymLogoUseCase,
-        private _s3Service: any
+        private _s3Service: IS3Service
     ) { }
 
     async getGymProfile(req: AuthRequest, res: Response, next: NextFunction) {
@@ -44,6 +45,9 @@ export class GymProfileController {
     async updateGymLogo(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const userId = req.user!.id;
+            if (!req.file) {
+                throw Error("File required");
+            }
             const logoUrl = await this._s3Service.uploadFile(req.file);
 
             const updatedProfile = await this._updateGymLogoUseCase.execute(userId, logoUrl);

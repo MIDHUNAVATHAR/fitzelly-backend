@@ -16,14 +16,22 @@ export const REFRESH_ROUTE = {
     REFRESH: "/api/auth/refresh-token"
 }
 
+export const LOGOUT_ROUTE = {
+    LOGOUT: "/api/auth/logout"
+}
+
 export const SUPER_ADMIN_ROUTES = {
     LOGIN: "/api/super-admin/auth/login",
     INITIATE_FORGOTPASSWORD: "/api/super-admin/auth/forgot-password/initiate",
     COMPLETE_FORGOTPASSWORD: "/api/super-admin/auth/forgot-password/verify",
-    RESET_PASSWORD: "/api/super-admin/auth/resetPassword"
+    RESET_PASSWORD: "/api/super-admin/auth/resetPassword",
+
+    SUPER_ADMIN_PROFILE: "/api/super-admin/profile",
+    SUPER_ADMIN_LOGO: "/api/super-admin/profile/logo"
 }
 
 export const GOOGLE_ROUTE = {
     INITIATE_GOOGLELOGIN: "/api/auth/google",
     GOOGLE_CALLBACK: "/api/auth/google/callback"
 }
+

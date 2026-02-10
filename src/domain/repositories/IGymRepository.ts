@@ -19,3 +19,4 @@ export interface IGymRepository extends IBaseRepository<Gym> {
     updateLogo(id: string, logoUrl: string): Promise<Gym>
 }
 
+

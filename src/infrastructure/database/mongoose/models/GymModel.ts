@@ -3,4 +3,4 @@ import { GymSchema } from "../schemas/GymSchema";
 import { IGymDocument } from "../types/IGymDocument";
 
 
-export const GymModel = model<IGymDocument>("Gym", GymSchema)
+export const GymModel = model<IGymDocument>("Gym", GymSchema);

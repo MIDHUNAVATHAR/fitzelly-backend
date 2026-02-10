@@ -1,4 +1,4 @@
-import { IS3Service,S3UploadFile } from "../../domain/services/IS3Service";
+import { IS3Service,IS3UploadFile } from "../../domain/services/IS3Service";
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export class S3Service implements IS3Service {
@@ -22,7 +22,7 @@ export class S3Service implements IS3Service {
         return this.s3;
     }
 
-    async uploadFile(file: S3UploadFile, folder = "gym-logos"): Promise<string> {
+    async uploadFile(file: IS3UploadFile, folder = "gym-logos"): Promise<string> {
         try {
             const client = this.getClient();
 
