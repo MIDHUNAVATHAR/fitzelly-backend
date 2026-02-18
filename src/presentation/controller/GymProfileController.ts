@@ -5,6 +5,7 @@ import { IUpdateGymProfileUseCase } from "../../application/IUseCases/IUpdateGym
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { IUpdateGymLogoUseCase } from "../../application/IUseCases/IUpdateGymLogoUseCase";
 import { IS3Service } from "../../domain/services/IS3Service";
+import { ResponseMessage } from "../../constants/response.constants";
 
 export class GymProfileController {
     constructor(
@@ -20,7 +21,7 @@ export class GymProfileController {
             const profile = await this._getGymProfileUseCase.execute(gymId);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "gym profile successfully fetched",
+                message: ResponseMessage.DATA_RETRIVE_SUCCESS,
                 data: { ...profile }
             })
         } catch (error) {
@@ -34,7 +35,7 @@ export class GymProfileController {
             const updatedProfile = await this._updateGymProfileUseCase.execute(gymId, req.body);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "gym profile update successfull",
+                message: ResponseMessage.DATA_UPDATE_SUCCESS,
                 data: { ...updatedProfile }
             })
         } catch (error) {
@@ -53,7 +54,7 @@ export class GymProfileController {
             const updatedProfile = await this._updateGymLogoUseCase.execute(userId, logoUrl);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "gym logo update successfull",
+                message: ResponseMessage.LOGO_UPDATE_SUCCESS,
                 data: { ...updatedProfile }
             })
         } catch (error) {

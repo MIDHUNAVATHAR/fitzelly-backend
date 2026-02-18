@@ -27,7 +27,9 @@ export const SUPER_ADMIN_ROUTES = {
     RESET_PASSWORD: "/api/super-admin/auth/resetPassword",
 
     SUPER_ADMIN_PROFILE: "/api/super-admin/profile",
-    SUPER_ADMIN_LOGO: "/api/super-admin/profile/logo"
+    SUPER_ADMIN_LOGO: "/api/super-admin/profile/logo",
+    SUPER_ADMIN_GYMS: "/api/super-admin/gyms",
+    GYM_BY_ID: "/api/super-admin/gyms/:gymId"
 }
 
 export const GOOGLE_ROUTE = {

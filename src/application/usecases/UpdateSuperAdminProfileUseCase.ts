@@ -1,7 +1,7 @@
 import { SuperAdminProfileDTO } from "../dtos/SuperAdminProfileDTO";
 import { IUpdateSuperAdminProfileUseCase } from "../IUseCases/IUpdateSuperAdminProfileUseCase";
 import { ISuperAdminRepository } from "../../domain/repositories/ISuperAdminRepository";
-import { SuperAdminProfileMapper } from "../mappers/SuperAdminProfileMapper";
+import { SuperAdminProfileMapper } from "../mapper/SuperAdminProfileMapper";
 
 
 

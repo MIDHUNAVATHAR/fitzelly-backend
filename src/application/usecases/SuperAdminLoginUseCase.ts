@@ -4,7 +4,7 @@ import { ITokenService } from "../../domain/services/ITokenService";
 import { LoginRequestDTO, LoginResponseDTO } from "../dtos/LoginDTO";
 import { AuthenticationFailedError } from "../errors/AppError";
 import { ILoginUseCase } from "../IUseCases/ILoginUseCase";
-import { SuperAdminLoginMapper } from "../mappers/SuperAdminLoginMapper";
+import { SuperAdminLoginMapper } from "../mapper/SuperAdminLoginMapper";
 
 export class SuperAdminLoginUseCase implements ILoginUseCase {
     constructor(

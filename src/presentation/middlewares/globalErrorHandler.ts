@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AppError } from "../../application/errors/AppError";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { logger } from "../../infrastructure/logger/logger";
+import { ResponseMessage } from "../../constants/response.constants";
 
 
-export function globalErrorHandler(err: Error, req: Request, res: Response) {
+export function globalErrorHandler(err: Error, req: Request, res: Response, _next: NextFunction) { //don't remove next
     logger.error("Error : ", err);
 
     if (err instanceof AppError) {
@@ -17,7 +18,7 @@ export function globalErrorHandler(err: Error, req: Request, res: Response) {
     //unknown errors like db/service operations fail 
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status: ResponseStatus.ERROR,
-        message: "something went wrong. please try again later"
+        message: ResponseMessage.UNKNOWN_ERROR_MESSAGE
     })
 
 }

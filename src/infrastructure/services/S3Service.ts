@@ -1,5 +1,8 @@
-import { IS3Service,IS3UploadFile } from "../../domain/services/IS3Service";
+import { IS3Service, IS3UploadFile } from "../../domain/services/IS3Service";
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { logger } from "../logger/logger";
+import { ServiceUnavailableError } from "../../domain/errors/ServiceUnavailableError";
+
 
 export class S3Service implements IS3Service {
     private s3: S3Client | null = null;
@@ -39,8 +42,8 @@ export class S3Service implements IS3Service {
 
             return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${fileName}`;
         } catch (error) {
-            console.error("S3 UPLOAD ERROR:", error);
-            throw error;
+            logger.error("S3 UPLOAD ERROR:", error);
+            throw new ServiceUnavailableError("File Storage");
         }
     }
 

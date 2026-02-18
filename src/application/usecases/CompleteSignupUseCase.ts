@@ -3,7 +3,7 @@ import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { IOtpRepository } from "../../domain/repositories/IOtpRepository";
 import { IPasswordHasher } from "../../domain/services/IPasswordHasher";
 import { CompleteSignupRequestDTO } from "../dtos/CompleteSignupDTO";
-import { GymSignupMapper } from "../mappers/CompleteSignupMapper";
+import { GymSignupMapper } from "../mapper/CompleteSignupMapper";
 
 import { InvalidOtpError, ConflictError } from "../errors/AppError";
 

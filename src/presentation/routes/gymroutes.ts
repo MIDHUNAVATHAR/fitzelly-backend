@@ -25,6 +25,7 @@ router.route(GYM_ROUTE.GYM_PROFILE)
     .all(protect([ROLES.GYM]))
     .get(gymProfileController.getGymProfile.bind(gymProfileController))
     .patch(gymProfileController.updateGymProfile.bind(gymProfileController));
+
 router.post(GYM_ROUTE.GYM_LOGO, protect([ROLES.GYM]), upload.single("logo"), gymProfileController.updateGymLogo.bind(gymProfileController))
 
 

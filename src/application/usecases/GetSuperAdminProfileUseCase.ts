@@ -1,7 +1,7 @@
 import { SuperAdminProfileDTO } from "../dtos/SuperAdminProfileDTO";
 import { IGetSuperAdminProfileUseCase } from "../IUseCases/IGetSuperAdminProfileUseCase";
 import { ISuperAdminRepository } from "../../domain/repositories/ISuperAdminRepository";
-import { SuperAdminProfileMapper } from "../mappers/SuperAdminProfileMapper";
+import { SuperAdminProfileMapper } from "../mapper/SuperAdminProfileMapper";
 import { NotFoundError } from "../errors/AppError";
 import { logger } from "../../infrastructure/logger/logger";
 

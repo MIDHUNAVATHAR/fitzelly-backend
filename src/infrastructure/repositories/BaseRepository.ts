@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
 import { IBaseRepository } from "../../domain/repositories/IBaseRepository";
 
-export abstract class BaseRepositoryImpl<T extends object, D> implements IBaseRepository<T> {//T -must be type of object, generic with specific condition. D -document type 
+export abstract class BaseRepository<T extends object, D> implements IBaseRepository<T> {//T -must be type of object, generic with specific condition. D -document type 
     protected model: Model<D>;
 
     constructor(model: Model<D>) {

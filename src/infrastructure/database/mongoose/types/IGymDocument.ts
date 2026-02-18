@@ -10,5 +10,9 @@ export interface IGymDocument extends Document {
     phoneNumber: string;
     address: string;
     description: string;
-    location: { latitude: number, longitude: number }
+    location: { latitude: number, longitude: number };
+    approvalStatus: 'Approved' | 'Pending' | 'Rejected';
+    subscriptionStatus: 'Active' | 'Trial' | 'Expired' | 'Pending';
+    expiryDate: Date;
+    createdAt: Date;
 }

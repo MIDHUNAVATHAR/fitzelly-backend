@@ -5,6 +5,7 @@ import { IInitiateForgotPasswordUseCase } from "../../application/IUseCases/IIni
 import { ICompleteForgotpassUseCase } from "../../application/IUseCases/ICompleteForgotpassUseCase";
 import { IResetPasswordUseCase } from "../../application/IUseCases/IResetPasswordUseCase";
 import { logger } from "../../infrastructure/logger/logger";
+import { ResponseMessage } from "../../constants/response.constants";
 
 
 
@@ -24,14 +25,14 @@ export class SuperAdminAuthenticationController {
 
             res.cookie("refreshToken", data.refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: true,
                 sameSite: "none",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                maxAge: Number(process.env.REFRESH_MAX_AGE) * 1000
             })
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "login successfull",
+                message: ResponseMessage.LOGIN_SUCCESS,
                 data: {
                     accessToken: data.accessToken, email: data.email, role: data.role, id: data.id
                 }
@@ -49,7 +50,7 @@ export class SuperAdminAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Forgot password otp send successfully"
+                message: ResponseMessage.OTP_SEND_SUCCESS
             })
         } catch (error) {
             next(error)
@@ -63,7 +64,7 @@ export class SuperAdminAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "OTP verification success"
+                message: ResponseMessage.OTP_VERIFY_SUCCESS
             })
         } catch (error) {
             next(error)
@@ -79,7 +80,7 @@ export class SuperAdminAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Password reset successfull"
+                message: ResponseMessage.PASSWORD_RESET_SUCCESS
             })
         } catch (error) {
             next(error)

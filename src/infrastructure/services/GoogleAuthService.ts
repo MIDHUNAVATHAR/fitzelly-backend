@@ -1,7 +1,9 @@
 import { OAuth2Client } from "google-auth-library";
 import { IGoogleAuthService } from "../../domain/services/IGoogleAuthService";
+import { ExternalAuthFailedError } from "../../domain/errors/ExternalAuthFailedError";
 
-export class GoogleAuthServiceImpl implements IGoogleAuthService {
+
+export class GoogleAuthService implements IGoogleAuthService {
     private client: OAuth2Client | null = null;
 
     private getClient(): OAuth2Client {
@@ -20,7 +22,8 @@ export class GoogleAuthServiceImpl implements IGoogleAuthService {
         return this.getClient().generateAuthUrl({
             access_type: "offline",
             scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'],
-            state: state
+            state: state,
+            prompt: "select_account"
         });
     }
 
@@ -38,7 +41,7 @@ export class GoogleAuthServiceImpl implements IGoogleAuthService {
         const email = payload?.email;
 
         if (!email) {
-            throw new Error("Google login failed! No email provided in token")
+            throw new ExternalAuthFailedError("Google", "No email provided in token")
         }
 
         return email;

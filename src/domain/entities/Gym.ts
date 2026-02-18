@@ -1,5 +1,7 @@
 import { ROLES } from "../../constants/roles.constants";
 
+export type ApprovalStatus = "Approved" | "Pending" | "Rejected";
+export type SubscriptionStatus = "Active" | "Trial" | "Expired" | "Pending";
 
 export class Gym {
     constructor(
@@ -13,7 +15,11 @@ export class Gym {
         public readonly phoneNumber?: string,
         public readonly address?: string,
         public readonly description?: string,
-        public readonly location?: { latitude: number, longitude: number }
+        public readonly location?: { latitude: number, longitude: number },
+        public readonly approvalStatus: ApprovalStatus = "Pending",
+        public readonly subscriptionStatus: SubscriptionStatus = 'Pending',
+        public readonly expiryDate?: Date,
+        public readonly createdAt: Date = new Date(),
     ) { }
 }
 

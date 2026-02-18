@@ -1,7 +1,7 @@
 import { GymProfileDTO } from "../dtos/GymProfileDTO";
 import { IGetGymProfileUseCase } from "../IUseCases/IGetGymProfileUseCase";
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
-import { GymProfileMapper } from "../mappers/GymProfileMapper";
+import { GymProfileMapper } from "../mapper/GymProfileMapper";
 import { NotFoundError } from "../errors/AppError";
 
 

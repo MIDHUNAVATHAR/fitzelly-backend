@@ -2,6 +2,7 @@ import { Router } from "express";
 import { SUPER_ADMIN_ROUTES } from "../../constants/routes.constants"
 import { superAdminAuthenticationController } from "../../main/di";
 import { superAdminProfileController } from "../../main/di";
+import { superAdminGymsController } from "../../main/di";
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";
@@ -24,7 +25,12 @@ router.route(SUPER_ADMIN_ROUTES.SUPER_ADMIN_PROFILE)
     .patch(superAdminProfileController.updateSuperAdminProfile.bind(superAdminProfileController));
 
 
-router.post(SUPER_ADMIN_ROUTES.SUPER_ADMIN_LOGO,protect([ROLES.SUPERADMIN]), upload.single('logo'), superAdminProfileController.updateSuperAdminLogo.bind(superAdminProfileController));
+router.post(SUPER_ADMIN_ROUTES.SUPER_ADMIN_LOGO, protect([ROLES.SUPERADMIN]), upload.single('logo'), superAdminProfileController.updateSuperAdminLogo.bind(superAdminProfileController));
+router.get(SUPER_ADMIN_ROUTES.SUPER_ADMIN_GYMS, protect([ROLES.SUPERADMIN]), superAdminGymsController.getAllGyms.bind(superAdminGymsController));
+router.route(SUPER_ADMIN_ROUTES.GYM_BY_ID)
+    .all(protect([ROLES.SUPERADMIN]))
+    .get(superAdminGymsController.getGymById.bind(superAdminGymsController))
+    .patch(superAdminGymsController.updateGymStatus.bind(superAdminGymsController))
 
-
+    
 export default router;

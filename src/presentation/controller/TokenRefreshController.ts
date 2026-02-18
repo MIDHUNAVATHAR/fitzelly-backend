@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ITokenRefreshUseCase } from "../../application/IUseCases/ITokenRefreshUseCase";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../constants/response.constants";
 
 
 export class TokenRefreshController {
@@ -14,7 +15,7 @@ export class TokenRefreshController {
             const result = await this._tokenRefreshUseCase.execute({ refreshToken });
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "token refresh successfull",
+                message: ResponseMessage.TOKEN_REFRESH_SUCCESS,
                 data: { accessToken: result.accessToken, user: result.user }
             })
         } catch (error) {

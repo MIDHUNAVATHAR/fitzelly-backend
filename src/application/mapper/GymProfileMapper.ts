@@ -12,7 +12,10 @@ export class GymProfileMapper {
             phoneNumber: gym.phoneNumber ?? "",
             address: gym.address ?? "",
             description: gym.description ?? "",
-            location: { latitude: gym.location?.latitude ?? 0, longitude: gym.location?.longitude ?? 0 }
+            location: { latitude: gym.location?.latitude ?? 0, longitude: gym.location?.longitude ?? 0 },
+            approvalStatus: gym.approvalStatus ?? "",
+            subscriptionStatus: gym.subscriptionStatus ?? "",
+            expiryDate: gym.expiryDate ?? ""
         }
     }
 }

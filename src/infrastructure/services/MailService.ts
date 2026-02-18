@@ -1,8 +1,10 @@
 import nodemailer from "nodemailer"
 import { IEmailService } from "../../domain/services/IEmailService";
 import { logger } from "../logger/logger";
+import { ServiceUnavailableError } from "../../domain/errors/ServiceUnavailableError";
 
-export class MailServiceImpl implements IEmailService {
+
+export class MailService implements IEmailService {
     private transporter: nodemailer.Transporter | null = null;
 
     private getTransporter(): nodemailer.Transporter | null {
@@ -51,7 +53,7 @@ export class MailServiceImpl implements IEmailService {
             logger.error(error);
             logger.debug(`[FALLBACK] OTP for ${to}: ${otp}`);
 
-            throw new Error("Email send failed");
+            throw new ServiceUnavailableError("Email Service");
 
         }
     }

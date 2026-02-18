@@ -5,6 +5,7 @@ import { AuthRequest } from "../middlewares/protect";
 import { HttpStatus } from "../../constants/statusCodes.constants";
 import { ResponseStatus } from "../../constants/statusCodes.constants";
 import { IUpdateSuperAdminLogoUseCase } from "../../application/IUseCases/IUpdateSuperAdminLogoUseCase";
+import { ResponseMessage } from "../../constants/response.constants";
 
 
 export class SuperAdminProfileController {
@@ -20,7 +21,7 @@ export class SuperAdminProfileController {
             const profile = await this._getSuperAdminProfileUseCase.execute(superAdminId);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "super admin profile successfully fetched",
+                message: ResponseMessage.DATA_RETRIVE_SUCCESS,
                 data: { ...profile }
             })
         } catch (error) {
@@ -36,7 +37,7 @@ export class SuperAdminProfileController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "profile update successfull"
+                message: ResponseMessage.DATA_UPDATE_SUCCESS
             })
         } catch (error) {
             next(error)
@@ -53,7 +54,7 @@ export class SuperAdminProfileController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "gym logo update successfull",
+                message: ResponseMessage.LOGO_UPDATE_SUCCESS,
                 data: { newLogoUrl }
             })
         } catch (error) {

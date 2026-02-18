@@ -1,14 +1,14 @@
 /* --------------- Repositories (infrastructure) ---------------- */
-import { GymRepositoryImpl } from "../infrastructure/repositories/GymRepositoryImpl";
-import { SuperAdminRepositoryImpl } from "../infrastructure/repositories/SuperAdminRepository";
-import { OtpRepositoryImpl } from "../infrastructure/repositories/OtpRepositoryImpl";
+import { GymRepository } from "../infrastructure/repositories/GymRepository";
+import { SuperAdminRepository } from "../infrastructure/repositories/SuperAdminRepository";
+import { OtpRepository } from "../infrastructure/repositories/OtpRepository";
 
 
 /* ------------------- services (infrastructure) ---------------- */
-import { MailServiceImpl } from "../infrastructure/services/MailServiceImpl"
-import { PasswordHasherImpl } from "../infrastructure/services/PasswordHasherImpl";
-import { JwtServiceImpl } from "../infrastructure/services/JwtServiceImpl";
-import { GoogleAuthServiceImpl } from "../infrastructure/services/GoogleAuthServiceImpl";
+import { MailService } from "../infrastructure/services/MailService";
+import { PasswordHasher } from "../infrastructure/services/PasswordHasher";
+import { JwtService } from "../infrastructure/services/JwtService";
+import { GoogleAuthService } from "../infrastructure/services/GoogleAuthService";
 import { S3Service } from "../infrastructure/services/S3Service";
 
 
@@ -35,6 +35,9 @@ import { SuperAdminLoginUseCase } from "../application/usecases/SuperAdminLoginU
 import { GetSuperAdminProfileUseCase } from "../application/usecases/GetSuperAdminProfileUseCase";
 import { UpdateSuperAdminProfileUseCase } from "../application/usecases/UpdateSuperAdminProfileUseCase";
 import { UpdateSuperAdminLogoUseCase } from "../application/usecases/UpdateSuperAdminLogoUseCase";
+import { GetAllGymsUseCase } from "../application/usecases/GetAllGymsUseCase";
+import { GetGymByIdUseCase } from "../application/usecases/GetGymByIdUseCase";
+import { UpdateGymStatusUseCase } from "../application/usecases/UpdateGymStatusUseCase";
 
 
 /* ------------------- controllers (presentation) ---------------- */
@@ -47,20 +50,21 @@ import { GymProfileController } from "../presentation/controller/GymProfileContr
 
 //superAdmin
 import { SuperAdminProfileController } from "../presentation/controller/SuperAdminProfileController";
+import { SuperAdminGymsController } from "../presentation/controller/SuperAdminGymsController";
 
 
 
 /* ------------------- Instantiate Repositories ---------------- */
-const gymRepository = new GymRepositoryImpl();
-const otpRepository = new OtpRepositoryImpl();
-const superAdminRepository = new SuperAdminRepositoryImpl();
+const gymRepository = new GymRepository();
+const otpRepository = new OtpRepository();
+const superAdminRepository = new SuperAdminRepository();
 
 
 /* ------------------- Instantiate services ---------------- */
-const emailService = new MailServiceImpl();
-const passwordHasher = new PasswordHasherImpl();
-const jwtService = new JwtServiceImpl();
-const googleAuthService = new GoogleAuthServiceImpl();
+const emailService = new MailService();
+const passwordHasher = new PasswordHasher();
+const jwtService = new JwtService();
+const googleAuthService = new GoogleAuthService();
 const s3Service = new S3Service();
 
 
@@ -87,6 +91,9 @@ const updateGymLogoUseCase = new UpdateGymLogoUseCase(gymRepository, s3Service);
 const getSuperAdminProfileUseCase = new GetSuperAdminProfileUseCase(superAdminRepository);
 const updateSuperAdminProfileUseCase = new UpdateSuperAdminProfileUseCase(superAdminRepository);
 const updateSuperAdminLogoUseCase = new UpdateSuperAdminLogoUseCase(superAdminRepository,s3Service); 
+const getAllGymsUseCase = new GetAllGymsUseCase(gymRepository);
+const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository);
+const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository); 
 
 
 /* ------------------- Instantiate controllers ---------------- */
@@ -96,3 +103,4 @@ export const googleAuthController = new GoogleAuthController(googleAuthUseCase, 
 export const superAdminAuthenticationController = new SuperAdminAuthenticationController(superAdminLoginUseCase, superAdminInitiateForgotpassUseCase, superAdminCompleteForgotpassUseCase, superAdminResetPasswordUseCase)
 export const gymProfileController = new GymProfileController(getGymProfileUseCase, updateGymProfileUseCase, updateGymLogoUseCase, s3Service);
 export const superAdminProfileController = new SuperAdminProfileController(getSuperAdminProfileUseCase,updateSuperAdminProfileUseCase,updateSuperAdminLogoUseCase); 
+export const superAdminGymsController = new SuperAdminGymsController(getAllGymsUseCase,getGymByIdUseCase,updateGymStatusUseCase);

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
-
+import { ResponseMessage } from "../../constants/response.constants";
 import { IInitiateSignupUseCase } from "../../application/IUseCases/IInitiateSignupUseCase";
 import { ICompleteSignupUseCase } from "../../application/IUseCases/ICompleteSignupUseCase";
 import { ILoginUseCase } from "../../application/IUseCases/ILoginUseCase";
@@ -26,7 +26,8 @@ export class GymAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "OTP send to mail successfully"
+                message: ResponseMessage.OTP_SEND_SUCCESS
+
             })
         } catch (error) {
             next(error);
@@ -40,7 +41,7 @@ export class GymAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Gym registration successfull"
+                message: ResponseMessage.SIGNUP_SUCCESS
             })
         } catch (error) {
             next(error)
@@ -54,14 +55,14 @@ export class GymAuthenticationController {
 
             res.cookie("refreshToken", data.refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: true,
                 sameSite: "none",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                maxAge: Number(process.env.REFRESH_MAX_AGE) * 1000  //in milliseconds
             })
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "login successfull",
+                message: ResponseMessage.LOGIN_SUCCESS,
                 data: {
                     accessToken: data.accessToken, email: data.email, role: data.role, id: data.id
                 }
@@ -78,7 +79,7 @@ export class GymAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Forgot password OTP sent successfully"
+                message: ResponseMessage.OTP_SEND_SUCCESS
             });
         } catch (error) {
             next(error);
@@ -92,7 +93,7 @@ export class GymAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "OTP verification success"
+                message: ResponseMessage.OTP_VERIFY_SUCCESS
             });
         } catch (error) {
             next(error);
@@ -106,7 +107,7 @@ export class GymAuthenticationController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Password reset successful"
+                message: ResponseMessage.PASSWORD_RESET_SUCCESS
             });
         } catch (error) {
             next(error);

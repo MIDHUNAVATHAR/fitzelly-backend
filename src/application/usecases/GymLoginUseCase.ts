@@ -3,7 +3,7 @@ import { IPasswordHasher } from "../../domain/services/IPasswordHasher";
 import { ITokenService } from "../../domain/services/ITokenService";
 import { LoginRequestDTO, LoginResponseDTO } from "../dtos/LoginDTO";
 import { ILoginUseCase } from "../IUseCases/ILoginUseCase";
-import { GymLoginMapper } from "../mappers/GymLoginMapper";
+import { GymLoginMapper } from "../mapper/GymLoginMapper";
 import { AuthenticationFailedError } from "../errors/AppError";
 
 
@@ -20,7 +20,7 @@ export class GymLoginUseCase implements ILoginUseCase {
             throw new AuthenticationFailedError("Email not exists")
         }
 
-        const isPasswordMatch = await this._passwordHasher.compare(request.password, user.password)
+        const isPasswordMatch = await this._passwordHasher.compare(request.password, user.password);
         if (!isPasswordMatch) {
             throw new AuthenticationFailedError("Password Mismatch");
         }

@@ -2,7 +2,7 @@ import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { IS3Service } from "../../domain/services/IS3Service";
 import { GymProfileDTO } from "../dtos/GymProfileDTO";
 import { IUpdateGymLogoUseCase } from "../IUseCases/IUpdateGymLogoUseCase";
-import { GymProfileMapper } from "../mappers/GymProfileMapper";
+import { GymProfileMapper } from "../mapper/GymProfileMapper";
 
 export class UpdateGymLogoUseCase implements IUpdateGymLogoUseCase {
     constructor(

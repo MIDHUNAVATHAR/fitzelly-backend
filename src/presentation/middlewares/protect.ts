@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { JwtServiceImpl } from "../../infrastructure/services/JwtServiceImpl";
+import { JwtService } from "../../infrastructure/services/JwtService";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../constants/response.constants";
 
 
-const jwtService = new JwtServiceImpl();
+const jwtService = new JwtService();
 
 export interface AuthRequest extends Request {
     user?: { id: string, role: string, email: string }
@@ -15,7 +16,7 @@ export const protect = (roles: string[]) => (req: AuthRequest, res: Response, ne
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(HttpStatus.UNAUTHORIZED).json({
                 status: ResponseStatus.FAIL,
-                message: "Access token missing"
+                message: ResponseMessage.ACCESS_TOKEN_MISSING
             })
         }
 
@@ -25,7 +26,7 @@ export const protect = (roles: string[]) => (req: AuthRequest, res: Response, ne
         if (roles.length > 0 && !roles.includes(payload.role)) {
             return res.status(HttpStatus.FORBIDDEN).json({
                 status: ResponseStatus.FAIL,
-                message: "you are not allowed to access this resource"
+                message: ResponseMessage.NOT_ALLOWED_TO_ACCESS
             })
         }
 
@@ -35,7 +36,7 @@ export const protect = (roles: string[]) => (req: AuthRequest, res: Response, ne
     } catch {
         return res.status(HttpStatus.UNAUTHORIZED).json({
             status: ResponseStatus.ERROR,
-            message: "Access token invalid"
+            message: ResponseMessage.ACCESS_TOKEN_INVALID
         })
     }
 }

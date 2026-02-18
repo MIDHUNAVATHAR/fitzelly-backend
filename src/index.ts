@@ -1,9 +1,9 @@
-import { app } from "./presentation/app"
-import dotenv from "dotenv";
-import { connectDB } from "./infrastructure/database/connectDB";
-import { logger } from "./infrastructure/logger/logger";
+import "./config/env.config"
 
-dotenv.config();
+import { app } from "./presentation/app"
+
+import { connectDB } from "./infrastructure/database/connectDB";
+
 
 async function bootstrap() {
 
@@ -12,7 +12,7 @@ async function bootstrap() {
     const PORT = process.env.PORT;
 
     app.listen(PORT, () => {
-        logger.info(`server started on port - ${PORT}`);
+        console.log(`server started on port - ${PORT}`);
     })
 }
 
