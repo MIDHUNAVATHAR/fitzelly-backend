@@ -3,6 +3,9 @@ import gymRouter from "./gymroutes";
 import refreshRouter from "./refreshroute"
 import googleAuthRouter from "./googleAuthRoutes";
 import superAdminRouter from "./super-adminRoutes";
+import inviteRouter from "./inviteroutes"
+import clientRouter from "./clientroutes";
+import trainerRouter from "./trainerroutes";
 
 
 const rootRouter = Router();
@@ -10,7 +13,10 @@ const rootRouter = Router();
 rootRouter.use("/", refreshRouter);
 rootRouter.use("/", googleAuthRouter);
 rootRouter.use("/", gymRouter);
+rootRouter.use("/", clientRouter);
+rootRouter.use("/",trainerRouter);
 rootRouter.use("/", superAdminRouter);
+rootRouter.use("/", inviteRouter)
 
 
 export default rootRouter; 

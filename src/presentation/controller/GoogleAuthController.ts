@@ -30,14 +30,13 @@ export class GoogleAuthController {
         try {
             const { code, state } = req.query;
             const { role, mode } = JSON.parse(state as string);
-
             const { refreshToken } =
                 await this.googleAuthUseCase.execute(code as string, role as string, mode as "login" | "signup");
-
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "none",
+                path: "/",
                 maxAge: Number(process.env.REFRESH_MAX_AGE) * 1000
             })
 
@@ -45,6 +44,8 @@ export class GoogleAuthController {
             //redirect to dashboard
             res.redirect(`${process.env.FRONTEND_URL}/${role}/dashboard`)
         } catch (error) {
+
+            console.log(error)
             if (error instanceof Error) {
                 return res.redirect(`${process.env.FRONTEND_URL}/?error=${error.message}`);
             }

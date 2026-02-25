@@ -46,3 +46,8 @@ export class ServiceUnavailableError extends AppError {
     }
 }
 
+export class BadRequestError extends AppError {
+    constructor(message: string = "Bad request") {
+        super(message, HttpStatus.BAD_REQUEST)
+    }
+}

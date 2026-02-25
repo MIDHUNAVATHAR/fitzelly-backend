@@ -57,4 +57,42 @@ export class MailService implements IEmailService {
 
         }
     }
+
+    async sendWelcomeInvite(email: string, inviteLink: string, gymName: string, userName: string): Promise<void> {
+        const transporter = this.getTransporter();
+
+        if (!transporter) {
+            logger.warn("Running in DEV mode - no email credentials configured");
+            logger.info(`Invite link for ${email}: ${inviteLink}`);
+            return;
+        }
+
+        try {
+            await transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to: email,
+                subject: `Welcome to ${gymName} via FITZELLY`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+                        <h2 style="color: #008080;">Welcome ${userName}!</h2>
+                        <p>You have been invited to join <strong>${gymName}</strong> powered by Fitzelly.</p>
+                        <p>Click the link below to create your password and set up your account:</p>
+                        <br/>
+                        <a href="${inviteLink}" style="background-color: #008080; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Create Your Password</a>
+                        <br/><br/>
+                        <p style="margin-top: 20px;">Or copy and paste this link into your browser:</p>
+                        <p><a href="${inviteLink}">${inviteLink}</a></p>
+                        <p style="color: #888; font-size: 12px; margin-top: 30px;">This invite link expires in 1 hour.</p>
+                    </div>
+                `
+            });
+            logger.info(`[MailService] Welcome email sent to ${email}`);
+        } catch (error) {
+            logger.error("[MailService] Failed to send email via SMTP.");
+            logger.error(error);
+            logger.debug(`[FALLBACK] Welcome Invite for ${email}: ${inviteLink}`);
+
+            throw new ServiceUnavailableError("Email Service");
+        }
+    }
 }

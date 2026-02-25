@@ -1,6 +1,8 @@
 import { ITokenService } from "../../domain/services/ITokenService";
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { ISuperAdminRepository } from "../../domain/repositories/ISuperAdminRepository";
+import { IClientRepository } from "../../domain/repositories/IClientRepository";
+import { ITrainerRepository } from "../../domain/repositories/ITrainerRepository";
 import { AuthenticationFailedError } from "../errors/AppError";
 import { TokenRefreshResponseDTO, TokenRefreshRequestDTO } from "../dtos/TokenRefreshDTO";
 import { ROLES } from "../../constants/roles.constants";
@@ -10,7 +12,9 @@ export class TokenRefreshUseCase {
     constructor(
         private _tokenService: ITokenService,
         private _gymRepository: IGymRepository,
-        private _superAdminRepository: ISuperAdminRepository
+        private _superAdminRepository: ISuperAdminRepository,
+        private _clientRepository: IClientRepository,
+        private _trainerRepository: ITrainerRepository
     ) { }
 
     async execute(request: TokenRefreshRequestDTO): Promise<TokenRefreshResponseDTO> {
@@ -31,6 +35,10 @@ export class TokenRefreshUseCase {
             user = await this._gymRepository.findById(payload.id);
         } else if (payload.role == ROLES.SUPERADMIN) {
             user = await this._superAdminRepository.findById(payload.id);
+        } else if (payload.role == ROLES.CLIENT) {
+            user = await this._clientRepository.findById(payload.id);
+        } else if (payload.role == ROLES.TRAINER) {
+            user = await this._trainerRepository.findById(payload.id);
         }
 
 

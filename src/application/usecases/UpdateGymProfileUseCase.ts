@@ -8,7 +8,7 @@ export class UpdateGymProfileUseCase implements IUpdateGymProfileUseCase {
         private _gymRepository: IGymRepository
     ) { }
     async execute(id: string, gymData: GymProfileDTO): Promise<GymProfileDTO> {
-        const updatedGymDoc = await this._gymRepository.update(id, gymData)
-        return GymProfileMapper.toDTO(updatedGymDoc);
+        const updatedGym = await this._gymRepository.update(id, gymData)
+        return GymProfileMapper.toDTO(updatedGym);
     }
 }

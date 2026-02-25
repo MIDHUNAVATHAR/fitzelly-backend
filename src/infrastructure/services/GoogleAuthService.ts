@@ -41,7 +41,7 @@ export class GoogleAuthService implements IGoogleAuthService {
         const email = payload?.email;
 
         if (!email) {
-            throw new ExternalAuthFailedError("Google", "No email provided in token")
+            throw new ExternalAuthFailedError("Google", "No email provided in token");
         }
 
         return email;

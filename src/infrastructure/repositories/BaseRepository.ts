@@ -12,7 +12,7 @@ export abstract class BaseRepository<T extends object, D> implements IBaseReposi
     protected abstract toEntity(doc: D): T;
 
     //domain -> db
-    protected abstract toDocument(entity: T): Partial<D>
+    protected abstract toDocument(entity: T): Partial<D>;
 
     async create(entity: T): Promise<T> {
         const doc = this.toDocument(entity);

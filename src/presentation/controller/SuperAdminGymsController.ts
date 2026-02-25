@@ -9,7 +9,7 @@ export class SuperAdminGymsController {
     constructor(
         private readonly _getAllGymsUseCase: IGetAllGymsUseCase,
         private readonly _getGymByIdUseCase: IGetGymByIdUseCase,
-        private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase
+        private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase,
     ) { }
 
     async getAllGyms(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -61,4 +61,6 @@ export class SuperAdminGymsController {
             next(error)
         }
     }
+
+   
 }

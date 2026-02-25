@@ -1,5 +1,5 @@
 
 export interface IOtpRepository {
-    upsertOtp(email: string, otp: string, expiresAt: Date): Promise<void>;
-    verifyOtp(email: string, otp: string): Promise<boolean>;
+    upsertOtp(email: string, otp: string, expiresAt: Date, userId?: string): Promise<void>;
+    verifyOtp(email: string, otp: string, userId?: string): Promise<boolean>;
 }

@@ -13,8 +13,27 @@ export const ResponseMessage = {
     ACCESS_TOKEN_MISSING: "Access token missing",
     NOT_ALLOWED_TO_ACCESS: "you are not allowed to access this resource",
     ACCESS_TOKEN_INVALID: "Invalid access token",
+    PASSWORD_CREATE_SUCCESS: "Password create success",
+    WELCOME_MAIL_SUCCESS:"Welcome email sent successfully",
 
     GYMS_FETCH_SUCCESS: "Gyms fetched successfully",
     GYM_FETCH_SUCCESS: "Gym fetched successfully",
-    GYM_UPDATE_SUCCESS: "Gym update successfull"
+    GYM_UPDATE_SUCCESS: "Gym update successfull",
+
+    CLIENT_ADD_SUCCESS: "Client added successfully",
+    GET_CLIENTS_SUCCESS: "Clients data successfully fetched",
+    GET_CLIENT_SUCCESS: "Client data successfully fetched",
+    CLIENT_UPDATE_SUCCESS: "Client update successfull",
+    CLIENT_DELETE_SUCCESS: "Client deleted successfully",
+
+
+    TRAINER_ADD_SUCCESS: "Trainer added successfully",
+    GET_TRAINERS_SUCCESS: "Trainers data successfully fetched",
+    GET_TRAINER_SUCCESS: "Trainer data successfully fetched",
+    TRAINER_UPDATE_SUCCESS: "Trainer updated successfully",
+    TRAINER_DELETE_SUCCESS: "Trainer deleted successfully",
+
+
+
+
 }

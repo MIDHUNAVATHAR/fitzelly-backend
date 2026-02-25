@@ -25,7 +25,7 @@ export class GymRepository extends BaseRepository<Gym, IGymDocument> implements 
 
     async findByEmail(email: string): Promise<Gym | null> {
         const gymDoc = await this.model.findOne({ email });
-        if (!gymDoc) throw new NotFoundError("Gym");
+        if (!gymDoc) return null;
 
         return this.toEntity(gymDoc);
     }
@@ -73,6 +73,11 @@ export class GymRepository extends BaseRepository<Gym, IGymDocument> implements 
             throw new NotFoundError("Gym")
         }
         return this.toEntity(gymDoc);
+    }
+
+    async getGymsBySubscriptionStatus(status: string): Promise<Gym[]> {
+        const gymDocs = await this.model.find({ subscriptionStatus: status });
+        return gymDocs.map(doc => this.toEntity(doc))
     }
 
 
