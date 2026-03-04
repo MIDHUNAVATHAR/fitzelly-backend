@@ -17,7 +17,12 @@ export interface IClientRepository extends IBaseRepository<Client> {
         clients: Client[],
         total: number
     }>
+    getClientsByTrainerId(trainerId: string, skip: number, limit: number, search?: string): Promise<{
+        clients: Client[],
+        total:number
+    }>;
     updateClientByGym(id: string, clientData: IClientData): Promise<Client>;
+    updateClient(client: Client): Promise<Client>;
     softDelete(clientId: string): Promise<void>;
     updatePassword(client: Client): Promise<void>;
     setPassword(id: string, passwordHash: string): Promise<void>;

@@ -1,7 +1,7 @@
 import { IOtpRepository } from "../../../domain/repositories/IOtpRepository";
-import { CompleteForgotPasswordRequestDTO } from "../../dtos/ForgotPasswordDTO";
+import { CompleteForgotPasswordRequestDTO } from "../../dtos/auth/ForgotPasswordDTO";
 import { InvalidOtpError } from "../../errors/AppError";
-import { ICompleteForgotpassUseCase } from "../../IUseCases/ICompleteForgotpassUseCase";
+import { ICompleteForgotpassUseCase } from "../../IUseCases/auth/ICompleteForgotpassUseCase";
 
 
 export class TrainerCompleteForgotpassUseCase implements ICompleteForgotpassUseCase {

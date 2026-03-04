@@ -1,6 +1,6 @@
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
-import { GymProfileDTO } from "../dtos/GymProfileDTO";
-import { IUpdateGymProfileUseCase } from "../IUseCases/IUpdateGymProfileUseCase";
+import { GymProfileDTO } from "../dtos/gym-profile/GymProfileDTO";
+import { IUpdateGymProfileUseCase } from "../IUseCases/gym-profile/IUpdateGymProfileUseCase";
 import { GymProfileMapper } from "../mapper/GymProfileMapper";
 
 export class UpdateGymProfileUseCase implements IUpdateGymProfileUseCase {

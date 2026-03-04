@@ -1,4 +1,4 @@
-import { AddClientRequestDTO, GetClientResponseDTO } from "../dtos/ClientDTO";
+import { AddClientRequestDTO, GetClientResponseDTO } from "../dtos/gym-client/ClientDTO";
 import { Client } from "../../domain/entities/Client";
 
 export class ClientMapper {
@@ -15,28 +15,46 @@ export class ClientMapper {
             dto.dateOfBirth ? new Date(dto.dateOfBirth) : null,
             dto.emergencyContact || null,
             dto.contactPerson || null,
-            null,
-            "Pending",
             false,
             new Date(),
             false
         )
     }
 
-    static toGetClientResponseDTO(client: Client): GetClientResponseDTO {
+    static toGetClientResponseDTO(
+        client: Client,
+        membershipDetails?: {
+            currentPlan: string | null;
+            membershipStatus: string | null;
+            planType?: 'DAY_BASED' | 'CATEGORY_BASED' | null;
+            daysLeft?: number | null;
+            startDate?: string | null;
+            expiryDate?: string | null;
+            assignedTrainer?: string | null;
+            paymentStatus?: 'PAID' | 'PARTIAL' | 'UNPAID' | null;
+            payments?: { date: string, amount: number }[];
+        }
+    ): GetClientResponseDTO {
         return {
-            id: client.id!,
+           id: client.id!,
             fullName: client.fullName,
             email: client.email,
             phoneNumber: client.phoneNumber,
-            membershipStatus: client.membershipStatus,
+            membershipStatus: membershipDetails?.membershipStatus || null,
             profileUrl: client.profileUrl,
-            currentPlan: client.currentPlan,
+            currentPlan: membershipDetails?.currentPlan || null,
+            planType: membershipDetails?.planType,
+            daysLeft: membershipDetails?.daysLeft,
+            startDate: membershipDetails?.startDate,
+            expiryDate: membershipDetails?.expiryDate,
+            assignedTrainer: membershipDetails?.assignedTrainer,
+            paymentStatus: membershipDetails?.paymentStatus,
+            payments: membershipDetails?.payments,
             joinedDate: client.joinedDate.toISOString(),
-            dateOfBirth: client.dateOfBirth?.toISOString() ?? null,
+            dateOfBirth: client.dateOfBirth ? `${client.dateOfBirth.getFullYear()}-${String(client.dateOfBirth.getMonth() + 1).padStart(2, '0')}-${String(client.dateOfBirth.getDate()).padStart(2, '0')}` : null,
             emergencyContact: client.emergencyContact ?? null,
             contactPerson: client.contactPerson ?? null,
-            isEmailVerified:client.isEmailVerified
-        }
+            isEmailVerified: client.isEmailVerified
+        };
     }
 }

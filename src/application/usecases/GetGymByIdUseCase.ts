@@ -1,7 +1,7 @@
-import { IGetGymByIdUseCase } from "../IUseCases/IGetGymByIdUseCase";
+import { IGetGymByIdUseCase } from "../IUseCases/gym-profile/IGetGymByIdUseCase";
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { GymMapper } from "../mapper/SuperAdminGymMapper";
-import { GymResponseDTO } from "../dtos/GetAllGymsDTO";
+import { GymResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
 import { NotFoundError } from "../errors/AppError";
 
 export class GetGymByIdUseCase implements IGetGymByIdUseCase {

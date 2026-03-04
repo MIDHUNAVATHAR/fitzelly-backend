@@ -52,7 +52,7 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
     }
 
     async findByEmail(email: string): Promise<Trainer | null> {
-        const doc = await this.model.findOne({ email });
+        const doc = await this.model.findOne({ email, isDeleted: false });
         return doc ? TrainerMapper.toEntity(doc) : null;
     }
 
@@ -106,6 +106,23 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
         }
 
         return TrainerMapper.toEntity(updatedDoc);
+    }
+
+    async updateProfile(trainer: Trainer): Promise<void> {
+        const document = this.toDocument(trainer);
+         await this.model.findByIdAndUpdate(
+            trainer.id,
+            {
+                $set: {
+                    fullName: document.fullName,
+                    phoneNumber: document.phoneNumber,
+                    specialization: document.specialization,
+                    dateOfBirth: document.dateOfBirth,
+                    profileUrl: document.profileUrl
+                }
+            },
+            { new: true }
+        )
     }
 
     async softDelete(trainerId: string): Promise<void> {

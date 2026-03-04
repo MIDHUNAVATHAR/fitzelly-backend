@@ -1,6 +1,6 @@
 
 import { SuperAdmin } from "../../domain/entities/SuperAdmin";
-import { SuperAdminProfileDTO } from "../dtos/SuperAdminProfileDTO";
+import { SuperAdminProfileDTO } from "../dtos/superAd-profile/SuperAdminProfileDTO";
 
 export class SuperAdminProfileMapper {
     static toDTO(superAdmin: SuperAdmin): SuperAdminProfileDTO {

@@ -5,6 +5,12 @@ import { gymAuthenticationController } from "../../main/di";
 import { gymProfileController } from "../../main/di";
 import { gymClientController } from "../../main/di";
 import { gymTrainerController } from "../../main/di";
+import { gymPlanController } from "../../main/di";
+import { gymEquipmentController } from "../../main/di";
+import { gymMembershipController } from "../../main/di";
+
+
+
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";
@@ -41,6 +47,32 @@ router.get(GYM_ROUTE.GET_TRAINERS, protect([ROLES.GYM]), gymTrainerController.ge
 router.get(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), gymTrainerController.getTrainerById.bind(gymTrainerController))
 router.put(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), gymTrainerController.updateTrainer.bind(gymTrainerController))
 router.delete(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), gymTrainerController.deleteTrainer.bind(gymTrainerController))
+
+
+router.post(GYM_ROUTE.ADD_PLAN, protect([ROLES.GYM]),  gymPlanController.addPlan.bind(gymPlanController));
+router.get(GYM_ROUTE.GET_PLANS, protect([ROLES.GYM]), gymPlanController.getPlans.bind(gymPlanController));
+router.patch(GYM_ROUTE.UPDATE_PLAN, protect([ROLES.GYM]),  gymPlanController.updatePlan.bind(gymPlanController));
+router.delete(GYM_ROUTE.DELETE_PLAN, protect([ROLES.GYM]),  gymPlanController.deletePlan.bind(gymPlanController));
+
+
+// Memberships
+router.post(GYM_ROUTE.ADD_MEMBERSHIP, protect([ROLES.GYM]), gymMembershipController.addMembership.bind(gymMembershipController));
+router.get(GYM_ROUTE.GET_MEMBERSHIPS, protect([ROLES.GYM]), gymMembershipController.getMemberships.bind(gymMembershipController));
+router.get(GYM_ROUTE.MEMBERSHIP_BY_ID, protect([ROLES.GYM]), gymMembershipController.getMembershipById.bind(gymMembershipController));
+router.patch(GYM_ROUTE.MEMBERSHIP_BY_ID, protect([ROLES.GYM]), gymMembershipController.updateMembership.bind(gymMembershipController));
+router.delete(GYM_ROUTE.MEMBERSHIP_BY_ID, protect([ROLES.GYM]), gymMembershipController.deleteMembership.bind(gymMembershipController));
+
+// Payments
+router.post(GYM_ROUTE.ADD_PAYMENT, protect([ROLES.GYM]), gymMembershipController.addPayment.bind(gymMembershipController));
+router.patch(GYM_ROUTE.PAYMENT_BY_ID, protect([ROLES.GYM]), gymMembershipController.updatePayment.bind(gymMembershipController));
+router.delete(GYM_ROUTE.PAYMENT_BY_ID, protect([ROLES.GYM]), gymMembershipController.deletePayment.bind(gymMembershipController));
+
+// Equipments
+router.post(GYM_ROUTE.ADD_EQUIPMENT, protect([ROLES.GYM]), upload.single("image"), gymEquipmentController.addEquipment.bind(gymEquipmentController));
+router.get(GYM_ROUTE.GET_EQUIPMENTS, protect([ROLES.GYM]), gymEquipmentController.getEquipments.bind(gymEquipmentController));
+router.put(GYM_ROUTE.EQUIPMENT_BY_ID, protect([ROLES.GYM]), upload.single("image"), gymEquipmentController.updateEquipment.bind(gymEquipmentController));
+router.delete(GYM_ROUTE.EQUIPMENT_BY_ID, protect([ROLES.GYM]), gymEquipmentController.deleteEquipment.bind(gymEquipmentController));
+
 
 
 export default router; 

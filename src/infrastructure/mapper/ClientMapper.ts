@@ -16,8 +16,6 @@ export class ClientMapper {
       doc.dateOfBirth ?? null,
       doc.emergencyContact ?? null,
       doc.contactPerson ?? null,
-      doc.currentPlan ?? null,
-      doc.membershipStatus ?? "Pending",
       doc.isEmailVerified,
       doc.joinedDate,
       doc.isDeleted
@@ -45,8 +43,6 @@ export class ClientMapper {
     if (entity.profileUrl) doc.profileUrl = entity.profileUrl;
     if (entity.phoneNumber) doc.phoneNumber = entity.phoneNumber;
     if (entity.password) doc.password = entity.password;
-    if (entity.currentPlan) doc.currentPlan = entity.currentPlan;
-    if (entity.membershipStatus) doc.membershipStatus = entity.membershipStatus;
 
     return doc;
 

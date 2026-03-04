@@ -1,4 +1,4 @@
-import { GymProfileDTO } from "../dtos/GymProfileDTO";
+import { GymProfileDTO } from "../dtos/gym-profile/GymProfileDTO";
 import { Gym } from "../../domain/entities/Gym";
 
 

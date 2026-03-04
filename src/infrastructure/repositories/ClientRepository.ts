@@ -4,6 +4,7 @@ import { QueryFilter } from "mongoose";
 import { BaseRepository } from "./BaseRepository";
 import { Client } from "../../domain/entities/Client";
 import { clientModel } from "../database/mongoose/models/ClientModel";
+import { MembershipModel } from "../database/mongoose/models/MembershipModel";
 import { IClientDocument } from "../database/mongoose/types/IClientDocument";
 import { ClientMapper } from "../mapper/ClientMapper";
 import { IClientData } from "../../domain/repositories/IClientRepository";
@@ -25,7 +26,9 @@ export class ClientRepository extends BaseRepository<Client, IClientDocument> im
     }
 
     async findByEmail(email: string): Promise<Client | null> {
-        const doc = await this.model.findOne({ email });
+        const doc = await this.model.findOne({
+            email, isDeleted:false
+        });
         return doc ? this.toEntity(doc) : null
     }
 
@@ -66,6 +69,61 @@ export class ClientRepository extends BaseRepository<Client, IClientDocument> im
             total
         }
 
+    }
+
+    async updateClient(client: Client): Promise<Client> {
+        const document = this.toDocument(client);
+        const updatedDoc = await this.model.findByIdAndUpdate(
+            client.id,
+            { $set: document },
+            { new: true }
+        );
+
+        if (!updatedDoc) {
+            throw new NotFoundError("Client");
+        }
+
+        return ClientMapper.toEntity(updatedDoc as IClientDocument);
+    }
+
+    async getClientsByTrainerId(trainerId: string, skip: number, limit: number, search?: string):
+        Promise<{ clients: Client[]; total: number; }> {
+
+        const memberships = await MembershipModel.find({
+            assignedTrainerId: trainerId,
+            status: 'ACTIVE',
+            isDeleted: false
+        }).exec();
+
+        const clientIds = memberships.map(m => m.clientId);
+
+        const filter: QueryFilter<IClientDocument> = {
+            _id: { $in: clientIds },
+            isDeleted: false,
+        };
+
+        if (search && search.trim().length > 0) {
+            filter.$or = [
+                { fullName: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+                { phoneNumber: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        const [docs, total] = await Promise.all([
+            this.model
+                .find(filter)
+                .skip(skip)
+                .limit(limit)
+                .sort({ joinedDate: -1 }),
+
+            this.model.countDocuments(filter)
+        ]);
+
+        return {
+            clients: docs.map(doc => ClientMapper.toEntity(doc)),
+            total
+        };
     }
 
     async updateClientByGym(clientId: string, clientData: IClientData): Promise<Client> {

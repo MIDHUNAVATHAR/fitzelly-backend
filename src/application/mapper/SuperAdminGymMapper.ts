@@ -1,8 +1,8 @@
-import { GymResponseDTO } from "../dtos/GetAllGymsDTO";
+import { GymResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
 import { Gym } from "../../domain/entities/Gym";
 
 export class GymMapper {
-    static toResponseDTO(gym:Gym):GymResponseDTO {
+    static toResponseDTO(gym: Gym): GymResponseDTO {
         return {
             _id: gym.id,
             gymName: gym.gymName,
@@ -19,7 +19,7 @@ export class GymMapper {
             createdAt: gym.createdAt.toISOString(),
         }
     }
-    static toResponseDTOList(gyms:Gym[]):GymResponseDTO[]{
-        return gyms.map(gym=>this.toResponseDTO(gym));
+    static toResponseDTOList(gyms: Gym[]): GymResponseDTO[] {
+        return gyms.map(gym => this.toResponseDTO(gym));
     }
 }

@@ -1,5 +1,5 @@
 import { ROLES } from "../../../constants/roles.constants";
-import { EmailNotVerifiedError, TrainerDeletedError } from "../../../domain/errors/DomainError";
+import { EmailNotVerifiedError} from "../../../domain/errors/DomainError";
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
 import { IPasswordHasher } from "../../../domain/services/IPasswordHasher";
 import { ITokenService } from "../../../domain/services/ITokenService";
@@ -23,10 +23,7 @@ export class TrainerLoginUseCase implements ITrainerLoginUseCase {
             throw new NotFoundError("Trainer");
         }
 
-        if (trainer.isDeleted) {
-            throw new TrainerDeletedError()
-        }
-
+       
         if (!trainer.isEmailVerified) {
             throw new EmailNotVerifiedError(trainer.email)
         }

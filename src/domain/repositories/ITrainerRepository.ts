@@ -2,8 +2,6 @@ import { IBaseRepository } from "./IBaseRepository";
 import { Trainer } from "../entities/Trainer";
 
 
-
-
 export interface ITrainerRepository extends IBaseRepository<Trainer> {
     findByEmail(email: string): Promise<Trainer | null>
 
@@ -13,6 +11,7 @@ export interface ITrainerRepository extends IBaseRepository<Trainer> {
         total: number
     }>
     updateTrainer(trainer: Trainer): Promise<Trainer>;
+    updateProfile(trainer: Trainer): Promise<void>; 
     softDelete(trainerId: string): Promise<void>;
     setPassword(id: string, passwordHash: string): Promise<void>;
 

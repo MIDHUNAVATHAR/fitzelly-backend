@@ -31,7 +31,7 @@ export class SuperAdminRepository extends BaseRepository<SuperAdmin, ISuperAdmin
     }
 
     async update(id: string, superAdminData: SuperAdmin): Promise<SuperAdmin> {
-        const superAdminDoc = this.toDocument(superAdminData); 
+        const superAdminDoc = this.toDocument(superAdminData);
 
         const updatedDoc = await this.model.findByIdAndUpdate(id, superAdminDoc, { new: true });
         if (!updatedDoc) {

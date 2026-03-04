@@ -5,7 +5,7 @@ import { ClientLoginRequestDTO, ClientLoginResponseDTO } from "../../dtos/auth/C
 import { AuthenticationFailedError, NotFoundError } from "../../errors/AppError";
 import { ROLES } from "../../../constants/roles.constants";
 import { IClientLoginUseCase } from "../../IUseCases/auth/IClientLoginUseCase";
-import { ClientDeletedError, EmailNotVerifiedError } from "../../../domain/errors/DomainError";
+import {  EmailNotVerifiedError } from "../../../domain/errors/DomainError";
 
 
 export class ClientLoginUseCase implements IClientLoginUseCase {
@@ -16,16 +16,14 @@ export class ClientLoginUseCase implements IClientLoginUseCase {
     ) { }
 
     async execute(data: ClientLoginRequestDTO): Promise<ClientLoginResponseDTO> {
+
         const client = await this._clientRepository.findByEmail(data.email);
 
         if (!client) {
             throw new NotFoundError("Client");
         }
 
-        if (client.isDeleted) {
-            throw new ClientDeletedError();
-        }
-
+       
         if (!client.isEmailVerified) {
             throw new EmailNotVerifiedError(client.email)
 
@@ -36,8 +34,8 @@ export class ClientLoginUseCase implements IClientLoginUseCase {
         }
 
         const isPasswordValid = await this._passwordHasher.compare(data.password, client.password);
+        if (!isPasswordValid) {
 
-        if (isPasswordValid) {
             throw new AuthenticationFailedError();
         }
 

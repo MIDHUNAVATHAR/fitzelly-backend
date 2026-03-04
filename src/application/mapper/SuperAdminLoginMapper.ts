@@ -1,5 +1,5 @@
 import { SuperAdmin } from "../../domain/entities/SuperAdmin";
-import { LoginResponseDTO } from "../dtos/LoginDTO";
+import { LoginResponseDTO } from "../dtos/auth/LoginDTO";
 
 export class SuperAdminLoginMapper {
     static toDTO(user: SuperAdmin, accessToken: string, refreshToken: string): LoginResponseDTO {

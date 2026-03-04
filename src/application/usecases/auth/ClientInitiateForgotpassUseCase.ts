@@ -1,8 +1,8 @@
 import { IOtpRepository } from "../../../domain/repositories/IOtpRepository";
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { IEmailService } from "../../../domain/services/IEmailService";
-import { IInitiateForgotPasswordUseCase } from "../../IUseCases/IInitiateForgotpassUseCase";
-import { ForgotPasswordRequestDTO } from "../../dtos/ForgotPasswordDTO";
+import { IInitiateForgotPasswordUseCase } from "../../IUseCases/auth/IInitiateForgotpassUseCase";
+import { ForgotPasswordRequestDTO } from "../../dtos/auth/ForgotPasswordDTO";
 import { AuthenticationFailedError, ServiceUnavailableError } from "../../errors/AppError";
 
 
@@ -26,7 +26,7 @@ export class ClientInitiateForgotpassUseCase implements IInitiateForgotPasswordU
 
         try {
             await this._emailService.sendOtp(request.email, otp)
-        } catch (error) {
+        } catch {
             throw new ServiceUnavailableError("Unable to send otp, please try again later.")
         }
     }

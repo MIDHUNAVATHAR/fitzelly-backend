@@ -4,6 +4,10 @@ import { SuperAdminRepository } from "../infrastructure/repositories/SuperAdminR
 import { OtpRepository } from "../infrastructure/repositories/OtpRepository";
 import { ClientRepository } from "../infrastructure/repositories/ClientRepository";
 import { TrainerRepository } from "../infrastructure/repositories/TrainerRepository";
+import { MembershipRepository } from "../infrastructure/repositories/MembershipRepository";
+import { PaymentRepository } from "../infrastructure/repositories/PaymentRepository";
+import { PlanRepository } from "../infrastructure/repositories/PlanRepository";
+import { EquipmentRepository } from "../infrastructure/repositories/EquipmentRepository";
 
 
 /* ------------------- services (infrastructure) ---------------- */
@@ -23,34 +27,40 @@ import { GetRepoByUserType } from "../infrastructure/adaptors/GetRepoByUserType"
 /**
  * auth usecases
  */
-import { CreatePasswordUseCase } from "../application/usecases/invite/CreatePasswordUseCase";
+import { CreatePasswordUseCase } from "../application/usecases/auth/CreatePasswordUseCase";
 
-import { TokenRefreshUseCase } from "../application/usecases/TokenRefreshUseCase";
+import { TokenRefreshUseCase } from "../application/usecases/auth/TokenRefreshUseCase";
 
-import { InitiateGoogleAuthUseCase } from "../application/usecases/InitiateGoogleAuthUseCase";
-import { GoogleAuthUseCase } from "../application/usecases/GoogleAuthUseCase";
+import { InitiateGoogleAuthUseCase } from "../application/usecases/auth/InitiateGoogleAuthUseCase";
+import { GoogleAuthUseCase } from "../application/usecases/auth/GoogleAuthUseCase";
 
-import { InitiateSignupUseCase } from "../application/usecases/InitiateSignupUseCase";
-import { CompleteSignupUseCase } from "../application/usecases/CompleteSignupUseCase";
-import { GymLoginUseCase } from "../application/usecases/GymLoginUseCase";
-import { GymInitiateForgotpassUseCase } from "../application/usecases/GymInitiateForgotpassUseCase";
-import { GymCompleteForgotpassUseCase } from "../application/usecases/GymCompleteForgotpassUseCase";
-import { GymResetPasswordUseCase } from "../application/usecases/GymResetPasswordUseCase";
+import { InitiateSignupUseCase } from "../application/usecases/auth/InitiateSignupUseCase";
+import { CompleteSignupUseCase } from "../application/usecases/auth/CompleteSignupUseCase";
+import { GymLoginUseCase } from "../application/usecases/auth/GymLoginUseCase";
+import { GymInitiateForgotpassUseCase } from "../application/usecases/auth/GymInitiateForgotpassUseCase";
+import { GymCompleteForgotpassUseCase } from "../application/usecases/auth/GymCompleteForgotpassUseCase";
+import { GymResetPasswordUseCase } from "../application/usecases/auth/GymResetPasswordUseCase";
 
 import { ClientLoginUseCase } from "../application/usecases/auth/ClientLoginUseCase";
 import { ClientInitiateForgotpassUseCase } from "../application/usecases/auth/ClientInitiateForgotpassUseCase";
 import { ClientForgotpassUseCase } from "../application/usecases/auth/ClientCompleteForgotpassUseCase";
 import { ClientResetPasswordUseCase } from "../application/usecases/auth/ClientResetPasswordUseCase";
 
+import { GetClientProfileWithMembershipUseCase } from "../application/usecases/client-profile/GetClientProfileWithMembershipUseCase";
+import { UpdateClientProfileUseCase } from "../application/usecases/client-profile/UpdateClientProfileUseCase";
+import { UpdateClientProfileImageUseCase } from "../application/usecases/client-profile/UpdateClientProfileImageUseCase";
+import { GetClientGymDetailsUseCase } from "../application/usecases/client-profile/GetClientGymDetailsUseCase";
+
+
 import { TrainerLoginUseCase } from "../application/usecases/auth/TrainerLoginUseCase";
-import { TrainerInitiateForgotpassUseCase } from "../application/usecases/auth/TrainerInitiateForgotpassuseCase";
+import { TrainerInitiateForgotpassUseCase } from "../application/usecases/auth/TrainerInitiateForgotpassUseCase";
 import { TrainerCompleteForgotpassUseCase } from "../application/usecases/auth/TrainerCompleteForgotpassUseCase";
 import { TrainerResetPasswordUseCase } from "../application/usecases/auth/TrainerResetPasswordUseCase";
 
-import { SuperAdminLoginUseCase } from "../application/usecases/SuperAdminLoginUseCase";
-import { SuperAdminInitiateForgotpassUseCase } from "../application/usecases/SuperAdminInitiateForgotpassUseCase";
-import { SuperAdminCompleteForgotpassUseCase } from "../application/usecases/SuperAdminCompleteForgotpassUseCase";
-import { SuperAdminResetPasswordUseCase } from "../application/usecases/SuperAdminResetPasswordUseCase";
+import { SuperAdminLoginUseCase } from "../application/usecases/auth/SuperAdminLoginUseCase";
+import { SuperAdminInitiateForgotpassUseCase } from "../application/usecases/auth/SuperAdminInitiateForgotpassUseCase";
+import { SuperAdminCompleteForgotpassUseCase } from "../application/usecases/auth/SuperAdminCompleteForgotpassUseCase";
+import { SuperAdminResetPasswordUseCase } from "../application/usecases/auth/SuperAdminResetPasswordUseCase";
 
 
 /**
@@ -70,26 +80,58 @@ import { UpdateGymLogoUseCase } from "../application/usecases/UpdateGymLogoUseCa
 /**
  * gym client usecases
  */
-import { AddClientUseCase } from "../application/usecases/client/AddClientUseCase";
-import { GetClientByIdUseCase } from "../application/usecases/client/GetClientByIdUseCase";
-import { UpdateClientByGymUseCase } from "../application/usecases/client/UpdateClientByGymUseCase";
-import { GetClientsUseCase } from "../application/usecases/client/GetClientsUseCase";
-import { DeleteClientUseCase } from "../application/usecases/client/DeleteClientUseCase";
+import { AddClientUseCase } from "../application/usecases/gym-clients/AddClientUseCase";
+import { GetClientByIdUseCase } from "../application/usecases/gym-clients/GetClientByIdUseCase";
+import { UpdateClientByGymUseCase } from "../application/usecases/gym-clients/UpdateClientByGymUseCase";
+import { GetClientsUseCase } from "../application/usecases/gym-clients/GetClientsUseCase";
+import { DeleteClientUseCase } from "../application/usecases/gym-clients/DeleteClientUseCase";
 
 
 /**
  * gym trainer usecases
  */
-import { AddTrainerUseCase } from "../application/usecases/trainer/AddTrainerUseCase";
-import { GetTrainerByIdUseCase } from "../application/usecases/trainer/GetTrainerByIdUseCase";
-import { UpdateTrainerUseCase } from "../application/usecases/trainer/UpdateTrainerUseCase";
-import { DeleteTrainerUseCase } from "../application/usecases/trainer/DeleteTrainerUseCase";
-import { GetTrainersUseCase } from "../application/usecases/trainer/GetTrainersUseCase";
+import { AddTrainerUseCase } from "../application/usecases/gym-trainer/AddTrainerUseCase";
+import { GetTrainerByIdUseCase } from "../application/usecases/gym-trainer/GetTrainerByIdUseCase";
+import { UpdateTrainerUseCase } from "../application/usecases/gym-trainer/UpdateTrainerUseCase";
+import { DeleteTrainerUseCase } from "../application/usecases/gym-trainer/DeleteTrainerUseCase";
+import { GetTrainersUseCase } from "../application/usecases/gym-trainer/GetTrainersUseCase";
+
+//gym plan usecases
+import { AddPlanUseCase } from "../application/usecases/gym-plans/AddPlanUseCase";
+import { GetPlansUseCase } from "../application/usecases/gym-plans/GetPlansUseCase";
+import { UpdatePlanUseCase } from "../application/usecases/gym-plans/UpdatePlanUseCase";
+import { DeletePlanUseCase } from "../application/usecases/gym-plans/DeletePlanUseCase";
+
+//gym membershup usecases
+import { AddMembershipUseCase } from "../application/usecases/gym-memberships/AddMembershipUseCase";
+import { GetMembershipsUseCase } from "../application/usecases/gym-memberships/GetMembershipsUseCase";
+import { GetMembershipByIdUseCase } from "../application/usecases/gym-memberships/GetMembershipByIdUseCase";
+import { UpdateMembershipUseCase } from "../application/usecases/gym-memberships/UpdateMembershipUseCase";
+import { DeleteMembershipUseCase } from "../application/usecases/gym-memberships/DeleteMembershipUseCase";
+import { AddPaymentUseCase } from "../application/usecases/gym-memberships/AddPaymentUseCase";
+import { UpdatePaymentUseCase } from "../application/usecases/gym-memberships/UpdatePaymentUseCase";
+import { DeletePaymentUseCase } from "../application/usecases/gym-memberships/DeletePaymentUseCase";
+
+//gym equipment usecases
+import { GetEquipmentsUseCase } from "../application/usecases/gym-equipments/GetEquipmentsUseCase";
+import { AddEquipmentUseCase } from "../application/usecases/gym-equipments/AddEquipmentUseCase";
+import { UpdateEquipmentUseCase } from "../application/usecases/gym-equipments/UpdateEquipmentUseCase";
+import { DeleteEquipmentUseCase } from "../application/usecases/gym-equipments/DeleteEquipmentUseCase";
+
+
+//trainer profile
+import { GetTrainerProfileUseCase } from "../application/usecases/trainer-profile/GetTrainerProfileUseCase"
+import { UpdateTrainerProfileUseCase } from "../application/usecases/trainer-profile/UpdateTrainerProfileUseCase";
+import { UpdateTrainerProfileImageUseCase } from "../application/usecases/trainer-profile/UpdateTrainerProfileImageUseCase";
+import { GetTrainerGymDetailsUseCase } from "../application/usecases/trainer-profile/GetTrainerGymDetailsUseCase";
+import { GetAssignedClientsUseCase } from "../application/usecases/trainer-assigned-clients/GetAssignedClientsUseCase";
+
 
 
 /**
  * superadmin profile usecases
  */
+
 import { GetSuperAdminProfileUseCase } from "../application/usecases/GetSuperAdminProfileUseCase";
 import { UpdateSuperAdminProfileUseCase } from "../application/usecases/UpdateSuperAdminProfileUseCase";
 import { UpdateSuperAdminLogoUseCase } from "../application/usecases/UpdateSuperAdminLogoUseCase";
@@ -105,20 +147,32 @@ import { UpdateGymStatusUseCase } from "../application/usecases/UpdateGymStatusU
 
 
 /* ------------------- controllers (presentation) ---------------- */
-import { InviteController } from "../presentation/controller/InviteController";
+import { InviteController } from "../presentation/controller/auth/InviteController";
 
-import { GymAuthenticationController } from "../presentation/controller/GymAuthenticationController";
-import { SuperAdminAuthenticationController } from "../presentation/controller/SuperAdminAuthenticationController";
-import { TokenRefreshController } from "../presentation/controller/TokenRefreshController";
-import { GoogleAuthController } from "../presentation/controller/GoogleAuthController";
-import { GymProfileController } from "../presentation/controller/GymProfileController";
-import { GymClientController } from "../presentation/controller/GymClientController";
-import { GymTrainerController } from "../presentation/controller/GymTrainerController";
+import { GymAuthenticationController } from "../presentation/controller/auth/GymAuthenticationController";
+import { SuperAdminAuthenticationController } from "../presentation/controller/auth/SuperAdminAuthenticationController";
+import { TokenRefreshController } from "../presentation/controller/auth/TokenRefreshController";
+import { GoogleAuthController } from "../presentation/controller/auth/GoogleAuthController";
+import { GymProfileController } from "../presentation/controller/gym/GymProfileController";
+import { GymClientController } from "../presentation/controller/gym/GymClientController";
+import { GymTrainerController } from "../presentation/controller/gym/GymTrainerController";
+import { GymPlanController } from "../presentation/controller/gym/GymPlanController";
+import { GymMembershipController } from "../presentation/controller/gym/GymMembershipController";
+import { GymEquipmentController } from "../presentation/controller/gym/GymEquipmentController";
 
-import { ClientAuthController } from "../presentation/controller/ClientAuthController";
-import { TrainerAuthController } from "../presentation/controller/TrainerAuthController";
-import { SuperAdminProfileController } from "../presentation/controller/SuperAdminProfileController";
-import { SuperAdminGymsController } from "../presentation/controller/SuperAdminGymsController";
+
+
+
+import { ClientAuthController } from "../presentation/controller/auth/ClientAuthController";
+import { ClientProfileController } from "../presentation/controller/client/ClientProfileController";
+
+
+import { TrainerAuthController } from "../presentation/controller/auth/TrainerAuthController";
+import { TrainerProfileController } from "../presentation/controller/trainer/TrainerProfileController";
+
+import { SuperAdminProfileController } from "../presentation/controller/super-admin/SuperAdminProfileController";
+import { SuperAdminGymsController } from "../presentation/controller/super-admin/SuperAdminGymsController";
+
 
 
 
@@ -127,7 +181,11 @@ const gymRepository = new GymRepository();
 const otpRepository = new OtpRepository();
 const superAdminRepository = new SuperAdminRepository();
 const clientRepository = new ClientRepository();
-const trainerRepository = new TrainerRepository()
+const trainerRepository = new TrainerRepository();
+const membershipRepository = new MembershipRepository();
+const paymentRepository = new PaymentRepository();
+const planRepository = new PlanRepository();
+const equipmentRepository = new EquipmentRepository();
 
 
 /* ------------------- Instantiate services ---------------- */
@@ -170,7 +228,7 @@ const superAdminCompleteForgotpassUseCase = new SuperAdminCompleteForgotpassUseC
 const superAdminResetPasswordUseCase = new SuperAdminResetPasswordUseCase(superAdminRepository, otpRepository, passwordHasher);
 
 const getRepoByUserType = new GetRepoByUserType(clientRepository, trainerRepository);
-const sendWelcomeEmailUseCase = new SendWelcomeEmailUseCase(gymRepository, otpRepository, emailService)
+const sendWelcomeEmailUseCase = new SendWelcomeEmailUseCase(getRepoByUserType, gymRepository, otpRepository, emailService)
 const createPasswordUseCase = new CreatePasswordUseCase(getRepoByUserType, otpRepository, passwordHasher)
 
 /**
@@ -184,8 +242,8 @@ const updateGymLogoUseCase = new UpdateGymLogoUseCase(gymRepository, s3Service);
  * gym client usecase instances
  */
 const addClientUseCase = new AddClientUseCase(clientRepository);
-const getClientsUseCase = new GetClientsUseCase(clientRepository);
-const getClienByIdUseCase = new GetClientByIdUseCase(clientRepository)
+const getClientsUseCase = new GetClientsUseCase(clientRepository, membershipRepository);
+const getClienByIdUseCase = new GetClientByIdUseCase(clientRepository, membershipRepository, paymentRepository)
 const updateClientByGymUseCase = new UpdateClientByGymUseCase(clientRepository)
 const deleteClientUseCase = new DeleteClientUseCase(clientRepository);
 
@@ -197,6 +255,49 @@ const getTrainersUseCase = new GetTrainersUseCase(trainerRepository);
 const getTrainerbyIdUseCase = new GetTrainerByIdUseCase(trainerRepository);
 const updateTrainerUseCase = new UpdateTrainerUseCase(trainerRepository);
 const deleteTrainerUseCase = new DeleteTrainerUseCase(trainerRepository)
+
+//gym plan usecases
+export const addPlanUseCase = new AddPlanUseCase(planRepository);
+export const getPlansUseCase = new GetPlansUseCase(planRepository);
+export const updatePlanUseCase = new UpdatePlanUseCase(planRepository);
+export const deletePlanUseCase = new DeletePlanUseCase(planRepository);
+
+//gym membership usecases
+export const addMembershipUseCase = new AddMembershipUseCase(membershipRepository, planRepository, clientRepository, trainerRepository);
+export const getMembershipsUseCase = new GetMembershipsUseCase(membershipRepository, paymentRepository, planRepository);
+export const getMembershipByIdUseCase = new GetMembershipByIdUseCase(membershipRepository, paymentRepository, planRepository);
+export const updateMembershipUseCase = new UpdateMembershipUseCase(membershipRepository, planRepository, trainerRepository);
+export const deleteMembershipUseCase = new DeleteMembershipUseCase(membershipRepository);
+export const addPaymentUseCase = new AddPaymentUseCase(paymentRepository, membershipRepository);
+export const updatePaymentUseCase = new UpdatePaymentUseCase(paymentRepository);
+export const deletePaymentUseCase = new DeletePaymentUseCase(paymentRepository);
+
+
+//gym equipment usecases
+const addEquipmentUseCase = new AddEquipmentUseCase(equipmentRepository, s3Service);
+const getEquipmentsUseCase = new GetEquipmentsUseCase(equipmentRepository)
+const updateEquipmentUseCase = new UpdateEquipmentUseCase(equipmentRepository, s3Service)
+const deleteEquipmentUseCase = new DeleteEquipmentUseCase(equipmentRepository)
+
+
+
+
+//client profile usecases
+const getClientProfileWithMembershipUseCase = new GetClientProfileWithMembershipUseCase(clientRepository, membershipRepository, paymentRepository)
+const updateClientProfileUseCase = new UpdateClientProfileUseCase(clientRepository);
+const updateClientProfileImageUseCase = new UpdateClientProfileImageUseCase(clientRepository, s3Service);
+const getClientGymDetailsUseCase = new GetClientGymDetailsUseCase(clientRepository, gymRepository);
+
+//trainer profile usecases
+const getTrainerProfileUseCase = new GetTrainerProfileUseCase(trainerRepository)
+const updateTrainerProfileUseCase = new UpdateTrainerProfileUseCase(trainerRepository)
+const updateTrainerProfileImageUseCase = new UpdateTrainerProfileImageUseCase(trainerRepository, s3Service)
+const getTrainerGymDetailsUseCase = new GetTrainerGymDetailsUseCase(trainerRepository, gymRepository)
+const getAssignedClientsUseCase = new GetAssignedClientsUseCase(clientRepository)
+
+//const getClienByIdUseCase = new GetClientByIdUseCase(clientRepository, membershipRepository, paymentRepository)
+
+
 
 /**
  * super-admin profile usecase instances
@@ -241,4 +342,30 @@ export const superAdminProfileController = new SuperAdminProfileController(getSu
 export const superAdminGymsController = new SuperAdminGymsController(getAllGymsUseCase, getGymByIdUseCase, updateGymStatusUseCase);
 export const gymClientController = new GymClientController(addClientUseCase, getClientsUseCase, getClienByIdUseCase, updateClientByGymUseCase, deleteClientUseCase, sendWelcomeEmailUseCase);
 export const gymTrainerController = new GymTrainerController(addTrainerUseCase, getTrainersUseCase, getTrainerbyIdUseCase, updateTrainerUseCase, deleteTrainerUseCase, sendWelcomeEmailUseCase);
+export const gymPlanController = new GymPlanController(addPlanUseCase, getPlansUseCase, updatePlanUseCase, deletePlanUseCase);
 
+export const gymMembershipController = new GymMembershipController(
+    addMembershipUseCase,
+    getMembershipsUseCase,
+    getMembershipByIdUseCase,
+    updateMembershipUseCase,
+    deleteMembershipUseCase,
+    addPaymentUseCase,
+    updatePaymentUseCase,
+    deletePaymentUseCase
+);
+
+
+export const gymEquipmentController = new GymEquipmentController(
+    addEquipmentUseCase,
+    getEquipmentsUseCase,
+    updateEquipmentUseCase,
+    deleteEquipmentUseCase
+);
+
+
+//client 
+export const clientProfileController = new ClientProfileController(getClientProfileWithMembershipUseCase, updateClientProfileUseCase, updateClientProfileImageUseCase, getClientGymDetailsUseCase);
+
+//trainer
+export const trainerProfileController = new TrainerProfileController(getTrainerProfileUseCase, updateTrainerProfileUseCase, updateTrainerProfileImageUseCase, getTrainerGymDetailsUseCase, getAssignedClientsUseCase, getClienByIdUseCase);

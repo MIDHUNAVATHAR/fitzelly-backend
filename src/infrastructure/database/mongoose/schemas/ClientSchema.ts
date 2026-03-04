@@ -41,15 +41,7 @@ export const ClientSchema = new Schema<IClientDocument>({
         type: Boolean,
         required: true
     },
-    currentPlan: {
-        type: String,
-        default: ""
-    },
-    membershipStatus: {
-        type: String,
-        default: "Pending"
-    },
-
+   
     joinedDate: {
         type: Date,
         default: Date.now

@@ -15,4 +15,5 @@ export interface IGymDocument extends Document {
     subscriptionStatus: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate: Date;
     createdAt: Date;
+    isDeleted: boolean;
 }

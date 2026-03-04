@@ -1,4 +1,4 @@
 
 export interface ISendWelcomeEmailUseCase {
-    execute(userId:string,email: string, name: string, gymId: string, urlPrefix: string): Promise<void>;
+    execute(params: { userId: string; gymId: string; role: "client" | "trainer" }): Promise<void>
 }

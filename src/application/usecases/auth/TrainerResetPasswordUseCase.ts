@@ -1,9 +1,9 @@
 import { IOtpRepository } from "../../../domain/repositories/IOtpRepository";
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
 import { IPasswordHasher } from "../../../domain/services/IPasswordHasher";
-import { ResetPasswordRequestDTO } from "../../dtos/ForgotPasswordDTO";
+import { ResetPasswordRequestDTO } from "../../dtos/auth/ForgotPasswordDTO";
 import { InvalidOtpError, ServiceUnavailableError } from "../../errors/AppError";
-import { IResetPasswordUseCase } from "../../IUseCases/IResetPasswordUseCase";
+import { IResetPasswordUseCase } from "../../IUseCases/auth/IResetPasswordUseCase";
 
 
 export class TrainerResetPasswordUseCase implements IResetPasswordUseCase {
@@ -28,7 +28,7 @@ export class TrainerResetPasswordUseCase implements IResetPasswordUseCase {
 
         try {
             await this._trainerRepository.setPassword(trainer.id, newPassword)
-        } catch (error) {
+        } catch {
             throw new ServiceUnavailableError("unable to reset password. please try agian")
         }
     }

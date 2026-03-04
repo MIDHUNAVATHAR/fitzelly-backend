@@ -1,7 +1,7 @@
-import { IGetAllGymsUseCase } from "../IUseCases/IGetAllGymsUseCase";
+import { IGetAllGymsUseCase } from "../IUseCases/superAd-gym-listing/IGetAllGymsUseCase";
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { GymMapper } from "../mapper/SuperAdminGymMapper";
-import { GymsListResponseDTO } from "../dtos/GetAllGymsDTO";
+import { GymsListResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
 
 interface SearchQuery {
     gymName?: { $regex: string; $options: string };
@@ -33,9 +33,9 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
         const gymDTOs = GymMapper.toResponseDTOList(gyms);
 
         return {
-            gyms:gymDTOs,
-            totalPages:Math.ceil(totalGyms/limit),
-            currentPage:page,
+            gyms: gymDTOs,
+            totalPages: Math.ceil(totalGyms / limit),
+            currentPage: page,
             totalGyms
         }
     }

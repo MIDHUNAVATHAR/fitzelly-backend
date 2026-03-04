@@ -1,3 +1,4 @@
+
 export class DomainError extends Error {
     constructor(message: string) {
         super(message);
@@ -11,14 +12,15 @@ export class EmailNotVerifiedError extends DomainError {
     }
 }
 
+
 export class ClientDeletedError extends DomainError {
     constructor() {
-        super(`Client account is deleted`);
+        super("Client account deleted")
     }
 }
 
 export class TrainerDeletedError extends DomainError {
     constructor() {
-        super(`Trainer account is deleted`);
+        super("Trainer account is deleted")
     }
 }

@@ -11,8 +11,6 @@ export class Client {
         public readonly dateOfBirth: Date | null,
         public readonly emergencyContact: string | null,
         public readonly contactPerson: string | null,
-        public readonly currentPlan: string | null,
-        public readonly membershipStatus: "Active" | "Expired" | "Pending",
         public readonly isEmailVerified: boolean = false,
         public readonly joinedDate: Date = new Date(),
         public readonly isDeleted: boolean = false

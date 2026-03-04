@@ -1,9 +1,9 @@
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { IOtpRepository } from "../../../domain/repositories/IOtpRepository";
 import { IPasswordHasher } from "../../../domain/services/IPasswordHasher";
-import { ResetPasswordRequestDTO } from "../../dtos/ForgotPasswordDTO";
+import { ResetPasswordRequestDTO } from "../../dtos/auth/ForgotPasswordDTO";
 import { AuthenticationFailedError, InvalidOtpError, ServiceUnavailableError } from "../../errors/AppError";
-import { IResetPasswordUseCase } from "../../IUseCases/IResetPasswordUseCase";
+import { IResetPasswordUseCase } from "../../IUseCases/auth/IResetPasswordUseCase";
 
 
 export class ClientResetPasswordUseCase implements IResetPasswordUseCase {
@@ -28,7 +28,7 @@ export class ClientResetPasswordUseCase implements IResetPasswordUseCase {
 
         try {
             await this._clientRepository.setPassword(client.id, newPassword)
-        } catch (error) {
+        } catch {
             throw new ServiceUnavailableError("unable to reset password. please try again")
         }
     }

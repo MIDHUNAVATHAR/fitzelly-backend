@@ -9,8 +9,6 @@ export interface IClientDocument extends Document {
     emergencyContact?: string;
     password: string;
     profileUrl: string;
-    membershipStatus: "Pending" | "Active" | "Expired";
-    currentPlan: string
     contactPerson?: string;
     isEmailVerified: boolean;
     joinedDate: Date;

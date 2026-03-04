@@ -1,5 +1,5 @@
-import { GymUpdateRequestDTO, GymResponseDTO } from "../dtos/GetAllGymsDTO";
-import { IUpdateGymStatusUseCase } from "../IUseCases/IUpdateGymStatusUseCase";
+import { GymUpdateRequestDTO, GymResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
+import { IUpdateGymStatusUseCase } from "../IUseCases/superAd-gym-listing/IUpdateGymStatusUseCase";
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { GymMapper } from "../mapper/SuperAdminGymMapper";
 
@@ -9,7 +9,7 @@ export class UpdateGymStatusUseCase implements IUpdateGymStatusUseCase {
     ) { }
 
     async execute(gymId: string, updateData: GymUpdateRequestDTO): Promise<GymResponseDTO> {
-        
+
         const updatedData = await this._gymRepository.updateStatus(gymId, updateData);
         return GymMapper.toResponseDTO(updatedData);
     }

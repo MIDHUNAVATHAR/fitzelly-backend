@@ -1,4 +1,4 @@
-import { TrainerRequestDTO, TrainerResponseDTO, UpdateTrainerRequestDTO } from "../dtos/TrainerDTO";
+import { TrainerRequestDTO, TrainerResponseDTO, UpdateTrainerRequestDTO } from "../dtos/gym-trainer/TrainerDTO";
 import { Trainer } from "../../domain/entities/Trainer";
 
 export class TrainerMapper {

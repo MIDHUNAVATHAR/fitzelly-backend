@@ -66,5 +66,6 @@ export const GymSchema = new Schema<IGymDocument>({
     expiryDate: {
         type: Date
     },
+  
 
 }, { timestamps: true }); 

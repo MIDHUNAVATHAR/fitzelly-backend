@@ -14,7 +14,7 @@ export const ResponseMessage = {
     NOT_ALLOWED_TO_ACCESS: "you are not allowed to access this resource",
     ACCESS_TOKEN_INVALID: "Invalid access token",
     PASSWORD_CREATE_SUCCESS: "Password create success",
-    WELCOME_MAIL_SUCCESS:"Welcome email sent successfully",
+    WELCOME_MAIL_SUCCESS: "Welcome email sent successfully",
 
     GYMS_FETCH_SUCCESS: "Gyms fetched successfully",
     GYM_FETCH_SUCCESS: "Gym fetched successfully",
@@ -33,7 +33,8 @@ export const ResponseMessage = {
     TRAINER_UPDATE_SUCCESS: "Trainer updated successfully",
     TRAINER_DELETE_SUCCESS: "Trainer deleted successfully",
 
-
+    PLAN_ADD_SUCCESS: "Plan added successfully",
+    PLAN_DELETE_SUCCESS: "Plan deleted successfully",
 
 
 }
