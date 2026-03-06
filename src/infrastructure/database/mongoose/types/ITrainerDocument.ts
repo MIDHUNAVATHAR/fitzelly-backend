@@ -14,6 +14,10 @@ export interface ITrainerDocument extends Document {
     salary: number;
     assignedClients: Types.ObjectId[];
 
+    qualification: string;
+    address: string;
+    certificates: string[];
+
     isEmailVerified: boolean;
     isDeleted: boolean;
 

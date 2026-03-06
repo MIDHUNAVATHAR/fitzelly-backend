@@ -13,10 +13,11 @@ export class SuperAdminMapper {
             doc.caption,
             doc.contactEmail,
             doc.phoneNumber,
-            doc.description
+            doc.description,
+            doc.trialDays || 28
         )
     }
-    
+
     static toDocument(entity: SuperAdmin): Partial<ISuperAdminDocument> {
         const doc: Partial<ISuperAdminDocument> = {};
         if (entity.email) doc.email = entity.email;
@@ -28,6 +29,7 @@ export class SuperAdminMapper {
         if (entity.contactEmail) doc.contactEmail = entity.contactEmail;
         if (entity.phoneNumber) doc.phoneNumber = entity.phoneNumber;
         if (entity.description) doc.description = entity.description;
+        if (entity.trialDays !== undefined) doc.trialDays = entity.trialDays;
 
         return doc;
     }

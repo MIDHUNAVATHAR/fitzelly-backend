@@ -1,8 +1,8 @@
 import { Plan } from "../../domain/entities/Plan";
 import { IPlanRepository } from "../../domain/repositories/IPlanRepository";
 
-
 import { PlanModel } from "../database/mongoose/models/PlanModel";
+import { IPlan } from "../database/mongoose/types/IMembershipPlan";
 
 export class PlanRepository implements IPlanRepository {
     async save(plan: Plan): Promise<Plan> {
@@ -49,12 +49,31 @@ export class PlanRepository implements IPlanRepository {
         return plan ? this.mapToEntity(plan) : null;
     }
 
-    async findAllByGym(gymId: string): Promise<Plan[]> {
-        const plans = await PlanModel.find({ gymId, isDeleted: false }).sort({ createdAt: -1 }).exec();
-        return plans.map(this.mapToEntity);
+    async findAllByGym(gymId: string, page: number = 1, limit: number = 10, search: string = ''): Promise<{ plans: Plan[], total: number }> {
+        const query: Record<string, unknown> = { gymId, isDeleted: false };
+        if (search) {
+            query.planName = { $regex: search, $options: 'i' };
+        }
+
+        const skip = (page - 1) * limit;
+        const [plans, total] = await Promise.all([
+            PlanModel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),
+            PlanModel.countDocuments(query)
+        ]);
+
+        return {
+            plans: plans.map(this.mapToEntity),
+            total
+        };
     }
 
-    private mapToEntity(doc:any ): Plan {
+    async findByNameAndPlan(planName: string, planType: string): Promise<Plan | null> {
+        const existingPlan = await PlanModel.findOne({ planName, planType, isDeleted: false });
+
+        return existingPlan ? this.mapToEntity(existingPlan) : null;
+    }
+
+    private mapToEntity(doc: IPlan): Plan {
         return new Plan(
             doc._id.toString(),
             doc.gymId.toString(),

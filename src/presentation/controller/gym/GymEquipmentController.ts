@@ -21,7 +21,7 @@ export class GymEquipmentController {
     async addEquipment(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gymId = req.user!.id;
-            const data = {...req.body};
+            const data = { ...req.body };
 
             if (typeof data.availableDays === "string") data.availableDays = JSON.parse(data.availableDays);
             if (typeof data.allowedPlans === "string") data.allowedPlans = JSON.parse(data.allowedPlans);
@@ -53,9 +53,10 @@ export class GymEquipmentController {
         try {
             const gymId = req.user!.id;
             const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
             const search = req.query.search as string;
 
-            const result = await this._getEquipmentsUseCase.execute(gymId, page, search);
+            const result = await this._getEquipmentsUseCase.execute(gymId, page, limit, search);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
@@ -71,7 +72,7 @@ export class GymEquipmentController {
         try {
             const gymId = req.user!.id;
             const id = req.params.equipmentId as string;
-            const data = {...req.body};
+            const data = { ...req.body };
             if (typeof data.availableDays === "string") data.availableDays = JSON.parse(data.availableDays);
             if (typeof data.allowedPlans === "string") data.allowedPlans = JSON.parse(data.allowedPlans);
 

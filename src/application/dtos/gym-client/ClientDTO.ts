@@ -43,6 +43,6 @@ export interface UpdateClientByGymRequestDTO {
     dateOfBirth: string;
     emergencyContact: string;
     contactPerson: string;
-    email?: string;
+    email: string;
 }
 

@@ -39,6 +39,10 @@ export const SuperAdminSchema = new Schema<ISuperAdminDocument>({
     description: {
         type: String,
         default: ""
+    },
+    trialDays: {
+        type: Number,
+        default: 28
     }
 }, { timestamps: true })
 

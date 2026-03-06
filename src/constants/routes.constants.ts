@@ -13,7 +13,7 @@ export const GYM_ROUTE = {
     ADD_CLIENT: "/api/gym/client",
     GET_CLIENTS: "/api/gym/clients",
     CLIENT_BY_ID: "/api/gym/client/:id",
-    CLIENT_INVITE: "/api/gym/clients/:id/send-welcome",
+    CLIENT_INVITE: "/api/gym/client/:id/send-welcome",
 
     ADD_TRAINER: "/api/gym/trainer",
     GET_TRAINERS: "/api/gym/trainers",

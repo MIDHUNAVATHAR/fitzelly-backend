@@ -5,5 +5,5 @@ export interface IPaymentRepository {
     getPaymentsByMembershipId(membershipId: string): Promise<Payment[]>;
     update(paymentId: string, updates: Partial<Payment>): Promise<Payment | null>;
     delete(paymentId: string): Promise<boolean>;
-    findById(paymentId:string):Promise<Payment|null>
+    findById(paymentId: string): Promise<Payment | null>
 }

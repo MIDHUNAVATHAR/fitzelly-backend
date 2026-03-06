@@ -11,6 +11,7 @@ export class SuperAdmin {
         public readonly caption: string,
         public readonly contactEmail: string,
         public readonly phoneNumber: string,
-        public readonly description: string
+        public readonly description: string,
+        public readonly trialDays: number = 28
     ) { }
 }

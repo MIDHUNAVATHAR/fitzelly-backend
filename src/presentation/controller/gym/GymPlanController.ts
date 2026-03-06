@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import {HttpStatus,ResponseStatus} from "../../../constants/statusCodes.constants"
+import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants"
 import { ResponseMessage } from "../../../constants/response.constants";
 
 import { IAddPlanUseCase } from "../../../application/IUseCases/gym-plans/IAddPlanUseCase";
@@ -36,12 +36,16 @@ export class GymPlanController {
     async getPlans(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gymId = req.user!.id;
-            const plans = await this._getPlansUseCase.execute(gymId);
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const search = req.query.search as string || '';
+
+            const result = await this._getPlansUseCase.execute(gymId, page, limit, search);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: ResponseMessage.DATA_RETRIVE_SUCCESS,
-                data: plans
+                data: result
             });
         } catch (error) {
             next(error);

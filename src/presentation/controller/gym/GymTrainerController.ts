@@ -9,8 +9,7 @@ import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.const
 import { AuthRequest } from "../../middlewares/protect";
 import { Response, NextFunction } from "express";
 
-
-
+import { IS3UploadFile } from "../../../domain/services/IS3Service";
 export class GymTrainerController {
     constructor(
         private _addTrainerUseCase: IAddTrainerUseCase,
@@ -33,9 +32,15 @@ export class GymTrainerController {
 
             }
             const gymId = user.id;
-            const { fullName, email, phoneNumber, salary, specialization, dateOfBirth } = req.body;
+            const { fullName, email, phoneNumber, salary, specialization, dateOfBirth, qualification, address } = req.body;
+
+            let certificateFiles: IS3UploadFile[] = [];
+            if (req.files && Array.isArray(req.files)) {
+                certificateFiles = req.files as unknown as IS3UploadFile[];
+            }
+
             await this._addTrainerUseCase.execute({
-                gymId, fullName, email, phoneNumber, salary, specialization, dateOfBirth
+                gymId, fullName, email, phoneNumber, salary, specialization, dateOfBirth, qualification, address, certificateFiles
             })
 
             res.status(HttpStatus.OK).json({
@@ -61,9 +66,10 @@ export class GymTrainerController {
             const gymId = user.id;
 
             const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
             const search = (req.query.search as string) || ""
 
-            const result = await this._getTrainersUseCase.execute(gymId, page, search);
+            const result = await this._getTrainersUseCase.execute(gymId, page, limit, search);
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
@@ -117,9 +123,28 @@ export class GymTrainerController {
             }
             const gymId = user.id;
             const trainerId = req.params.id as string;
-            const { fullName, phoneNumber, salary, specialization, dateOfBirth, email } = req.body;
+            const { fullName, phoneNumber, salary, specialization, dateOfBirth, email, qualification, address } = req.body;
 
-            const updatedTrainer = await this._updateTrainerUseCase.execute(trainerId, gymId, { fullName, email, phoneNumber, salary, specialization, dateOfBirth })
+            // Handle certificates
+            let existingCertificates: string[] = [];
+            try {
+                if (req.body.certificates) {
+                    existingCertificates = JSON.parse(req.body.certificates);
+                }
+            } catch {
+                if (Array.isArray(req.body.certificates)) {
+                    existingCertificates = req.body.certificates;
+                }
+            }
+
+            let newCertificateFiles: IS3UploadFile[] = [];
+            if (req.files && Array.isArray(req.files)) {
+                newCertificateFiles = req.files as unknown as IS3UploadFile[];
+            }
+
+            const updatedTrainer = await this._updateTrainerUseCase.execute(trainerId, gymId, {
+                fullName, email, phoneNumber, salary, specialization, dateOfBirth, qualification, address, certificates: existingCertificates, newCertificateFiles
+            })
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,

@@ -1,5 +1,7 @@
 
 
+
+
 export interface SuperAdminProfileDTO {
     logoUrl: string;
     appName: string;
@@ -8,5 +10,6 @@ export interface SuperAdminProfileDTO {
     description: string;
     contactEmail: string;
     phoneNumber: string;
+    trialDays: number;
 }
 

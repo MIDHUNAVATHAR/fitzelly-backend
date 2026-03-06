@@ -43,6 +43,15 @@ export const TrainerSchema = new Schema<ITrainerDocument>({
         type: Number,
         default: 0
     },
+    qualification: {
+        type: String,
+        default: ""
+    },
+    address: {
+        type: String,
+        default: ""
+    },
+    certificates: [{ type: String }],
     assignedClients: [{ type: Schema.Types.ObjectId, ref: "Client" }],
     isEmailVerified: {
         type: Boolean,

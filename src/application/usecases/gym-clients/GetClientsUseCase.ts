@@ -4,6 +4,7 @@ import { IClientRepository } from "../../../domain/repositories/IClientRepositor
 import { IMembershipRepository } from "../../../domain/repositories/IMembershipRepository";
 import { ClientMapper } from "../../mapper/ClientMapper";
 
+import { Membership } from "../../../domain/entities/Membership";
 
 export class GetClientsUseCase implements IGetClientsUseCase {
     constructor(
@@ -11,20 +12,20 @@ export class GetClientsUseCase implements IGetClientsUseCase {
         private _membershipRepository: IMembershipRepository
     ) { }
 
-    async execute(gymId: string, page: number, search?: string): Promise<{
+    async execute(gymId: string, page: number, limit: number, search?: string): Promise<{
         clients: GetClientResponseDTO[];
         total: number;
         page: number;
         limit: number;
     }> {
 
-        const limit = 10;
+
         const skip = (page - 1) * limit;
 
         const { clients, total } = await this._clientRepository.getClientsByGymId(gymId, skip, limit, search);
 
         const clientIds = clients.map(c => c.id!);
-        let memberships: any[] = [];
+        let memberships: Membership[] = [];
 
         if (clientIds.length > 0 && this._membershipRepository.findLatestByClientIds) {
             memberships = await this._membershipRepository.findLatestByClientIds(clientIds);

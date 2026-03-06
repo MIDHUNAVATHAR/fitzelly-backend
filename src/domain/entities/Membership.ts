@@ -9,7 +9,7 @@ export class Membership {
         public readonly planAmount: number,
         public readonly planType: "DAY_BASED" | "CATEGORY_BASED",
         public readonly startDate: Date,
-        public readonly expiryDate: Date,
+        public readonly expiryDate: Date | null,
         public readonly status: "ACTIVE" | "EXPIRED",
         public readonly daysLeft: number | null,
         public readonly assignedTrainerId: string | null,

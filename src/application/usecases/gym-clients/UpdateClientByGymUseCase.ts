@@ -15,11 +15,13 @@ export class UpdateClientByGymUseCase implements IUpdateClientByGymUseCase {
             throw new NotFoundError("Client not found");
         }
 
-        if (clientData.email && clientData.email !== client.email) {
-            if (client.isEmailVerified) {
-                throw new BadRequestError("Cannot update verified email address");
-            }
+        const isEmailVerified = await this._clientRepository.findVerifiedByEmail(clientData.email)
+
+        if (isEmailVerified) {
+            throw new BadRequestError("Cannot update verified email address");
+
         }
+
         const updatedClient = await this._clientRepository.updateClientByGym(clientId, clientData);
         return ClientMapper.toGetClientResponseDTO(updatedClient);
     }

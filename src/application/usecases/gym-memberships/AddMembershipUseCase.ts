@@ -4,6 +4,7 @@ import { IClientRepository } from "../../../domain/repositories/IClientRepositor
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
 import { Membership } from "../../../domain/entities/Membership";
 
+
 export interface AddMembershipDTO {
     gymId: string;
     clientId: string;
@@ -31,8 +32,14 @@ export class AddMembershipUseCase {
         let trainerName = null;
         if (data.assignedTrainerId) {
             const trainer = await this.trainerRepository.findById(data.assignedTrainerId);
+            /**
+             * take number of assined client to this trainer
+             */
+
             if (trainer && trainer.gymId === data.gymId) {
                 trainerName = trainer.fullName;
+
+               
             } else {
                 data.assignedTrainerId = undefined; // Nullify invalid trainer
             }

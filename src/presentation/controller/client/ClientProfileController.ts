@@ -69,8 +69,9 @@ export class ClientProfileController {
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: ResponseMessage.LOGO_UPDATE_SUCCESS,
-                data: { profileImage: updatedProfile.profileImage }
+                data: { profileImage: updatedProfile.profileUrl }
             });
+
         } catch (error) {
             next(error);
         }

@@ -9,9 +9,13 @@ export class GetMembershipsUseCase {
         private planRepository: IPlanRepository
     ) { }
 
-    async execute(gymId: string) {
-        const memberships = await this.membershipRepository.findByGymId(gymId);
-        const plans = await this.planRepository.findAllByGym(gymId);
+    async execute(gymId: string, page: number = 1, limit: number = 10, search: string = '', status?: string) {
+        const result = await this.membershipRepository.findByGymId(gymId, page, limit, search, status);
+        const memberships = result.memberships;
+
+        // Fetch a large limit for plans to map correctly within this context
+        const plansData = await this.planRepository.findAllByGym(gymId, 1, 1000);
+        const plans = plansData.plans;
         const planMap = new Map(plans.map(p => [p.id, p]));
 
         const results = [];
@@ -47,6 +51,6 @@ export class GetMembershipsUseCase {
                 planAmount
             });
         }
-        return results;
+        return { memberships: results, total: result.total };
     }
 }

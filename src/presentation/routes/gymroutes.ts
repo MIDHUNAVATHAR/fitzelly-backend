@@ -42,17 +42,17 @@ router.get(GYM_ROUTE.CLIENT_BY_ID, protect([ROLES.GYM]), gymClientController.get
 router.put(GYM_ROUTE.CLIENT_BY_ID, protect([ROLES.GYM]), gymClientController.updateClient.bind(gymClientController));
 router.delete(GYM_ROUTE.CLIENT_BY_ID, protect([ROLES.GYM]), gymClientController.DeleteClientUseCase.bind(gymClientController))
 
-router.post(GYM_ROUTE.ADD_TRAINER, protect([ROLES.GYM]), gymTrainerController.addTrainer.bind(gymTrainerController));
+router.post(GYM_ROUTE.ADD_TRAINER, protect([ROLES.GYM]), upload.array("certificates"), gymTrainerController.addTrainer.bind(gymTrainerController));
 router.get(GYM_ROUTE.GET_TRAINERS, protect([ROLES.GYM]), gymTrainerController.getTrainers.bind(gymTrainerController));
 router.get(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), gymTrainerController.getTrainerById.bind(gymTrainerController))
-router.put(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), gymTrainerController.updateTrainer.bind(gymTrainerController))
+router.put(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), upload.array("certificates"), gymTrainerController.updateTrainer.bind(gymTrainerController))
 router.delete(GYM_ROUTE.TRAINER_BY_ID, protect([ROLES.GYM]), gymTrainerController.deleteTrainer.bind(gymTrainerController))
 
 
-router.post(GYM_ROUTE.ADD_PLAN, protect([ROLES.GYM]),  gymPlanController.addPlan.bind(gymPlanController));
+router.post(GYM_ROUTE.ADD_PLAN, protect([ROLES.GYM]), gymPlanController.addPlan.bind(gymPlanController));
 router.get(GYM_ROUTE.GET_PLANS, protect([ROLES.GYM]), gymPlanController.getPlans.bind(gymPlanController));
-router.patch(GYM_ROUTE.UPDATE_PLAN, protect([ROLES.GYM]),  gymPlanController.updatePlan.bind(gymPlanController));
-router.delete(GYM_ROUTE.DELETE_PLAN, protect([ROLES.GYM]),  gymPlanController.deletePlan.bind(gymPlanController));
+router.patch(GYM_ROUTE.UPDATE_PLAN, protect([ROLES.GYM]), gymPlanController.updatePlan.bind(gymPlanController));
+router.delete(GYM_ROUTE.DELETE_PLAN, protect([ROLES.GYM]), gymPlanController.deletePlan.bind(gymPlanController));
 
 
 // Memberships

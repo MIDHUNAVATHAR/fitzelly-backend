@@ -12,6 +12,7 @@ export class SuperAdminProfileMapper {
             description: superAdmin.description,
             contactEmail: superAdmin.contactEmail,
             phoneNumber: superAdmin.phoneNumber,
+            trialDays: superAdmin.trialDays
         }
     }
     static toEntity(superAdminData: SuperAdminProfileDTO): SuperAdmin {
@@ -25,7 +26,8 @@ export class SuperAdminProfileMapper {
             superAdminData.caption,
             superAdminData.contactEmail,
             superAdminData.phoneNumber,
-            superAdminData.description
+            superAdminData.description,
+            superAdminData.trialDays || 28
         )
     }
 }

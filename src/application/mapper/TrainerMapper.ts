@@ -13,7 +13,10 @@ export class TrainerMapper {
             trainerData.phoneNumber,
             trainerData.dateOfBirth ? new Date(trainerData.dateOfBirth) : null,
             trainerData.salary ?? "",
-            trainerData.specialization ?? ""
+            trainerData.specialization ?? "",
+            trainerData.qualification ?? "",
+            trainerData.address ?? "",
+            trainerData.certificates ?? []
         )
     }
 
@@ -32,6 +35,9 @@ export class TrainerMapper {
             data.dateOfBirth ? new Date(data.dateOfBirth) : existing.dateOfBirth,
             data.salary ?? existing.salary,
             data.specialization ?? existing.specialization,
+            data.qualification ?? existing.qualification,
+            data.address ?? existing.address,
+            data.certificates ?? existing.certificates,
             existing.isEmailVerified,
             existing.joinedDate,
             existing.isDeleted
@@ -48,7 +54,10 @@ export class TrainerMapper {
             salary: trainer.salary ?? "",
             dateOfBirth: trainer.dateOfBirth?.toISOString() ?? "",
             joinedDate: trainer.joinedDate.toISOString(),
-            isEmailVerified: trainer.isEmailVerified
+            isEmailVerified: trainer.isEmailVerified,
+            qualification: trainer.qualification,
+            address: trainer.address,
+            certificates: trainer.certificates
         }
     }
 }

@@ -17,6 +17,9 @@ export class SendWelcomeEmailUseCase implements ISendWelcomeEmailUseCase {
 
     async execute(params: { userId: string; gymId: string; role: "client" | "trainer"; }): Promise<void> {
         const repo = this.getRepoByUserType.getRepo(params.role);
+        if (!repo) {
+            throw new Error("Invalid repository for role");
+        }
         const user = await repo.findById(params.userId);
         const gym = await this.gymRepository.findById(params.gymId);
 
@@ -36,7 +39,7 @@ export class SendWelcomeEmailUseCase implements ISendWelcomeEmailUseCase {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const expiresAt = new Date(Date.now() + 60 * 60 * 1000) //1 hr
 
-        await this.otpRepository.upsertOtp(user.email, otp, expiresAt, user.userId);
+        await this.otpRepository.upsertOtp(user.email, otp, expiresAt, user.id);
 
         const frontendUrl = process.env.FRONTEND_URL;
         const urlPrefix = `${frontendUrl}/create-password?type=${params.role}&id=${params.userId}`;

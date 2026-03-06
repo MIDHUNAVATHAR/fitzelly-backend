@@ -11,6 +11,9 @@ export class Trainer {
         public readonly dateOfBirth: Date | null,
         public readonly salary: string | null,
         public readonly specialization: string,
+        public readonly qualification: string = "",
+        public readonly address: string = "",
+        public readonly certificates: string[] = [],
         public readonly isEmailVerified: boolean = false,
         public readonly joinedDate: Date = new Date(),
         public readonly isDeleted: boolean = false

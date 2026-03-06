@@ -16,6 +16,15 @@ export interface GymResponseDTO {
     description?: string;
     location?: { latitude: number, longitude: number };
     createdAt: string;
+    latestSubscription?: {
+        planName: string;
+        amount: number;
+        startDate: Date;
+        endDate: Date;
+        status: string;
+        paymentGateway: string | null;
+        gatewayPaymentId: string | null;
+    }
 }
 
 export interface GymsListResponseDTO {

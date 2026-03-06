@@ -10,4 +10,5 @@ export interface ISuperAdminDocument extends Document {
     contactEmail: string;
     phoneNumber: string;
     description: string;
+    trialDays: number;
 }

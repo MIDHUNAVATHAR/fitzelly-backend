@@ -1,3 +1,4 @@
+import { IS3UploadFile } from "../../../domain/services/IS3Service";
 
 export interface TrainerRequestDTO {
     gymId: string;
@@ -7,6 +8,10 @@ export interface TrainerRequestDTO {
     specialization: string;
     salary: string;
     dateOfBirth: string;
+    qualification?: string;
+    address?: string;
+    certificates?: string[];
+    certificateFiles?: IS3UploadFile[];
 }
 
 export interface UpdateTrainerRequestDTO {
@@ -16,6 +21,10 @@ export interface UpdateTrainerRequestDTO {
     dateOfBirth: string;
     salary: string;
     email?: string;
+    qualification?: string;
+    address?: string;
+    certificates?: string[];
+    newCertificateFiles?: IS3UploadFile[];
 }
 
 export interface TrainerResponseDTO {
@@ -27,5 +36,8 @@ export interface TrainerResponseDTO {
     salary: string;
     dateOfBirth: string;
     joinedDate: string;
-    isEmailVerified: boolean
+    isEmailVerified: boolean;
+    qualification?: string;
+    address?: string;
+    certificates?: string[];
 }

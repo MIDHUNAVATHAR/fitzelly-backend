@@ -8,7 +8,7 @@ import { MembershipRepository } from "../infrastructure/repositories/MembershipR
 import { PaymentRepository } from "../infrastructure/repositories/PaymentRepository";
 import { PlanRepository } from "../infrastructure/repositories/PlanRepository";
 import { EquipmentRepository } from "../infrastructure/repositories/EquipmentRepository";
-
+import { SubscriptionRepository } from "../infrastructure/repositories/SubscriptionRepository";
 
 /* ------------------- services (infrastructure) ---------------- */
 import { MailService } from "../infrastructure/services/MailService";
@@ -142,7 +142,7 @@ import { UpdateSuperAdminLogoUseCase } from "../application/usecases/UpdateSuper
 import { GetAllGymsUseCase } from "../application/usecases/GetAllGymsUseCase";
 import { GetGymByIdUseCase } from "../application/usecases/GetGymByIdUseCase";
 import { UpdateGymStatusUseCase } from "../application/usecases/UpdateGymStatusUseCase";
-
+import { ApproveGymUseCase } from "../application/usecases/ApproveGymUseCase";
 
 
 
@@ -186,6 +186,7 @@ const membershipRepository = new MembershipRepository();
 const paymentRepository = new PaymentRepository();
 const planRepository = new PlanRepository();
 const equipmentRepository = new EquipmentRepository();
+const subscriptionRepository = new SubscriptionRepository();
 
 
 /* ------------------- Instantiate services ---------------- */
@@ -234,7 +235,7 @@ const createPasswordUseCase = new CreatePasswordUseCase(getRepoByUserType, otpRe
 /**
  * gym profile usecase instances
  */
-const getGymProfileUseCase = new GetGymProfileUseCase(gymRepository);
+const getGymProfileUseCase = new GetGymProfileUseCase(gymRepository, subscriptionRepository);
 const updateGymProfileUseCase = new UpdateGymProfileUseCase(gymRepository);
 const updateGymLogoUseCase = new UpdateGymLogoUseCase(gymRepository, s3Service);
 
@@ -250,10 +251,10 @@ const deleteClientUseCase = new DeleteClientUseCase(clientRepository);
 /**
  * gym trainer usecase instances 
  */
-const addTrainerUseCase = new AddTrainerUseCase(trainerRepository);
+const addTrainerUseCase = new AddTrainerUseCase(trainerRepository, s3Service);
 const getTrainersUseCase = new GetTrainersUseCase(trainerRepository);
 const getTrainerbyIdUseCase = new GetTrainerByIdUseCase(trainerRepository);
-const updateTrainerUseCase = new UpdateTrainerUseCase(trainerRepository);
+const updateTrainerUseCase = new UpdateTrainerUseCase(trainerRepository, s3Service);
 const deleteTrainerUseCase = new DeleteTrainerUseCase(trainerRepository)
 
 //gym plan usecases
@@ -267,7 +268,7 @@ export const addMembershipUseCase = new AddMembershipUseCase(membershipRepositor
 export const getMembershipsUseCase = new GetMembershipsUseCase(membershipRepository, paymentRepository, planRepository);
 export const getMembershipByIdUseCase = new GetMembershipByIdUseCase(membershipRepository, paymentRepository, planRepository);
 export const updateMembershipUseCase = new UpdateMembershipUseCase(membershipRepository, planRepository, trainerRepository);
-export const deleteMembershipUseCase = new DeleteMembershipUseCase(membershipRepository);
+export const deleteMembershipUseCase = new DeleteMembershipUseCase(membershipRepository,paymentRepository);
 export const addPaymentUseCase = new AddPaymentUseCase(paymentRepository, membershipRepository);
 export const updatePaymentUseCase = new UpdatePaymentUseCase(paymentRepository);
 export const deletePaymentUseCase = new DeletePaymentUseCase(paymentRepository);
@@ -309,9 +310,10 @@ const updateSuperAdminLogoUseCase = new UpdateSuperAdminLogoUseCase(superAdminRe
 /**
  * super-admin gym usecase instances
  */
-const getAllGymsUseCase = new GetAllGymsUseCase(gymRepository);
-const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository);
+const getAllGymsUseCase = new GetAllGymsUseCase(gymRepository, subscriptionRepository);
+const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository, subscriptionRepository);
 const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
+const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdminRepository, subscriptionRepository);
 
 
 
@@ -339,7 +341,7 @@ export const superAdminAuthenticationController = new SuperAdminAuthenticationCo
  */
 export const gymProfileController = new GymProfileController(getGymProfileUseCase, updateGymProfileUseCase, updateGymLogoUseCase, s3Service);
 export const superAdminProfileController = new SuperAdminProfileController(getSuperAdminProfileUseCase, updateSuperAdminProfileUseCase, updateSuperAdminLogoUseCase);
-export const superAdminGymsController = new SuperAdminGymsController(getAllGymsUseCase, getGymByIdUseCase, updateGymStatusUseCase);
+export const superAdminGymsController = new SuperAdminGymsController(getAllGymsUseCase, getGymByIdUseCase, updateGymStatusUseCase, approveGymUseCase);
 export const gymClientController = new GymClientController(addClientUseCase, getClientsUseCase, getClienByIdUseCase, updateClientByGymUseCase, deleteClientUseCase, sendWelcomeEmailUseCase);
 export const gymTrainerController = new GymTrainerController(addTrainerUseCase, getTrainersUseCase, getTrainerbyIdUseCase, updateTrainerUseCase, deleteTrainerUseCase, sendWelcomeEmailUseCase);
 export const gymPlanController = new GymPlanController(addPlanUseCase, getPlansUseCase, updatePlanUseCase, deletePlanUseCase);

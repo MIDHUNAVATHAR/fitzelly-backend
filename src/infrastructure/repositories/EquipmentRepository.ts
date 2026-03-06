@@ -1,7 +1,8 @@
 import { Equipment } from "../../domain/entities/Equipment";
 import { IEquipmentRepository } from "../../domain/repositories/IEquipmentRepository";
 import { EquipmentModel } from "../database/mongoose/models/EquipmentModel";
-
+import { IEquipment } from "../database/mongoose/types/IEquipment";
+import mongoose from "mongoose";
 
 export class EquipmentRepository implements IEquipmentRepository {
     async save(equipment: Equipment): Promise<Equipment> {
@@ -49,7 +50,7 @@ export class EquipmentRepository implements IEquipmentRepository {
     }
 
     async findAllByGym(gymId: string, page: number, limit: number, search?: string): Promise<{ equipments: Equipment[], total: number }> {
-        const query: any = { gymId, isDeleted: false };
+        const query: Record<string, unknown> = { gymId, isDeleted: false };
         if (search) {
             query.name = { $regex: search, $options: "i" };
         }
@@ -66,7 +67,7 @@ export class EquipmentRepository implements IEquipmentRepository {
         };
     }
 
-    private mapToEntity(doc: any): Equipment {
+    private mapToEntity(doc: IEquipment & { _id: mongoose.Types.ObjectId }): Equipment {
         return new Equipment(
             doc._id.toString(),
             doc.gymId.toString(),
@@ -77,7 +78,7 @@ export class EquipmentRepository implements IEquipmentRepository {
             doc.availableDays,
             doc.availableFrom,
             doc.availableTo,
-            doc.allowedPlans?.map((id: any) => id.toString()) || [],
+            doc.allowedPlans?.map((id: mongoose.Types.ObjectId) => id.toString()) || [],
             doc.maxUsageMinutes,
             doc.capacity,
             doc.slotIntervalMinutes,

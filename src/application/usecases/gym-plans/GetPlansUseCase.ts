@@ -7,8 +7,11 @@ import { PlanMapper } from "../../mapper/GymPlanMapper";
 export class GetPlansUseCase implements IGetPlansUseCase {
     constructor(private planRepository: IPlanRepository) { }
 
-    async execute(gymId: string): Promise<PlanDTO[]> {
-        const plans = await this.planRepository.findAllByGym(gymId);
-        return plans.map(PlanMapper.toDTO);
+    async execute(gymId: string, page: number, limit: number, search: string): Promise<{ plans: PlanDTO[], total: number }> {
+        const result = await this.planRepository.findAllByGym(gymId, page, limit, search);
+        return {
+            plans: result.plans.map(PlanMapper.toDTO),
+            total: result.total
+        };
     }
 }

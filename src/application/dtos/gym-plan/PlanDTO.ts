@@ -21,8 +21,8 @@ export interface CreatePlanDTO {
 }
 
 export interface UpdatePlanDTO {
-    planName?: string;
-    planType?: 'DAY_BASED' | 'CATEGORY_BASED';
+    planName: string;
+    planType: 'DAY_BASED' | 'CATEGORY_BASED';
     validity?: number;
     price?: number;
     windowPeriod?: number;

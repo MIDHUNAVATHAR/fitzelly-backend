@@ -3,12 +3,14 @@ import { UpdateTrainerRequestDTO, TrainerResponseDTO } from "../../dtos/gym-trai
 import { NotFoundError, BadRequestError } from "../../errors/AppError";
 import { IUpdateTrainerUseCase } from "../../IUseCases/gym-trainer/IUpdateTrainerUseCase";
 import { TrainerMapper } from "../../mapper/TrainerMapper";
+import { IS3Service } from "../../../domain/services/IS3Service";
 
 
 
 export class UpdateTrainerUseCase implements IUpdateTrainerUseCase {
     constructor(
-        private _trainerRepository: ITrainerRepository
+        private _trainerRepository: ITrainerRepository,
+        private _s3Service: IS3Service
     ) { }
 
     async execute(trainerId: string, gymId: string, data: UpdateTrainerRequestDTO): Promise<TrainerResponseDTO> {
@@ -24,7 +26,20 @@ export class UpdateTrainerUseCase implements IUpdateTrainerUseCase {
             }
         }
 
-        const updatedTrainerData = TrainerMapper.updateEntity(trainer, data);
+        let existingCerts = data.certificates || [];
+        if (data.newCertificateFiles && data.newCertificateFiles.length > 0) {
+            const uploaded = await Promise.all(
+                data.newCertificateFiles.map((file) => this._s3Service.uploadFile(file, `trainer-certificates/${gymId}`))
+            );
+            existingCerts = [...existingCerts, ...uploaded];
+        }
+
+        const updatePayload = {
+            ...data,
+            certificates: existingCerts
+        };
+
+        const updatedTrainerData = TrainerMapper.updateEntity(trainer, updatePayload);
 
         const updatedTrainer = await this._trainerRepository.updateTrainer(updatedTrainerData);
 

@@ -16,6 +16,9 @@ export class TrainerMapper {
             doc.dateOfBirth ?? null,
             doc.salary?.toString() ?? null,
             doc.specialization,
+            doc.qualification ?? "",
+            doc.address ?? "",
+            doc.certificates ?? [],
             doc.isEmailVerified,
             doc.joinedDate,
             doc.isDeleted
@@ -32,6 +35,9 @@ export class TrainerMapper {
             dateOfBirth: entity.dateOfBirth ?? undefined,
             specialization: entity.specialization,
             salary: entity.salary ? Number(entity.salary) : 0,
+            qualification: entity.qualification,
+            address: entity.address,
+            certificates: entity.certificates,
             joinedDate: entity.joinedDate,
             isEmailVerified: entity.isEmailVerified,
             isDeleted: entity.isDeleted

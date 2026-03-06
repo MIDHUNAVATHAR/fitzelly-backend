@@ -6,7 +6,7 @@ import { ROLES } from "../../constants/roles.constants";
 
 const router = Router();
 
-router.post(GYM_ROUTE.CLIENT_INVITE, protect([ROLES.GYM]), gymClientController.sendWelcomeEmail.bind(gymClientController));
+router.post(GYM_ROUTE.CLIENT_INVITE , protect([ROLES.GYM]), gymClientController.sendWelcomeEmail.bind(gymClientController));
 router.post(GYM_ROUTE.TRAINER_INVITE, protect([ROLES.GYM]), gymTrainerController.sendWelcomeEmail.bind(gymTrainerController));
 router.post(CREATE_PASSWORD_ROUTE, inviteController.createPassword.bind(inviteController));
 

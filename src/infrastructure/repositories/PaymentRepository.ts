@@ -1,7 +1,7 @@
 import { IPaymentRepository } from "../../domain/repositories/IPaymentRepository";
 import { Payment } from "../../domain/entities/Payment";
 import { PaymentModel } from "../database/mongoose/models/PaymentModel";
-
+import { IPayment } from "../database/mongoose/types/IPayment";
 
 export class PaymentRepository implements IPaymentRepository {
     async create(payment: Payment): Promise<Payment> {
@@ -44,7 +44,7 @@ export class PaymentRepository implements IPaymentRepository {
         return doc ? this.mapToEntity(doc) : null;
     }
 
-    private mapToEntity(doc: any): Payment {
+    private mapToEntity(doc: IPayment): Payment {
         return new Payment(
             doc._id.toString(),
             doc.membershipId,

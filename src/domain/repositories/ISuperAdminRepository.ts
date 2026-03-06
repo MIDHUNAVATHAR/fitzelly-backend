@@ -7,4 +7,5 @@ export interface ISuperAdminRepository extends IBaseRepository<SuperAdmin> {
     updatePassword(email: string, password: string): Promise<void>;
     update(id: string, superAdminData: SuperAdmin): Promise<SuperAdmin>;
     updateLogo(id: string, logoUrl: string): Promise<string>;
+    getAdminConfig(): Promise<SuperAdmin | null>;
 }

@@ -1,9 +1,9 @@
 import { IMembershipRepository } from "../../domain/repositories/IMembershipRepository";
 import { Membership } from "../../domain/entities/Membership";
 import { MembershipModel } from "../database/mongoose/models/MembershipModel";
+import { IMembership } from "../database/mongoose/types/IMembership";
 
-
-export class MembershipRepository implements IMembershipRepository{
+export class MembershipRepository implements IMembershipRepository {
     async findLatestByClientId(clientId: string): Promise<Membership | null> {
         const doc = await MembershipModel.findOne({ clientId, isDeleted: false })
             .sort({ createdAt: -1 })
@@ -52,11 +52,34 @@ export class MembershipRepository implements IMembershipRepository{
         return doc ? this.mapToEntity(doc) : null;
     }
 
-    async findByGymId(gymId: string): Promise<Membership[]> {
-        const docs = await MembershipModel.find({ gymId, isDeleted: false })
-            .sort({ createdAt: -1 })
-            .exec();
-        return docs.map(doc => this.mapToEntity(doc));
+    async findByGymId(gymId: string, page: number = 1, limit: number = 10, search: string = '', status?: string): Promise<{ memberships: Membership[], total: number }> {
+        const query: Record<string, unknown> = { gymId, isDeleted: false };
+        if (search) {
+            query.$or = [
+                { clientName: { $regex: search, $options: 'i' } },
+                { planName: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        if (status && status !== 'ALL') {
+            query.status = status;
+        }
+
+        const skip = (page - 1) * limit;
+
+        const [docs, total] = await Promise.all([
+            MembershipModel.find(query)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec(),
+            MembershipModel.countDocuments(query)
+        ]);
+
+        return {
+            memberships: docs.map(doc => this.mapToEntity(doc)),
+            total
+        };
     }
 
     async update(id: string, updates: Partial<Membership>): Promise<Membership | null> {
@@ -76,7 +99,7 @@ export class MembershipRepository implements IMembershipRepository{
         return result.modifiedCount > 0;
     }
 
-    private mapToEntity(doc: any): Membership {
+    private mapToEntity(doc: IMembership): Membership {
         return new Membership(
             doc._id.toString(),
             doc.clientId,

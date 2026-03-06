@@ -4,9 +4,12 @@ import { GymMapper } from "../mapper/SuperAdminGymMapper";
 import { GymResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
 import { NotFoundError } from "../errors/AppError";
 
+import { ISubscriptionRepository } from "../../domain/repositories/ISubscriptionRepository";
+
 export class GetGymByIdUseCase implements IGetGymByIdUseCase {
     constructor(
-        private readonly _gymRepository: IGymRepository
+        private readonly _gymRepository: IGymRepository,
+        private readonly _subscriptionRepository: ISubscriptionRepository
     ) { }
 
     async execute(gymId: string): Promise<GymResponseDTO> {
@@ -14,6 +17,7 @@ export class GetGymByIdUseCase implements IGetGymByIdUseCase {
         if (!gym) {
             throw new NotFoundError("Gym");
         }
-        return GymMapper.toResponseDTO(gym);
+        const latestSubscription = await this._subscriptionRepository.findLatestSubscriptionByGymId(gymId);
+        return GymMapper.toResponseDTO(gym, latestSubscription);
     }
 }

@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import { Document, Types } from "mongoose";
 
 export interface IPlan extends Document {
-    gymId: mongoose.Types.ObjectId;
+    gymId: Types.ObjectId;
     planName: string;
     planType: 'DAY_BASED' | 'CATEGORY_BASED';
     validity: number;

@@ -39,8 +39,14 @@ export class GymMembershipController {
         try {
             const gymId = req.user?.id;
             if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
-            const memberships = await this.getMembershipsUseCase.execute(gymId);
-            res.status(200).json({ success: true, data: memberships });
+
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const search = req.query.search as string || '';
+            const status = req.query.status as string || '';
+
+            const result = await this.getMembershipsUseCase.execute(gymId, page, limit, search, status);
+            res.status(200).json({ success: true, data: result });
         } catch (error) {
             next(error)
         }

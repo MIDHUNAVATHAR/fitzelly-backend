@@ -2,6 +2,9 @@ import { IGetAllGymsUseCase } from "../IUseCases/superAd-gym-listing/IGetAllGyms
 import { IGymRepository } from "../../domain/repositories/IGymRepository";
 import { GymMapper } from "../mapper/SuperAdminGymMapper";
 import { GymsListResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
+import { ISubscriptionRepository } from "../../domain/repositories/ISubscriptionRepository";
+
+
 
 interface SearchQuery {
     gymName?: { $regex: string; $options: string };
@@ -9,7 +12,8 @@ interface SearchQuery {
 
 export class GetAllGymsUseCase implements IGetAllGymsUseCase {
     constructor(
-        private _gymRepository: IGymRepository
+        private _gymRepository: IGymRepository,
+        private _subscriptionRepository: ISubscriptionRepository
     ) { }
 
     async execute(page: number, limit: number, search: string): Promise<GymsListResponseDTO> {
@@ -30,7 +34,15 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
             sort: { createdAt: -1 }
         })
 
-        const gymDTOs = GymMapper.toResponseDTOList(gyms);
+        // Fetch latest subscription for each gym
+        const gymsWithSubscriptions = await Promise.all(gyms.map(async (gym) => {
+            const latestSubscription = await this._subscriptionRepository.findLatestSubscriptionByGymId(gym.id);
+            return { gym, latestSubscription };
+        }));
+
+        const gymDTOs = gymsWithSubscriptions.map(({ gym, latestSubscription }) =>
+            GymMapper.toResponseDTO(gym, latestSubscription)
+        );
 
         return {
             gyms: gymDTOs,

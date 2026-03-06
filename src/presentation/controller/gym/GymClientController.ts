@@ -63,9 +63,10 @@ export class GymClientController {
             const gymId = user.id;
 
             const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
             const search = (req.query.search as string) || "";
 
-            const result = await this._getClientsUseCase.execute(gymId, page, search);
+            const result = await this._getClientsUseCase.execute(gymId, page,limit, search);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,

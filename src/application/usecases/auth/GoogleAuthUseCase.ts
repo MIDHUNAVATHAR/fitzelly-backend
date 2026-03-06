@@ -5,6 +5,8 @@ import { ITokenService } from "../../../domain/services/ITokenService";
 import { IGoogleAuthUseCase } from "../../IUseCases/auth/IGoogleAuthUseCase";
 import { IGoogleAuthService } from "../../../domain/services/IGoogleAuthService";
 import { Gym } from "../../../domain/entities/Gym";
+import { Client } from "../../../domain/entities/Client";
+import { Trainer } from "../../../domain/entities/Trainer";
 import { AuthenticationFailedError } from "../../errors/AppError";
 
 export class GoogleAuthUseCase implements IGoogleAuthUseCase {
@@ -21,7 +23,7 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
 
         const email = await this.googleAuthService.getGoogleEmail(code);
 
-        let user: any = null;
+        let user: Gym | Client | Trainer | null = null;
 
         if (role === "gym") {
             user = await this.gymRepository.findByEmail(email);

@@ -49,4 +49,9 @@ export class SuperAdminRepository extends BaseRepository<SuperAdmin, ISuperAdmin
         return superAdminDoc?.logoUrl;
     }
 
+    async getAdminConfig(): Promise<SuperAdmin | null> {
+        const doc = await this.model.findOne();
+        return doc ? this.toEntity(doc) : null;
+    }
+
 }

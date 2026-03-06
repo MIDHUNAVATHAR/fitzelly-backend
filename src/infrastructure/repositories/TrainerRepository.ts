@@ -29,6 +29,9 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
             doc.dateOfBirth ?? null,
             doc.salary?.toString() ?? null,
             doc.specialization,
+            doc.qualification ?? "",
+            doc.address ?? "",
+            doc.certificates ?? [],
             doc.isEmailVerified,
             doc.joinedDate,
             doc.isDeleted
@@ -44,6 +47,9 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
             profileUrl: entity.profileUrl ?? "",
             dateOfBirth: entity.dateOfBirth ?? undefined,
             specialization: entity.specialization,
+            qualification: entity.qualification,
+            address: entity.address,
+            certificates: entity.certificates,
             salary: entity.salary ? Number(entity.salary) : 0,
             joinedDate: entity.joinedDate,
             isEmailVerified: entity.isEmailVerified,
@@ -110,7 +116,7 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
 
     async updateProfile(trainer: Trainer): Promise<void> {
         const document = this.toDocument(trainer);
-         await this.model.findByIdAndUpdate(
+        await this.model.findByIdAndUpdate(
             trainer.id,
             {
                 $set: {
@@ -123,6 +129,11 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
             },
             { new: true }
         )
+    }
+
+    async getAssignedClients(trainerId: string) {
+        const trainer = await this.model.findById(trainerId);
+        return trainer?.assignedClients;
     }
 
     async softDelete(trainerId: string): Promise<void> {
