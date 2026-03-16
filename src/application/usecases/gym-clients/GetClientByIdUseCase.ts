@@ -15,12 +15,12 @@ export class GetClientByIdUseCase implements IGetClientByIdUseCase {
 
     async execute(clientId: string): Promise<GetClientResponseDTO> {
         const client = await this._clientRepository.findById(clientId);
-
+        console.log(client)
         /**
          * removed client.gymId !== gymId : this usecase used in both gym and trainer 
          */
         if (!client || client.isDeleted) {
-           
+
 
 
             throw new NotFoundError("Client not found");

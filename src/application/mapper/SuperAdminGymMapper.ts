@@ -1,7 +1,7 @@
 import { GymResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
 import { Gym } from "../../domain/entities/Gym";
-
 import { Subscription } from "../../domain/entities/Subscription";
+
 
 export class GymMapper {
     static toResponseDTO(gym: Gym, latestSubscription?: Subscription | null): GymResponseDTO {

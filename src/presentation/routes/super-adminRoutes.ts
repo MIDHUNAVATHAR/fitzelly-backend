@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { SUPER_ADMIN_ROUTES } from "../../constants/routes.constants"
-import { superAdminAuthenticationController } from "../../main/di";
-import { superAdminProfileController } from "../../main/di";
-import { superAdminGymsController } from "../../main/di";
+import { superAdminAuthenticationController } from "../../main/controllers.di";
+import { superAdminProfileController } from "../../main/controllers.di";
+import { superAdminGymsController } from "../../main/controllers.di";
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";
@@ -32,5 +32,5 @@ router.route(SUPER_ADMIN_ROUTES.GYM_BY_ID)
     .get(superAdminGymsController.getGymById.bind(superAdminGymsController))
     .patch(superAdminGymsController.updateGymStatus.bind(superAdminGymsController))
 
-    
+
 export default router;

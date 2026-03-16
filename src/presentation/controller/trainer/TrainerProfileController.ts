@@ -45,6 +45,8 @@ export class TrainerProfileController {
                 phoneNumber: req.body.phoneNumber,
                 specialization: req.body.specialization,
                 dateOfBirth: req.body.dateOfBirth,
+                qualification: req.body.qualification,
+                address: req.body.address,
                 profilePhoto: req.file as Express.Multer.File | undefined
             };
 
@@ -124,7 +126,7 @@ export class TrainerProfileController {
     async getAssignedClientById(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const clientId = req.params.id as string;
-          
+
 
             const client = await this._getClientByIdUseCase.execute(clientId);
 

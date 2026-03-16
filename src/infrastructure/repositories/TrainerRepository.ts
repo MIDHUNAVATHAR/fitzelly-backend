@@ -104,7 +104,7 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
 
     }
 
-    async updateTrainer(trainer: Trainer): Promise<Trainer> {
+    async update(trainer: Trainer): Promise<Trainer> {
         const document = this.toDocument(trainer);
         const updatedDoc = await this.model.findByIdAndUpdate(trainer.id, { $set: document }, { new: true });
         if (!updatedDoc) {
@@ -124,7 +124,9 @@ export class TrainerRepository extends BaseRepository<Trainer, ITrainerDocument>
                     phoneNumber: document.phoneNumber,
                     specialization: document.specialization,
                     dateOfBirth: document.dateOfBirth,
-                    profileUrl: document.profileUrl
+                    profileUrl: document.profileUrl,
+                    qualification: document.qualification,
+                    address: document.address
                 }
             },
             { new: true }

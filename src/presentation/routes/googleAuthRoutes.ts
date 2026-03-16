@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { googleAuthController } from "../../main/di";
+import { googleAuthController } from "../../main/controllers.di";
 import { GOOGLE_ROUTE } from "../../constants/routes.constants";
 
 

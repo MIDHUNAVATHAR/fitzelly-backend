@@ -8,10 +8,14 @@ export interface AddClientRequestDTO {
     emergencyContact: string;
     contactPerson: string;
     gymId: string;
+    clientId?: string;
+    height?: number;
+    weight?: number;
+    gender?: string;
 }
 
 export interface GetClientResponseDTO {
-     id: string;
+    id: string;
     fullName: string;
     email: string;
     phoneNumber?: string | null;
@@ -30,6 +34,10 @@ export interface GetClientResponseDTO {
     payments?: { date: string, amount: number }[];
     joinedDate: string;
     isEmailVerified: boolean;
+    clientId?: string;
+    height?: number;
+    weight?: number;
+    gender?: string;
 
 }
 
@@ -44,5 +52,9 @@ export interface UpdateClientByGymRequestDTO {
     emergencyContact: string;
     contactPerson: string;
     email: string;
+    clientId?: string;
+    height?: number;
+    weight?: number;
+    gender?: string;
 }
 

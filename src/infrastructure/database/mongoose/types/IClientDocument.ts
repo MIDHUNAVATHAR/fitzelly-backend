@@ -12,6 +12,10 @@ export interface IClientDocument extends Document {
     contactPerson?: string;
     isEmailVerified: boolean;
     joinedDate: Date;
-    isDeleted: boolean
+    isDeleted: boolean;
+    clientId?: string;
+    height?: number;
+    weight?: number;
+    gender?: string;
 }
 

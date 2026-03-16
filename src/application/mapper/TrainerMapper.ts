@@ -57,7 +57,9 @@ export class TrainerMapper {
             isEmailVerified: trainer.isEmailVerified,
             qualification: trainer.qualification,
             address: trainer.address,
-            certificates: trainer.certificates
+            certificates: trainer.certificates,
+            gymId: trainer.gymId,
+            profileUrl: trainer.profileUrl ?? undefined
         }
     }
 }

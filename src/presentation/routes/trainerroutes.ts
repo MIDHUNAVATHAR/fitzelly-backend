@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { TRAINER_ROUTES } from "../../constants/routes.constants";
-import { trainerAuthController } from "../../main/di";
+import { trainerAuthController } from "../../main/controllers.di"; 
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";
 import { ROLES } from "../../constants/roles.constants";
 import multer from "multer";
 
-import { trainerProfileController } from "../../main/di";
+import { trainerProfileController } from "../../main/controllers.di";
+import { trainerWorkoutPlanController } from "../../main/controllers.di";
 
 
 const upload = multer();
@@ -24,7 +25,10 @@ router.patch(TRAINER_ROUTES.TRAINER_PROFILE, protect([ROLES.TRAINER]), trainerPr
 router.post(TRAINER_ROUTES.TRAINER_PROFILE_IMAGE, protect([ROLES.TRAINER]), upload.single('profilePhoto'), trainerProfileController.uploadTrainerProfileImage.bind(trainerProfileController));
 router.get(TRAINER_ROUTES.TRAINER_GYM_DETAILS, protect([ROLES.TRAINER]), trainerProfileController.getTrainerGymDetails.bind(trainerProfileController));
 router.get(TRAINER_ROUTES.TRAINER_CLIENTS, protect([ROLES.TRAINER]), trainerProfileController.getAssignedClients.bind(trainerProfileController));
-router.get(TRAINER_ROUTES.TRAINER_CLIENT_VIEW, protect([ROLES.TRAINER]),  trainerProfileController.getAssignedClientById.bind(trainerProfileController));
+router.get(TRAINER_ROUTES.TRAINER_CLIENT_VIEW, protect([ROLES.TRAINER]), trainerProfileController.getAssignedClientById.bind(trainerProfileController));
+
+router.post(TRAINER_ROUTES.TRAINER_WORKOUT_PLAN, protect([ROLES.TRAINER]), trainerWorkoutPlanController.createOrUpdatePlan.bind(trainerWorkoutPlanController));
+router.get(TRAINER_ROUTES.TRAINER_WORKOUT_PLAN, protect([ROLES.TRAINER]), trainerWorkoutPlanController.getClientPlan.bind(trainerWorkoutPlanController));
 
 
 

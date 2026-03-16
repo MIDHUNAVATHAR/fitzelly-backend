@@ -36,5 +36,4 @@ export const ResponseMessage = {
     PLAN_ADD_SUCCESS: "Plan added successfully",
     PLAN_DELETE_SUCCESS: "Plan deleted successfully",
 
-
 }

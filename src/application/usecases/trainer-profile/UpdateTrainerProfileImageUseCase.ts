@@ -20,12 +20,12 @@ export class UpdateTrainerProfileImageUseCase implements IUploadTrainerProfileIm
             const updatedTrainerEntity = Object.assign(Object.create(Object.getPrototypeOf(trainer)), trainer, {
                 profileUrl: logoUrl
             });
-            const updatedDoc = await this._trainerRepository.updateTrainer(updatedTrainerEntity);
+            const updatedDoc = await this._trainerRepository.update(updatedTrainerEntity);
 
             if (updatedDoc && oldProfileUrl) {
-             
-                    await this._s3Service.deleteFile(oldProfileUrl);
-               
+
+                await this._s3Service.deleteFile(oldProfileUrl);
+
             }
 
             return TrainerMapper.toTrainerResponseDTO(updatedDoc);

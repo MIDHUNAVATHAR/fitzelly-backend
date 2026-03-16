@@ -1,13 +1,14 @@
 
 import { Router } from "express";
 import { GYM_ROUTE } from "../../constants/routes.constants";
-import { gymAuthenticationController } from "../../main/di";
-import { gymProfileController } from "../../main/di";
-import { gymClientController } from "../../main/di";
-import { gymTrainerController } from "../../main/di";
-import { gymPlanController } from "../../main/di";
-import { gymEquipmentController } from "../../main/di";
-import { gymMembershipController } from "../../main/di";
+import { gymAuthenticationController } from "../../main/controllers.di";
+import { gymProfileController } from "../../main/controllers.di";
+import { gymClientController } from "../../main/controllers.di";
+import { gymTrainerController } from "../../main/controllers.di";
+import { gymPlanController } from "../../main/controllers.di";
+import { gymEquipmentController } from "../../main/controllers.di";
+import { gymMembershipController } from "../../main/controllers.di";
+
 
 
 

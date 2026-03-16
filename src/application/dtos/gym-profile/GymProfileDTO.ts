@@ -8,9 +8,13 @@ export interface GymProfileDTO {
     address: string;
     description: string;
     location: { longitude: number, latitude: number }
-    approvalStatus: string,
-    subscriptionStatus: string,
-    expiryDate: Date | ""
+    approvalStatus: string;
+    subscriptionStatus: string;
+    startDate?: Date;
+    expiryDate: Date | "";
+    paymentMethod?: string;
+    planName?: string;
+    amount?: number;
 }
 
 

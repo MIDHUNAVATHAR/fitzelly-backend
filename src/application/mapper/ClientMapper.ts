@@ -17,7 +17,11 @@ export class ClientMapper {
             dto.contactPerson || null,
             false,
             new Date(),
-            false
+            false,
+            dto.clientId || null,
+            dto.height || null,
+            dto.weight || null,
+            dto.gender || null
         )
     }
 
@@ -36,7 +40,7 @@ export class ClientMapper {
         }
     ): GetClientResponseDTO {
         return {
-           id: client.id!,
+            id: client.id!,
             fullName: client.fullName,
             email: client.email,
             phoneNumber: client.phoneNumber,
@@ -54,7 +58,11 @@ export class ClientMapper {
             dateOfBirth: client.dateOfBirth ? `${client.dateOfBirth.getFullYear()}-${String(client.dateOfBirth.getMonth() + 1).padStart(2, '0')}-${String(client.dateOfBirth.getDate()).padStart(2, '0')}` : null,
             emergencyContact: client.emergencyContact ?? null,
             contactPerson: client.contactPerson ?? null,
-            isEmailVerified: client.isEmailVerified
+            isEmailVerified: client.isEmailVerified,
+            clientId: client.clientId ?? undefined,
+            height: client.height ?? undefined,
+            weight: client.weight ?? undefined,
+            gender: client.gender ?? undefined
         };
     }
 }

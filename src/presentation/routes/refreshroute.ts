@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { REFRESH_ROUTE, LOGOUT_ROUTE } from "../../constants/routes.constants";
-import { tokenRefreshController } from "../../main/di";
+import { tokenRefreshController } from "../../main/controllers.di";
 
 
 

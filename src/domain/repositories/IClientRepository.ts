@@ -7,6 +7,10 @@ export interface IClientData {
     dateOfBirth: string;
     emergencyContact: string;
     contactPerson: string;
+    clientId?: string;
+    height?: number;
+    weight?: number;
+    gender?: string;
     email?: string;
 }
 
@@ -19,7 +23,7 @@ export interface IClientRepository extends IBaseRepository<Client> {
     }>
     getClientsByTrainerId(trainerId: string, skip: number, limit: number, search?: string): Promise<{
         clients: Client[],
-        total:number
+        total: number
     }>;
     updateClientByGym(id: string, clientData: IClientData): Promise<Client>;
     updateClient(client: Client): Promise<Client>;

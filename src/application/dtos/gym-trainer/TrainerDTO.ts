@@ -40,4 +40,6 @@ export interface TrainerResponseDTO {
     qualification?: string;
     address?: string;
     certificates?: string[];
+    gymId?: string;
+    profileUrl?: string;
 }

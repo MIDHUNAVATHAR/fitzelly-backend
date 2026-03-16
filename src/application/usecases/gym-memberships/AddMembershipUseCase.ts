@@ -3,6 +3,7 @@ import { IPlanRepository } from "../../../domain/repositories/IPlanRepository";
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
 import { Membership } from "../../../domain/entities/Membership";
+import { ConflictError } from "../../errors/AppError";
 
 
 export interface AddMembershipDTO {
@@ -26,20 +27,26 @@ export class AddMembershipUseCase {
         const client = await this.clientRepository.findById(data.clientId);
         if (!client || client.gymId !== data.gymId) throw new Error("Client not found.");
 
+        /**
+         * check the client has any active memberships
+         */
+        const existingMembership = await this.membershipRepository.findLatestByClientId(data.clientId);
+        if (existingMembership?.status == "ACTIVE") {
+            throw new ConflictError("Unable to add . Old membership still active")
+        }
+
         const plan = await this.planRepository.findById(data.planId);
         if (!plan || plan.gymId !== data.gymId) throw new Error("Plan not found.");
 
         let trainerName = null;
         if (data.assignedTrainerId) {
             const trainer = await this.trainerRepository.findById(data.assignedTrainerId);
-            /**
-             * take number of assined client to this trainer
-             */
+
 
             if (trainer && trainer.gymId === data.gymId) {
                 trainerName = trainer.fullName;
 
-               
+
             } else {
                 data.assignedTrainerId = undefined; // Nullify invalid trainer
             }

@@ -59,6 +59,10 @@ export const CLIENT_ROUTES = {
     CLIENT_PROFILE_IMAGE: "/api/client/profile/image",
     CLIENT_MEMBERSHIP_LATEST: "/api/client/membership/latest",
     CLIENT_GYM_DETAILS: "/api/client/gym-details",
+    CLIENT_TRAINER_VIEW: "/api/client/trainer/:trainerId",
+    CLIENT_WORKOUT_PLAN: "/api/client/workout-plan",
+    CLIENT_WORKOUT_PROGRESS: "/api/client/workout-progress",
+    CLIENT_WORKOUT_STREAK: "/api/client/workout-streak",
 }
 
 export const TRAINER_ROUTES = {
@@ -72,6 +76,7 @@ export const TRAINER_ROUTES = {
     TRAINER_GYM_DETAILS: "/api/trainer/gym-details",
     TRAINER_CLIENTS: "/api/trainer/clients",
     TRAINER_CLIENT_VIEW: "/api/trainer/clients/:id",
+    TRAINER_WORKOUT_PLAN: "/api/trainer/workout-plan/:clientId",
 }
 
 export const SUPER_ADMIN_ROUTES = {

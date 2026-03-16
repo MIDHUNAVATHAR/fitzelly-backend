@@ -18,7 +18,11 @@ export class ClientMapper {
       doc.contactPerson ?? null,
       doc.isEmailVerified,
       doc.joinedDate,
-      doc.isDeleted
+      doc.isDeleted,
+      doc.clientId ?? null,
+      doc.height ?? null,
+      doc.weight ?? null,
+      doc.gender ?? null
     );
   }
 
@@ -43,6 +47,10 @@ export class ClientMapper {
     if (entity.profileUrl) doc.profileUrl = entity.profileUrl;
     if (entity.phoneNumber) doc.phoneNumber = entity.phoneNumber;
     if (entity.password) doc.password = entity.password;
+    if (entity.clientId) doc.clientId = entity.clientId;
+    if (entity.height !== null && entity.height !== undefined) doc.height = entity.height;
+    if (entity.weight !== null && entity.weight !== undefined) doc.weight = entity.weight;
+    if (entity.gender) doc.gender = entity.gender;
 
     return doc;
 

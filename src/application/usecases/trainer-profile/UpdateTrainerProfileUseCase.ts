@@ -22,6 +22,8 @@ export class UpdateTrainerProfileUseCase implements IUpdateTrainerProfileUseCase
             fullName: data.fullName ?? trainer.fullName,
             phoneNumber: data.phoneNumber ?? trainer.phoneNumber,
             specialization: data.specialization ?? trainer.specialization,
+            qualification: data.qualification ?? trainer.qualification,
+            address: data.address ?? trainer.address,
             dateOfBirth
         });
 

@@ -41,7 +41,24 @@ export const ClientSchema = new Schema<IClientDocument>({
         type: Boolean,
         required: true
     },
-   
+    clientId: {
+        type: String,
+        default: ""
+    },
+    height: {
+        type: Number,
+        default: 0
+    },
+    weight: {
+        type: Number,
+        default: 0
+    },
+    gender: {
+        type: String,
+        enum: ["MALE", "FEMALE", "OTHER", ""],
+        default: ""
+    },
+
     joinedDate: {
         type: Date,
         default: Date.now

@@ -32,11 +32,11 @@ export class GymClientController {
 
             const gymId = user.id;
 
-            const { fullName, email, phoneNumber, dateOfBirth, emergencyContact, contactPerson } = req.body;
+            const { fullName, email, phoneNumber, dateOfBirth, emergencyContact, contactPerson, clientId, height, weight, gender } = req.body;
 
             await this._addClientUseCase.execute({
                 gymId,
-                fullName, email, phoneNumber, dateOfBirth, emergencyContact, contactPerson
+                fullName, email, phoneNumber, dateOfBirth, emergencyContact, contactPerson, clientId, height, weight, gender
             })
 
             res.status(HttpStatus.OK).json({
@@ -66,7 +66,7 @@ export class GymClientController {
             const limit = Number(req.query.limit) || 10;
             const search = (req.query.search as string) || "";
 
-            const result = await this._getClientsUseCase.execute(gymId, page,limit, search);
+            const result = await this._getClientsUseCase.execute(gymId, page, limit, search);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
@@ -101,11 +101,11 @@ export class GymClientController {
 
     async updateClient(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const clientId = req.params.id as string;
+            const id = req.params.id as string;
 
-            const { fullName, phoneNumber, dateOfBirth, emergencyContact, contactPerson, email } = req.body;
-            const updatedClient = await this._updateClientByGymUseCase.execute(clientId, {
-                fullName, phoneNumber, dateOfBirth, emergencyContact, contactPerson, email
+            const { fullName, phoneNumber, dateOfBirth, emergencyContact, contactPerson, email, clientId, height, weight, gender } = req.body;
+            const updatedClient = await this._updateClientByGymUseCase.execute(id, {
+                fullName, phoneNumber, dateOfBirth, emergencyContact, contactPerson, email, clientId, height, weight, gender
             });
 
             res.status(HttpStatus.OK).json({

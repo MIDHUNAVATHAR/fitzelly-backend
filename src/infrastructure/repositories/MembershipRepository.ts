@@ -69,7 +69,7 @@ export class MembershipRepository implements IMembershipRepository {
 
         const [docs, total] = await Promise.all([
             MembershipModel.find(query)
-                .sort({ createdAt: -1 })
+                .sort({ startDate: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec(),

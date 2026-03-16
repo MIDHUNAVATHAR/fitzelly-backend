@@ -6,7 +6,7 @@ import { ResponseMessage } from "../../constants/response.constants";
 import { DomainError } from "../../domain/errors/DomainError";
 
 
-export function globalErrorHandler(err: Error, req: Request, res: Response, _next: NextFunction) { //don't remove next
+export function globalErrorHandler(err: Error, req: Request, res: Response, _next: NextFunction) {
     logger.error("Error : ", err);
 
     if (err instanceof AppError) {
@@ -23,7 +23,9 @@ export function globalErrorHandler(err: Error, req: Request, res: Response, _nex
         })
     }
 
-    //unknown errors like db/service operations fail 
+    /**
+     * unknown errors in db/services
+     */
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status: ResponseStatus.ERROR,
         message: ResponseMessage.UNKNOWN_ERROR_MESSAGE

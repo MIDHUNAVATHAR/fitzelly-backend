@@ -7,13 +7,16 @@ import { IGetClientProfileWithMembershipUseCase } from "../../../application/IUs
 import { IUpdateClientProfileUseCase } from "../../../application/IUseCases/client-profile/IUpdateClientProfileUseCase";
 import { IUpdateClientProfileImageUseCase } from "../../../application/IUseCases/client-profile/IUploadClientProfileImageUseCase";
 import { IGetClientGymDetailsUseCase } from "../../../application/IUseCases/client-profile/IGetClientGymDetailsUseCase";
+import { IGetClientAssignedTrainerUseCase } from "../../../application/IUseCases/client-profile/IGetClientAssignedTrainerUseCase";
+
 
 export class ClientProfileController {
     constructor(
         private _getClientProfileWithMembershipUseCase: IGetClientProfileWithMembershipUseCase,
         private _updateClientProfileUseCase: IUpdateClientProfileUseCase,
         private _updateClientProfileImageUseCase: IUpdateClientProfileImageUseCase,
-        private _getClientGymDetailsUseCase: IGetClientGymDetailsUseCase
+        private _getClientGymDetailsUseCase: IGetClientGymDetailsUseCase,
+        private _getClientAssignedTrainerUseCase: IGetClientAssignedTrainerUseCase
     ) { }
 
     async getClientProfile(req: AuthRequest, res: Response, next: NextFunction) {
@@ -72,6 +75,21 @@ export class ClientProfileController {
                 data: { profileImage: updatedProfile.profileUrl }
             });
 
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getClientAssignedTrainer(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const clientId = req.user!.id;
+            const trainerId = req.params.trainerId as string;
+            const trainer = await this._getClientAssignedTrainerUseCase.execute(clientId, trainerId);
+            return res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.DATA_RETRIVE_SUCCESS,
+                data: trainer
+            })
         } catch (error) {
             next(error);
         }

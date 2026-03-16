@@ -41,7 +41,7 @@ export class UpdateTrainerUseCase implements IUpdateTrainerUseCase {
 
         const updatedTrainerData = TrainerMapper.updateEntity(trainer, updatePayload);
 
-        const updatedTrainer = await this._trainerRepository.updateTrainer(updatedTrainerData);
+        const updatedTrainer = await this._trainerRepository.update(updatedTrainerData);
 
         return TrainerMapper.toTrainerResponseDTO(updatedTrainer);
 

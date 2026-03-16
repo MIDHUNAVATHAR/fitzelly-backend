@@ -38,13 +38,17 @@ export class GymRepository extends BaseRepository<Gym, IGymDocument> implements 
         }
     }
 
-    async update(id: string, gymData: IGymData): Promise<Gym> {
-        const gymDoc = await this.model.findByIdAndUpdate(id, gymData, { new: true });
-        if (!gymDoc) {
-            throw new NotFoundError("Gym")
-        }
-        return this.toEntity(gymDoc);
-    }
+    /**
+     * 
+     * update method used in the base repository.
+     */
+    // async update(id: string, gymData: IGymData): Promise<Gym> {
+    //     const gymDoc = await this.model.findByIdAndUpdate(id, gymData, { new: true });
+    //     if (!gymDoc) {
+    //         throw new NotFoundError("Gym")
+    //     }
+    //     return this.toEntity(gymDoc);
+    // }
 
     async updateLogo(id: string, logoUrl: string): Promise<Gym> {
         const gymDoc = await this.model.findByIdAndUpdate(id, { logoUrl }, { new: true });

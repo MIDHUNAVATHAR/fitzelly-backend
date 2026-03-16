@@ -10,6 +10,7 @@ export class ClientForgotpassUseCase implements ICompleteForgotpassUseCase {
         const isValid = await this._otpRepository.verifyOtp(request.email, request.otp);
         if (!isValid) {
             throw new InvalidOtpError("Invalid Otp");
+            
         }
     }
 }

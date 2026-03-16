@@ -25,6 +25,17 @@ export abstract class BaseRepository<T extends object, D> implements IBaseReposi
         return doc ? this.toEntity(doc) : null;
     }
 
+    // async update(entity: T): Promise<T> {
+    //     const doc = this.toDocument(entity);
+    //     const updatedDoc = await this.model.findByIdAndUpdate(
+    //         (entity as any).id,
+    //         { $set: doc },
+    //         { new: true }
+    //     );
+    //     if (!updatedDoc) throw new Error("Entity not found");
+    //     return this.toEntity(updatedDoc);
+    // }
+
 }
 
 

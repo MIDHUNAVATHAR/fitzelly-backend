@@ -10,8 +10,9 @@ export interface ITrainerRepository extends IBaseRepository<Trainer> {
         trainers: Trainer[],
         total: number
     }>
-    updateTrainer(trainer: Trainer): Promise<Trainer>;
-    updateProfile(trainer: Trainer): Promise<void>; 
+    update(trainer: Trainer): Promise<Trainer>;
+
+    updateProfile(trainer: Trainer): Promise<void>;
     softDelete(trainerId: string): Promise<void>;
     setPassword(id: string, passwordHash: string): Promise<void>;
 

@@ -12,7 +12,6 @@ export class GymProfileController {
         private _getGymProfileUseCase: IGetGymProfileUseCase,
         private _updateGymProfileUseCase: IUpdateGymProfileUseCase,
         private _updateGymLogoUseCase: IUpdateGymLogoUseCase,
-        private _s3Service: IS3Service
     ) { }
 
     async getGymProfile(req: AuthRequest, res: Response, next: NextFunction) {
@@ -49,9 +48,8 @@ export class GymProfileController {
             if (!req.file) {
                 throw Error("File required");
             }
-            const logoUrl = await this._s3Service.uploadFile(req.file);
 
-            const updatedProfile = await this._updateGymLogoUseCase.execute(userId, logoUrl);
+            const updatedProfile = await this._updateGymLogoUseCase.execute(userId, req.file);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: ResponseMessage.LOGO_UPDATE_SUCCESS,

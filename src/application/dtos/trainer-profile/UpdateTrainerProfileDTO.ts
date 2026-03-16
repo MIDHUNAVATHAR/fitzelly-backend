@@ -6,4 +6,6 @@ export interface UpdateTrainerProfileDTO {
     specialization?: string;
     dateOfBirth?: string;
     profilePhoto?: Express.Multer.File;
+    qualification?: string;
+    address?: string;
 }

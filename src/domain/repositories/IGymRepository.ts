@@ -36,7 +36,7 @@ export interface IGymStatus {
 export interface IGymRepository extends IBaseRepository<Gym> {
     findByEmail(email: string): Promise<Gym | null>;
     updatePassword(email: string, password: string): Promise<void>
-    update(id: string, gymData: IGymData): Promise<Gym>
+    // update(id: string, gymData: IGymData): Promise<Gym>
     updateLogo(id: string, logoUrl: string): Promise<Gym>;
 
     findAll(query: GymSearchQuery, options: GymFindOptions): Promise<Gym[]>;
