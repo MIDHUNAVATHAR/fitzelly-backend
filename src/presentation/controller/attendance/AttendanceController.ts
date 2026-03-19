@@ -26,7 +26,7 @@ export class AttendanceController {
             const userType = user.role === "trainer" ? "TRAINER" : "CLIENT";
 
             const result = await this._markAttendanceUseCase.execute({
-                userId: user?.id!,
+                userId: user.id!,
                 gymId: gymId,
                 userType: userType,
                 action: action,

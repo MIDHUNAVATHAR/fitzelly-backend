@@ -1,4 +1,4 @@
-import { IGymRepository, IGymData, GymSearchQuery, GymFindOptions, IGymStatus } from "../../domain/repositories/IGymRepository";
+import { IGymRepository, GymSearchQuery, GymFindOptions, IGymStatus } from "../../domain/repositories/IGymRepository";
 import { Gym } from "../../domain/entities/Gym";
 import { GymModel } from "../database/mongoose/models/GymModel";
 import { IGymDocument } from "../database/mongoose/types/IGymDocument";
@@ -38,17 +38,6 @@ export class GymRepository extends BaseRepository<Gym, IGymDocument> implements 
         }
     }
 
-    /**
-     * 
-     * update method used in the base repository.
-     */
-    // async update(id: string, gymData: IGymData): Promise<Gym> {
-    //     const gymDoc = await this.model.findByIdAndUpdate(id, gymData, { new: true });
-    //     if (!gymDoc) {
-    //         throw new NotFoundError("Gym")
-    //     }
-    //     return this.toEntity(gymDoc);
-    // }
 
     async updateLogo(id: string, logoUrl: string): Promise<Gym> {
         const gymDoc = await this.model.findByIdAndUpdate(id, { logoUrl }, { new: true });

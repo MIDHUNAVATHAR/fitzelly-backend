@@ -59,7 +59,7 @@ export class WorkoutPlanRepository extends BaseRepository<WorkoutPlan, IWorkoutP
     async update(entity: WorkoutPlan): Promise<WorkoutPlan> {
         const doc = this.toDocument(entity);
         const updatedDoc = await this.model.findByIdAndUpdate(
-            (entity as any).id,
+            entity.id,
             { $set: doc },
             { new: true }
         );

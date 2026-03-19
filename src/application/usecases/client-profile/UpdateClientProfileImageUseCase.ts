@@ -19,7 +19,7 @@ export class UpdateClientProfileImageUseCase implements IUpdateClientProfileImag
         const client = await this._clientRepository.findById(clientId);
         const oldProfileUrl = client?.profileUrl;
 
-        // Since updateClientByGym expects an IClientData or standard fields, let's just use updateClient
+        
         if (client) {
             const updatedClientEntity = Object.assign(Object.create(Object.getPrototypeOf(client)), client, {
                 profileUrl: logoUrl

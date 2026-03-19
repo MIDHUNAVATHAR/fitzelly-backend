@@ -1,8 +1,6 @@
 /**
  * Checks if the distance between two points is within 50 kilometers.
  */
-
-
 export function isWithin50Km(
     lat1: number,
     lon1: number,

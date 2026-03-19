@@ -22,10 +22,14 @@ export class GetWorkoutPlanByClientIdUseCase implements IGetWorkoutPlanByClientI
 
         const currentWeekSunday = getWeekStart();
 
-        // 1. Try to find existing plan for this week
+        /**
+         * find existing plan for this week
+         */
         let plan = await this.workoutPlanRepository.findByClientIdAndWeekStart(clientId, currentWeekSunday);
 
-        // 2. If not found and we have a trainerId, create a new empty template
+        /**
+         * if not found, create a new empty template
+         */
         if (!plan && trainerId) {
             const trainer = await this.trainerRepository.findById(trainerId);
             if (!trainer) throw new Error("Trainer not found");

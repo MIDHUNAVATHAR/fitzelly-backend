@@ -21,7 +21,7 @@ export class SubscriptionMapper {
 
     static toDocument(entity: Subscription): Partial<ISubscriptionDocument> {
         return {
-            gymId: new Types.ObjectId(entity.gymId) as any,
+            gymId: new Types.ObjectId(entity.gymId),
             planName: entity.planName,
             amount: entity.amount,
             startDate: entity.startDate,

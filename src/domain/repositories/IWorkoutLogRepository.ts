@@ -1,3 +1,5 @@
+import { IBaseRepository } from "./IBaseRepository";
+
 export interface IWorkoutLog {
     clientId: string;
     date: Date;
@@ -7,5 +9,6 @@ export interface IWorkoutLog {
 export interface IWorkoutLogRepository {
     findByClientIdAndDate(clientId: string, date: Date): Promise<IWorkoutLog | null>;
     findByClientId(clientId: string): Promise<IWorkoutLog[]>;
-    save(log: IWorkoutLog): Promise<IWorkoutLog>
+    save(log: IWorkoutLog): Promise<IWorkoutLog>;
+    update(log: IWorkoutLog): Promise<IWorkoutLog>;
 }

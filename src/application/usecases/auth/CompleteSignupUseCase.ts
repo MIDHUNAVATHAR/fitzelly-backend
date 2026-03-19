@@ -17,19 +17,25 @@ export class CompleteSignupUseCase implements ICompleteSignupUseCase {
     ) { }
 
     async execute(request: CompleteSignupRequestDTO): Promise<void> {
-        //verify otp
+        /**
+         * verify otp
+         */
         const isOtpValid = await this._otpRepository.verifyOtp(request.email, request.otp);
         if (!isOtpValid) {
             throw new InvalidOtpError();
         }
 
-        //check email exists
+        /**
+         * check email exists
+         */
         const existingGym = await this._gymRepository.findByEmail(request.email);
         if (existingGym) {
             throw new ConflictError("Email already exists");
         }
 
-        //password hash
+        /**
+         * hash password
+         */
         const hashedPassword = await this._passwordHasher.hash(request.password);
 
         const gymToCreate = GymSignupMapper.toEntity(request, hashedPassword);

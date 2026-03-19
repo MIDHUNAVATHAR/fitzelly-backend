@@ -27,20 +27,26 @@ export class GetClientProfileWithMembershipUseCase implements IGetClientProfileW
         let membershipData = null;
         if (membership) {
 
-            // "If Plan Type = DAY_BASED -> Show daysLeft even if membership is expired"
+            /**
+             * "If Plan Type = DAY_BASED -> Show daysLeft even if membership is expired"
+            */
             const daysLeft = membership.planType === 'DAY_BASED' ? membership.daysLeft : null;
 
             let paymentStatus: 'PAID' | 'PARTIAL' | 'UNPAID' | null = null;
             let payments: { date: string, amount: number }[] = [];
 
-            // Fetch payments
+            /**
+             * fetch payments
+             */
             const rawPayments = await this.paymentRepository.getPaymentsByMembershipId(membership.id);
             payments = rawPayments.map(p => ({
                 date: p.paymentDate.toISOString(),
                 amount: p.amount
             }));
 
-            // Determine payment status
+            /**
+             * determine payment status
+             */
             const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
             if (totalPaid === 0) {
                 paymentStatus = 'UNPAID';
@@ -69,7 +75,7 @@ export class GetClientProfileWithMembershipUseCase implements IGetClientProfileW
         return {
             profile: {
                 ...profileDTO,
-               
+
                 emergencyContact: client.emergencyContact || null
             },
             membership: membershipData

@@ -4,7 +4,6 @@ import { IGetGymProfileUseCase } from "../../../application/IUseCases/gym-profil
 import { IUpdateGymProfileUseCase } from "../../../application/IUseCases/gym-profile/IUpdateGymProfileUseCase";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { IUpdateGymLogoUseCase } from "../../../application/IUseCases/gym-profile/IUpdateGymLogoUseCase";
-import { IS3Service } from "../../../domain/services/IS3Service";
 import { ResponseMessage } from "../../../constants/response.constants";
 
 export class GymProfileController {

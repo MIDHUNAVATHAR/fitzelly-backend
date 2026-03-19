@@ -1,7 +1,4 @@
 
-
-
-
 export interface SuperAdminProfileDTO {
     logoUrl: string;
     appName: string;

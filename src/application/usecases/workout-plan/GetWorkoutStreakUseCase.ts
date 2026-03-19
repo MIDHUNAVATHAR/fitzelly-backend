@@ -8,11 +8,9 @@ export class GetWorkoutStreakUseCase implements IGetWorkoutStreakUseCase {
         const logs = await this.workoutLogRepository.findByClientId(clientId);
         if (logs.length === 0) return 0;
 
-        // Filter out logs with no completed exercises (if needed by your app business logic)
         const validLogs = logs.filter(log => log.completedExercises.length > 0);
         if (validLogs.length === 0) return 0;
 
-        // Sort just in case repository didn't (though repositories usually handle this)
         validLogs.sort((a, b) => b.date.getTime() - a.date.getTime());
 
         const today = new Date();
@@ -24,7 +22,9 @@ export class GetWorkoutStreakUseCase implements IGetWorkoutStreakUseCase {
         const lastWorkoutDate = new Date(validLogs[0].date);
         lastWorkoutDate.setHours(0, 0, 0, 0);
 
-        // If the last workout was before yesterday, streak is zero
+        /**
+         * If the last workout was before yesterday, streak is zero
+         */
         if (lastWorkoutDate.getTime() < yesterday.getTime()) {
             return 0;
         }

@@ -52,7 +52,7 @@ export class SuperAdminGymsController {
         try {
             const gymId = req.params.gymId as string;
             const { approvalStatus } = req.body;
-            const updatedGym = await this._updateGymStatusUseCase.execute(gymId, { approvalStatus } as any)
+            const updatedGym = await this._updateGymStatusUseCase.execute(gymId, { approvalStatus })
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,

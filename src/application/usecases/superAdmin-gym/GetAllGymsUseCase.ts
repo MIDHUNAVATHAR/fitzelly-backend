@@ -19,13 +19,17 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
     async execute(page: number, limit: number, search: string): Promise<GymsListResponseDTO> {
         const skip = (page - 1) * limit;
 
-        //build search query based on gym name
+        /**
+         * build search query
+         */
         const searchQuery: SearchQuery = {};
         if (search) {
             searchQuery.gymName = { $regex: search, $options: "i" };
         }
 
-        //total gyms count for pagination
+        /**
+         * total gyms count for pagination
+         */
         const totalGyms = await this._gymRepository.count(searchQuery);
 
         const gyms = await this._gymRepository.findAll(searchQuery, {
@@ -34,7 +38,9 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
             sort: { createdAt: -1 }
         })
 
-        // Fetch latest subscription for each gym
+        /**
+         * fetch latest subscription for each gym
+         */
         const gymsWithSubscriptions = await Promise.all(gyms.map(async (gym) => {
             const latestSubscription = await this._subscriptionRepository.findLatestSubscriptionByGymId(gym.id);
             return { gym, latestSubscription };

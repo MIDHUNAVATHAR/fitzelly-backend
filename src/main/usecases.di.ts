@@ -138,6 +138,13 @@ import { TrackWorkoutProgressUseCase } from "../application/usecases/workout-pla
 import { GetWorkoutProgressUseCase } from "../application/usecases/workout-plan/GetWorkoutProgressUseCase";
 import { GetWorkoutStreakUseCase } from "../application/usecases/workout-plan/GetWorkoutStreakUseCase";
 
+//enquiry usecases
+import { AddEnquiryUseCase, GetEnquiriesUseCase, UpdateEnquiryUseCase, DeleteEnquiryUseCase } from "../application/usecases/enquiry/EnquiryUseCases";
+
+//expense usecases
+import { AddExpenseUseCase, GetExpensesUseCase, UpdateExpenseUseCase, DeleteExpenseUseCase } from "../application/usecases/expense/ExpenseUseCases";
+
+
 
 
 import { gymRepository } from "./repositories.di";
@@ -153,6 +160,9 @@ import { equipmentRepository } from "./repositories.di";
 import { attendanceRepository } from "./repositories.di";
 import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
+import { enquiryRepository } from "./repositories.di";
+import { expenseRepository } from "./repositories.di";
+
 
 
 import { jwtService } from "./services.di";
@@ -301,3 +311,14 @@ export const getWorkoutProgressUseCase = new GetWorkoutProgressUseCase(workoutLo
 export const getWorkoutStreakUseCase = new GetWorkoutStreakUseCase(workoutLogRepository);
 export const createOrUpdateWorkoutPlanUseCase = new CreateOrUpdateWorkoutPlanUseCase(workoutPlanRepository);
 
+//enquiry usecases
+export const addEnquiryUseCase = new AddEnquiryUseCase(enquiryRepository);
+export const getEnquiriesUseCase = new GetEnquiriesUseCase(enquiryRepository);
+export const updateEnquiryUseCase = new UpdateEnquiryUseCase(enquiryRepository);
+export const deleteEnquiryUseCase = new DeleteEnquiryUseCase(enquiryRepository);
+
+//expense usecases
+export const addExpenseUseCase = new AddExpenseUseCase(expenseRepository);
+export const getExpensesUseCase = new GetExpensesUseCase(expenseRepository);
+export const updateExpenseUseCase = new UpdateExpenseUseCase(expenseRepository);
+export const deleteExpenseUseCase = new DeleteExpenseUseCase(expenseRepository);

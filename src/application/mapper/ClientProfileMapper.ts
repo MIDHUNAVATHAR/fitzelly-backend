@@ -1,5 +1,4 @@
 import { Client } from "../../domain/entities/Client";
-//import { GetClientResponseDTO } from "../dtos/gym-client/ClientDTO";
 import { ClientProfileDTO } from "../dtos/client-profile/ClientProfileDTO";
 
 

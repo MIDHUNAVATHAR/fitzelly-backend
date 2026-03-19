@@ -1,6 +1,6 @@
 import { IUpdateEquipmentUseCase } from "../../IUseCases/gym-equipment/IUpdateEquipmentUseCase";
 import { IEquipmentRepository } from "../../../domain/repositories/IEquipmentRepository";
-import { UpdateEquipmentDTO,EquipmentDTO } from "../../dtos/gym-equipment/EquipmentDTO";
+import { UpdateEquipmentDTO, EquipmentDTO } from "../../dtos/gym-equipment/EquipmentDTO";
 import { IS3Service, IS3UploadFile } from "../../../domain/services/IS3Service";
 import { EquipmentMapper } from "../../mapper/EquipmentMapper";
 
@@ -22,7 +22,9 @@ export class UpdateEquipmentUseCase implements IUpdateEquipmentUseCase {
         let imageUrl = equipment.image;
         if (file) {
             imageUrl = await this.s3Service.uploadFile(file, `equipments/${data.gymId}`);
-            // Optionally delete old image
+            /**
+             * delete old image from s3
+             */
             if (equipment.image) {
                 await this.s3Service.deleteFile(equipment.image).catch(err => console.error("Error deleting old image:", err));
             }

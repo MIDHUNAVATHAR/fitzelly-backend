@@ -1,5 +1,5 @@
 import { GymResponseDTO } from "../dtos/superAd-gym-listing/GetAllGymsDTO";
-import { Gym } from "../../domain/entities/Gym";
+import { Gym, SubscriptionStatus } from "../../domain/entities/Gym";
 import { Subscription } from "../../domain/entities/Subscription";
 
 
@@ -12,7 +12,7 @@ export class GymMapper {
         if (latestSubscription) {
             subscriptionStatus = latestSubscription.status;
             if (new Date() > latestSubscription.endDate) {
-                subscriptionStatus = "expired";
+                subscriptionStatus = "Expired";
             }
             subscriptionStatus = subscriptionStatus.charAt(0).toUpperCase() + subscriptionStatus.slice(1);
             expiryDate = latestSubscription.endDate.toISOString();
@@ -25,7 +25,7 @@ export class GymMapper {
             phone: gym.phoneNumber,
             address: gym.address,
             approvalStatus: gym.approvalStatus,
-            subscriptionStatus: subscriptionStatus as any,
+            subscriptionStatus: subscriptionStatus as SubscriptionStatus,
             expiryDate: expiryDate,
             logoUrl: gym.logoUrl,
             caption: gym.caption,

@@ -24,7 +24,9 @@ export class CreateOrUpdateWorkoutPlanUseCase implements ICreateOrUpdateWorkoutP
             const existingWeekStart = new Date(existingPlan.weekStartDate);
             existingWeekStart.setHours(0, 0, 0, 0);
 
-            // If the existing plan's weekStartDate is the same as the current week Sunday, update it.
+            /**
+             * If the existing plan's weekStartDate is the same as the current week Sunday, update it.
+             */
             if (existingWeekStart.getTime() === currentWeekSunday.getTime()) {
                 shouldCreateNew = false;
             }

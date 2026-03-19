@@ -12,6 +12,9 @@ import { GymTrainerController } from "../presentation/controller/gym/GymTrainerC
 import { GymPlanController } from "../presentation/controller/gym/GymPlanController";
 import { GymMembershipController } from "../presentation/controller/gym/GymMembershipController";
 import { GymEquipmentController } from "../presentation/controller/gym/GymEquipmentController";
+import { EnquiryController } from "../presentation/controller/gym/EnquiryController";
+import { ExpenseController } from "../presentation/controller/gym/ExpenseController";
+
 
 import { ClientAuthController } from "../presentation/controller/auth/ClientAuthController";
 import { ClientProfileController } from "../presentation/controller/client/ClientProfileController";
@@ -120,6 +123,16 @@ import {
     trackWorkoutProgressUseCase,
     getWorkoutProgressUseCase,
     getWorkoutStreakUseCase,
+
+    addEnquiryUseCase,
+    getEnquiriesUseCase,
+    updateEnquiryUseCase,
+    deleteEnquiryUseCase,
+
+    addExpenseUseCase,
+    getExpensesUseCase,
+    updateExpenseUseCase,
+    deleteExpenseUseCase,
 
 
 } from "./usecases.di";
@@ -259,11 +272,24 @@ export const trainerWorkoutPlanController = new TrainerWorkoutPlanController(
 )
 
 export const clientWorkoutPlanController = new ClientWorkoutPlanController(
-    getWorkoutPlanByClientIdUseCase, 
-    trackWorkoutProgressUseCase, 
-    getWorkoutProgressUseCase, 
+    getWorkoutPlanByClientIdUseCase,
+    trackWorkoutProgressUseCase,
+    getWorkoutProgressUseCase,
     getWorkoutStreakUseCase);
 
 
+export const enquiryController = new EnquiryController(
+    addEnquiryUseCase,
+    getEnquiriesUseCase,
+    updateEnquiryUseCase,
+    deleteEnquiryUseCase
+);
 
-    
+
+export const expenseController = new ExpenseController(
+    addExpenseUseCase,
+    getExpensesUseCase,
+    updateExpenseUseCase,
+    deleteExpenseUseCase
+);
+

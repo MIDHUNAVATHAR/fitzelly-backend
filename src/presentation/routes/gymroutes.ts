@@ -8,6 +8,8 @@ import { gymTrainerController } from "../../main/controllers.di";
 import { gymPlanController } from "../../main/controllers.di";
 import { gymEquipmentController } from "../../main/controllers.di";
 import { gymMembershipController } from "../../main/controllers.di";
+import { enquiryController } from "../../main/controllers.di";
+import { expenseController } from "../../main/controllers.di";
 
 
 
@@ -74,6 +76,18 @@ router.get(GYM_ROUTE.GET_EQUIPMENTS, protect([ROLES.GYM]), gymEquipmentControlle
 router.put(GYM_ROUTE.EQUIPMENT_BY_ID, protect([ROLES.GYM]), upload.single("image"), gymEquipmentController.updateEquipment.bind(gymEquipmentController));
 router.delete(GYM_ROUTE.EQUIPMENT_BY_ID, protect([ROLES.GYM]), gymEquipmentController.deleteEquipment.bind(gymEquipmentController));
 
+// Enquiries
+router.post(GYM_ROUTE.ADD_ENQUIRY, protect([ROLES.GYM]), enquiryController.addEnquiry.bind(enquiryController));
+router.get(GYM_ROUTE.GET_ENQUIRIES, protect([ROLES.GYM]), enquiryController.getEnquiries.bind(enquiryController));
+router.put(GYM_ROUTE.ENQUIRY_BY_ID, protect([ROLES.GYM]), enquiryController.updateEnquiry.bind(enquiryController));
+router.delete(GYM_ROUTE.ENQUIRY_BY_ID, protect([ROLES.GYM]), enquiryController.deleteEnquiry.bind(enquiryController));
+
+// Expenses
+router.post(GYM_ROUTE.ADD_EXPENSE, protect([ROLES.GYM]), expenseController.addExpense.bind(expenseController));
+router.get(GYM_ROUTE.GET_EXPENSES, protect([ROLES.GYM]), expenseController.getExpenses.bind(expenseController));
+router.put(GYM_ROUTE.EXPENSE_BY_ID, protect([ROLES.GYM]), expenseController.updateExpense.bind(expenseController));
+router.delete(GYM_ROUTE.EXPENSE_BY_ID, protect([ROLES.GYM]), expenseController.deleteExpense.bind(expenseController));
 
 
-export default router; 
+
+export default router;

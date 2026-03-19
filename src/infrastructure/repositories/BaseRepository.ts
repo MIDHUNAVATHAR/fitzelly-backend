@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
 import { IBaseRepository } from "../../domain/repositories/IBaseRepository";
 
-export abstract class BaseRepository<T extends object, D> implements IBaseRepository<T> {//T -must be type of object, generic with specific condition. D -document type 
+export abstract class BaseRepository<T extends { id: string }, D> implements IBaseRepository<T> {//T -must be type of object, generic with specific condition. D -document type 
     protected model: Model<D>;
 
     constructor(model: Model<D>) {
@@ -25,16 +25,16 @@ export abstract class BaseRepository<T extends object, D> implements IBaseReposi
         return doc ? this.toEntity(doc) : null;
     }
 
-    // async update(entity: T): Promise<T> {
-    //     const doc = this.toDocument(entity);
-    //     const updatedDoc = await this.model.findByIdAndUpdate(
-    //         (entity as any).id,
-    //         { $set: doc },
-    //         { new: true }
-    //     );
-    //     if (!updatedDoc) throw new Error("Entity not found");
-    //     return this.toEntity(updatedDoc);
-    // }
+    async update(entity: T): Promise<T> {
+        const doc = this.toDocument(entity);
+        const updatedDoc = await this.model.findByIdAndUpdate(
+            entity.id,
+            { $set: doc },
+            { new: true }
+        );
+        if (!updatedDoc) throw new Error("Entity not found");
+        return this.toEntity(updatedDoc);
+    }
 
 }
 

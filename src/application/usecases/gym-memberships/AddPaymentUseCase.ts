@@ -17,7 +17,9 @@ export class AddPaymentUseCase {
     ) { }
 
     async execute(data: AddPaymentDTO) {
-        // Validate if membership belongs to the gym
+        /**
+         * validate if membership belongs to the gym 
+         */
         const membership = await this.membershipRepository.findById(data.membershipId);
         if (!membership || membership.gymId !== data.gymId) {
             throw new Error("Membership not found.");

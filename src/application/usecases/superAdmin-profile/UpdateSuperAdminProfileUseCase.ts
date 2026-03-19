@@ -11,7 +11,7 @@ export class UpdateSuperAdminProfileUseCase implements IUpdateSuperAdminProfileU
     ) { }
     async execute(id: string, profile: SuperAdminProfileDTO): Promise<SuperAdminProfileDTO> {
         const superAdminEntity = SuperAdminProfileMapper.toEntity(profile)
-        const updatedSuperAdmin = await this._superAdminRepository.update(id, superAdminEntity);
+        const updatedSuperAdmin = await this._superAdminRepository.updateById(id, superAdminEntity);
         return SuperAdminProfileMapper.toDTO(updatedSuperAdmin);
     }
 }

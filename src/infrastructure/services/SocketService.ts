@@ -6,11 +6,7 @@ export class SocketService implements ISocketService {
     private static _io: SocketServer | null = null;
 
     public static init(server: HttpServer): SocketServer {
-        const origins = [
-            "http://localhost:5173",
-            "http://localhost:5174",
-            process.env.FRONTEND_URL
-        ].filter(Boolean) as string[];
+
 
         this._io = new SocketServer(server, {
             cors: {
@@ -31,7 +27,7 @@ export class SocketService implements ISocketService {
             console.log("A user connected:", socket.id);
 
             socket.on("join-gym", (gymId: string) => {
-                socket.join(`gym_${gymId}`);
+                void socket.join(`gym_${gymId}`);
                 console.log(`User joined room: gym_${gymId}`);
             });
 
@@ -50,7 +46,7 @@ export class SocketService implements ISocketService {
         return this._io;
     }
 
-    public emitToGym(gymId: string, event: string, data: any): void {
+    public emitToGym(gymId: string, event: string, data: unknown): void {
         if (SocketService._io) {
             SocketService._io.to(`gym_${gymId}`).emit(event, data);
         }

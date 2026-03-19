@@ -19,7 +19,7 @@ export class GetDailyAttendanceReportUseCase implements IGetDailyAttendanceRepor
         /**
          * fetch all users of that type for the gym
          */
-        let users:any[] = [];
+        let users: { id: string; fullName: string; email: string; clientId?: string | null }[] = [];
         if(userType === "CLIENT"){
           
             //no pagination needed
@@ -43,10 +43,10 @@ export class GetDailyAttendanceReportUseCase implements IGetDailyAttendanceRepor
             
             let checkIn= "--";
             let checkOut= "--";
-            let status:any = "PENDING";
+            let status: 'PRESENT' | 'ABSENT' | 'PENDING' = "PENDING";
 
             if(attendance){
-                status=attendance.status;
+                status=attendance.status as 'PRESENT' | 'ABSENT' | 'PENDING';
                 if(attendance.logs && attendance.logs.length > 0){
                     const firstLog = attendance.logs[0];
                     const lastLog = attendance.logs[attendance.logs.length-1]; 
@@ -62,7 +62,7 @@ export class GetDailyAttendanceReportUseCase implements IGetDailyAttendanceRepor
             return {
                 userId:user.id,
                 fullName : user.fullName ||user.email , //fallback if name is missing
-                clientId : userType === "CLIENT" ? user.clientId: undefined,
+                clientId : userType === "CLIENT" ? (user.clientId ?? undefined) : undefined,
                 checkIn,
                 checkOut,
                 status,

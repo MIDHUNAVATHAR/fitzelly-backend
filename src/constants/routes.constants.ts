@@ -34,7 +34,15 @@ export const GYM_ROUTE = {
 
     ADD_EQUIPMENT: "/api/gym/equipment",
     GET_EQUIPMENTS: "/api/gym/equipments",
-    EQUIPMENT_BY_ID: "/api/gym/equipment/:equipmentId"
+    EQUIPMENT_BY_ID: "/api/gym/equipment/:equipmentId",
+
+    ADD_ENQUIRY: "/api/gym/enquiry",
+    GET_ENQUIRIES: "/api/gym/enquiries",
+    ENQUIRY_BY_ID: "/api/gym/enquiry/:id",
+
+    ADD_EXPENSE: "/api/gym/expense",
+    GET_EXPENSES: "/api/gym/expenses",
+    EXPENSE_BY_ID: "/api/gym/expense/:id"
 
 
 }

@@ -1,7 +1,16 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ICreateOrUpdateWorkoutPlanUseCase } from "../../../application/IUseCases/workout-plan/ICreateOrUpdateWorkoutPlanUseCase";
 import { IGetWorkoutPlanByClientIdUseCase } from "../../../application/IUseCases/workout-plan/IGetWorkoutPlanByClientIdUseCase";
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
+
+interface CustomRequest extends Request {
+    user: {
+        id: string;
+        gymId?: string;
+        role: string;
+        email: string;
+    };
+}
 
 export class TrainerWorkoutPlanController {
     constructor(
@@ -10,11 +19,12 @@ export class TrainerWorkoutPlanController {
         private trainerRepository: ITrainerRepository
     ) { }
 
-    async createOrUpdatePlan(req: Request, res: Response): Promise<void> {
+    async createOrUpdatePlan(req: Request, res: Response,next:NextFunction): Promise<void> {
         try {
-            const trainerId = (req as any).user.id;
+            const authReq = req as unknown as CustomRequest;
+            const trainerId = authReq.user.id;
             const { clientId, weeklyPlan, notes } = req.body;
-            let gymId = (req as any).user.gymId;
+            let gymId = authReq.user.gymId;
 
             if (!gymId) {
                 const trainer = await this.trainerRepository.findById(trainerId);
@@ -31,19 +41,20 @@ export class TrainerWorkoutPlanController {
             });
 
             res.status(200).json({ status: "success", data: plan });
-        } catch (error: any) {
-            res.status(500).json({ status: "error", message: error.message });
+        } catch (error) {
+           next(error)
         }
     }
 
-    async getClientPlan(req: Request, res: Response): Promise<void> {
+    async getClientPlan(req: Request, res: Response,next:NextFunction): Promise<void> {
         try {
+            const authReq = req as unknown as CustomRequest;
             const { clientId } = req.params;
-            const trainerId = (req as any).user.id;
+            const trainerId = authReq.user.id;
             const plan = await this.getWorkoutPlanByClientIdUseCase.execute(clientId as string, trainerId);
             res.status(200).json({ status: "success", data: plan });
-        } catch (error: any) {
-            res.status(500).json({ status: "error", message: error.message });
+        } catch (error) {
+              next(error)
         }
     }
 }
