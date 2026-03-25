@@ -1,5 +1,5 @@
 import { IGymRepository, GymSearchQuery, GymFindOptions, IGymStatus } from "../../domain/repositories/IGymRepository";
-import { Gym } from "../../domain/entities/Gym";
+import { Gym, IGymCertificate } from "../../domain/entities/Gym";
 import { GymModel } from "../database/mongoose/models/GymModel";
 import { IGymDocument } from "../database/mongoose/types/IGymDocument";
 import { BaseRepository } from "./BaseRepository";
@@ -43,6 +43,14 @@ export class GymRepository extends BaseRepository<Gym, IGymDocument> implements 
         const gymDoc = await this.model.findByIdAndUpdate(id, { logoUrl }, { new: true });
         if (!gymDoc) {
             throw new NotFoundError("Gym")
+        }
+        return this.toEntity(gymDoc);
+    }
+
+    async updateCertificates(id: string, certificates: IGymCertificate[]): Promise<Gym> {
+        const gymDoc = await this.model.findByIdAndUpdate(id, { certificates }, { new: true });
+        if (!gymDoc) {
+            throw new NotFoundError("Gym");
         }
         return this.toEntity(gymDoc);
     }

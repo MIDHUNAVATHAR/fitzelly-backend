@@ -6,6 +6,7 @@ import { connectDB } from "./infrastructure/database/connectDB";
 
 import http from "http";
 import { SocketService } from "./infrastructure/services/SocketService";
+import { AutomatedExpiryCronService } from "./infrastructure/services/AutomatedExpiryCronService";
 
 
 async function bootstrap() {
@@ -16,10 +17,11 @@ async function bootstrap() {
     const server = http.createServer(app);
 
     SocketService.init(server);
+    new AutomatedExpiryCronService().init();
 
     server.listen(PORT, () => {
         console.log(`server started on port - ${PORT}`);
     })
 }
 
-void bootstrap();
+bootstrap();

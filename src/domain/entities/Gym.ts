@@ -3,6 +3,13 @@ import { ROLES } from "../../constants/roles.constants";
 export type ApprovalStatus = "Approved" | "Pending" | "Rejected";
 export type SubscriptionStatus = "Active" | "Trial" | "Expired" | "Pending";
 
+export interface IGymCertificate {
+    url: string;
+    type: 'IMAGE' | 'PDF';
+    name: string;
+    key: string;
+}
+
 export class Gym {
     constructor(
         public readonly id: string,
@@ -19,6 +26,7 @@ export class Gym {
         public readonly approvalStatus: ApprovalStatus = "Pending",
         public readonly subscriptionStatus: SubscriptionStatus = "Pending",
         public readonly expiryDate?: Date,
+        public readonly certificates: IGymCertificate[] = [],
         public readonly createdAt: Date = new Date(),
     ) { }
 }

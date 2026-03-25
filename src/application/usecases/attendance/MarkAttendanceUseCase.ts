@@ -6,17 +6,22 @@ import { BadRequestError } from "../../errors/AppError";
 import { IMarkAttendanceUseCase } from "../../IUseCases/attendance/IMarkAttendanceUseCase";
 import { isWithin50Km } from "../../utils/location.util";
 import { ISocketService } from "../../../domain/services/ISocketService";
-
+import { IMembershipRepository } from "../../../domain/repositories/IMembershipRepository";
+import { logger } from "../../../infrastructure/logger/logger";
 
 
 export class MarkAttendenceUseCase implements IMarkAttendanceUseCase {
     constructor(
         private _attendanceRepository: IAttendanceRepository,
         private _gymRepository: IGymRepository,
-        private _socketService: ISocketService
-    ) { };
+        private _socketService: ISocketService,
+        private _membershipRepository: IMembershipRepository
+    ) {
+        logger.info("MarkAttendenceUseCase initialized - v3 (with deduction support)");
+    };
 
     async execute(data: MarkAttendanceRequestDTO): Promise<AttendanceResponseDTO> {
+        logger.info(`[MarkAttendance] Execute called with: ${JSON.stringify(data)}`);
         const today = new Date();
         const startOfDay = new Date(today);
         startOfDay.setHours(0, 0, 0, 0);
@@ -46,7 +51,10 @@ export class MarkAttendenceUseCase implements IMarkAttendanceUseCase {
             }
         }
 
+
         let attendance = await this._attendanceRepository.findByUserAndDate(data.userId, startOfDay)
+
+        const oldStatus = attendance?.status;
 
         if (data.action === "CHECK_IN") {
             if (attendance) {
@@ -80,7 +88,36 @@ export class MarkAttendenceUseCase implements IMarkAttendanceUseCase {
                 )
                 const created = await this._attendanceRepository.create(newAttendance);
                 attendance = created;
+            }
 
+            /**
+             * Decerement one day from membership if day based plan
+             */
+            if (oldStatus !== "PRESENT" && data.userType === "CLIENT") {
+                logger.info(`[MarkAttendance] Starting deduction process for client ${data.userId}`);
+                const activeMembership = await this._membershipRepository.findLatestByClientId(data.userId);
+
+                if (!activeMembership) {
+                    logger.error(`[MarkAttendance] Deduction Failed: No membership found for client ${data.userId}`);
+                } else if (activeMembership.planType !== "DAY_BASED") {
+                    logger.info(`[MarkAttendance] Skipping deduction: Plan is ${activeMembership.planType}, not DAY_BASED`);
+                } else if (activeMembership.status !== "ACTIVE") {
+                    logger.error(`[MarkAttendance] Deduction Failed: Membership status is ${activeMembership.status}, expected ACTIVE. ID: ${activeMembership.id}`);
+                } else {
+                    const currentDays = activeMembership.daysLeft ?? 0;
+                    const newDays = Math.max(0, currentDays - 1);
+                    const newStatus = newDays === 0 ? "EXPIRED" : "ACTIVE";
+
+                    logger.info(`[MarkAttendance] Proceeding with deduction for ${activeMembership.id}. ${currentDays} -> ${newDays}`);
+
+                    await this._membershipRepository.update(activeMembership.id, {
+                        daysLeft: newDays,
+                        status: newStatus
+                    });
+                    logger.info(`[MarkAttendance] Successfully updated membership record`);
+                }
+            } else if (oldStatus === "PRESENT") {
+                logger.info(`[MarkAttendance] Skipping deduction for client ${data.userId} because they have already been marked PRESNT today.`);
             }
         } else if (data.action === "CHECK_OUT") {
             if (!attendance) {

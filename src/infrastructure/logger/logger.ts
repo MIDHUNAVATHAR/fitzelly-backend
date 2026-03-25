@@ -29,7 +29,7 @@ export const logger = winston.createLogger({
     format: fileFormat,
     transports: [
 
-        // 🖥 Console → only in development
+        //  Console → only in development
         ...(isDev
             ? [
                 new winston.transports.Console({
@@ -42,7 +42,7 @@ export const logger = winston.createLogger({
             ]
             : []),
 
-        // 📄 Info Logs
+        //  Info Logs
         new DailyRotateFile({
             filename: "logs/info-%DATE%.log",
             datePattern: "YYYY-MM-DD",

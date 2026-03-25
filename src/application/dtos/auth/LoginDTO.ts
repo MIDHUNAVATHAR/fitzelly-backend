@@ -11,4 +11,5 @@ export interface LoginResponseDTO {
     email: string;
     role: string;
     id: string;
+    gymId?: string;
 }

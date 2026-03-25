@@ -34,12 +34,10 @@ export class UpdateEquipmentUseCase implements IUpdateEquipmentUseCase {
             name: data.name,
             description: data.description,
             image: imageUrl,
-            startBookingTime: data.startBookingTime,
             availableDays: data.availableDays,
             availableFrom: data.availableFrom,
             availableTo: data.availableTo,
             allowedPlans: data.allowedPlans,
-            maxUsageMinutes: data.maxUsageMinutes,
             capacity: data.capacity,
             slotIntervalMinutes: data.slotIntervalMinutes,
             isActive: data.isActive

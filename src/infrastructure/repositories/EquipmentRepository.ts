@@ -13,12 +13,10 @@ export class EquipmentRepository implements IEquipmentRepository {
             name: equipment.name,
             description: equipment.description,
             image: equipment.image,
-            startBookingTime: equipment.startBookingTime,
             availableDays: equipment.availableDays,
             availableFrom: equipment.availableFrom,
             availableTo: equipment.availableTo,
             allowedPlans: equipment.allowedPlans,
-            maxUsageMinutes: equipment.maxUsageMinutes,
             capacity: equipment.capacity,
             slotIntervalMinutes: equipment.slotIntervalMinutes,
             isActive: equipment.isActive,
@@ -50,7 +48,7 @@ export class EquipmentRepository implements IEquipmentRepository {
     }
 
     async findAllByGym(gymId: string, page: number, limit: number, search?: string): Promise<{ equipments: Equipment[], total: number }> {
-        const query: Record<string, unknown> = { gymId, isDeleted: false };
+        const query: Record<string, unknown> = { gymId: new mongoose.Types.ObjectId(gymId), isDeleted: false };
         if (search) {
             query.name = { $regex: search, $options: "i" };
         }
@@ -74,12 +72,10 @@ export class EquipmentRepository implements IEquipmentRepository {
             doc.name,
             doc.description,
             doc.image,
-            doc.startBookingTime,
             doc.availableDays,
             doc.availableFrom,
             doc.availableTo,
             doc.allowedPlans?.map((id: mongoose.Types.ObjectId) => id.toString()) || [],
-            doc.maxUsageMinutes,
             doc.capacity,
             doc.slotIntervalMinutes,
             doc.isActive,

@@ -1,5 +1,12 @@
 import { Document } from "mongoose";
 
+export interface IGymCertificate {
+    url: string;
+    type: 'IMAGE' | 'PDF';
+    name: string;
+    key: string;
+}
+
 export interface IGymDocument extends Document {
     email: string;
     password: string;
@@ -14,6 +21,7 @@ export interface IGymDocument extends Document {
     approvalStatus: 'Approved' | 'Pending' | 'Rejected';
     subscriptionStatus: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate: Date;
+    certificates: IGymCertificate[];
     createdAt: Date;
     isDeleted: boolean;
 }

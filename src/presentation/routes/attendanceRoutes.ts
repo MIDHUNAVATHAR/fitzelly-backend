@@ -9,6 +9,7 @@ router.post("/mark", protect([]), attendanceController.markAttendance.bind(atten
 router.post("/mark-manual", protect(["gym"]), attendanceController.markManualAttendance.bind(attendanceController));
 router.get("/report", protect(["gym"]), attendanceController.getDailyReport.bind(attendanceController));
 router.get("/today", protect([]), attendanceController.getTodayAttendance.bind(attendanceController));
+router.get("/yearly-count", protect([]), attendanceController.getYearlyAttendanceCount.bind(attendanceController));
 
 
 export default router;

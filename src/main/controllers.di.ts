@@ -12,8 +12,11 @@ import { GymTrainerController } from "../presentation/controller/gym/GymTrainerC
 import { GymPlanController } from "../presentation/controller/gym/GymPlanController";
 import { GymMembershipController } from "../presentation/controller/gym/GymMembershipController";
 import { GymEquipmentController } from "../presentation/controller/gym/GymEquipmentController";
+import { GymAnalyticsController } from "../presentation/controller/gym/GymAnalyticsController";
 import { EnquiryController } from "../presentation/controller/gym/EnquiryController";
 import { ExpenseController } from "../presentation/controller/gym/ExpenseController";
+import { TrainerPayoutController } from "../presentation/controller/gym/TrainerPayoutController";
+import { DashboardController } from "../presentation/controller/gym/DashboardController";
 
 
 import { ClientAuthController } from "../presentation/controller/auth/ClientAuthController";
@@ -24,10 +27,14 @@ import { TrainerProfileController } from "../presentation/controller/trainer/Tra
 
 import { SuperAdminProfileController } from "../presentation/controller/super-admin/SuperAdminProfileController";
 import { SuperAdminGymsController } from "../presentation/controller/super-admin/SuperAdminGymsController";
+import { WorkoutLibraryController } from "../presentation/controller/workout-library/WorkoutLibraryController";
+import { WorkoutTemplateController } from "../presentation/controller/workout-template/WorkoutTemplateController";
 
 import { AttendanceController } from "../presentation/controller/attendance/AttendanceController";
 import { TrainerWorkoutPlanController } from "../presentation/controller/trainer/TrainerWorkoutPlanController";
 import { ClientWorkoutPlanController } from "../presentation/controller/client/ClientWorkoutPlanController";
+import { EquipmentBookingController } from "../presentation/controller/equipment-booking/EquipmentBookingController";
+import { NotificationController } from "../presentation/controller/notification/NotificationController";
 
 
 import {
@@ -60,6 +67,8 @@ import {
     getGymProfileUseCase,
     updateGymProfileUseCase,
     updateGymLogoUseCase,
+    uploadGymCertificateUseCase,
+    deleteGymCertificateUseCase,
 
     getSuperAdminProfileUseCase,
     updateSuperAdminProfileUseCase,
@@ -96,6 +105,9 @@ import {
     addPaymentUseCase,
     updatePaymentUseCase,
     deletePaymentUseCase,
+    getPaymentCollectionUseCase,
+    getGymAnalyticsUseCase,
+    getGymDashboardUseCase,
 
     addEquipmentUseCase,
     getEquipmentsUseCase,
@@ -118,6 +130,7 @@ import {
     getTodayAttendanceUseCase,
     getDailyAttendanceReportUseCase,
     markManualAttendanceUseCase,
+    getYearlyAttendanceCountUseCase,
     createOrUpdateWorkoutPlanUseCase,
     getWorkoutPlanByClientIdUseCase,
     trackWorkoutProgressUseCase,
@@ -134,7 +147,20 @@ import {
     updateExpenseUseCase,
     deleteExpenseUseCase,
 
+    workoutLibraryUseCase,
+    workoutTemplateUseCase,
 
+    addTrainerPayoutUseCase,
+    getTrainerPayoutsUseCase,
+    updateTrainerPayoutUseCase,
+    deleteTrainerPayoutUseCase,
+    getTrainerEarningsUseCase,
+    createEquipmentBookingUseCase,
+    getAvailableSlotsUseCase,
+    getClientBookingsUseCase,
+    cancelEquipmentBookingUseCase,
+    getNotificationsUseCase,
+    markNotificationUseCase
 } from "./usecases.di";
 import { trainerRepository } from "./repositories.di";
 
@@ -188,7 +214,10 @@ export const superAdminAuthenticationController = new SuperAdminAuthenticationCo
 export const gymProfileController = new GymProfileController(
     getGymProfileUseCase,
     updateGymProfileUseCase,
-    updateGymLogoUseCase);
+    updateGymLogoUseCase,
+    uploadGymCertificateUseCase,
+    deleteGymCertificateUseCase,
+);
 export const superAdminProfileController = new SuperAdminProfileController(
     getSuperAdminProfileUseCase,
     updateSuperAdminProfileUseCase,
@@ -226,10 +255,12 @@ export const gymMembershipController = new GymMembershipController(
     deleteMembershipUseCase,
     addPaymentUseCase,
     updatePaymentUseCase,
-    deletePaymentUseCase
+    deletePaymentUseCase,
+    getPaymentCollectionUseCase
 );
 
 
+// gym equipment
 export const gymEquipmentController = new GymEquipmentController(
     addEquipmentUseCase,
     getEquipmentsUseCase,
@@ -237,8 +268,13 @@ export const gymEquipmentController = new GymEquipmentController(
     deleteEquipmentUseCase
 );
 
+// gym analytics
+export const gymAnalyticsController = new GymAnalyticsController(getGymAnalyticsUseCase);
 
-//client 
+// gym dashboard
+export const dashboardController = new DashboardController(getGymDashboardUseCase);
+
+//client
 export const clientProfileController = new ClientProfileController(
     getClientProfileWithMembershipUseCase,
     updateClientProfileUseCase,
@@ -261,7 +297,8 @@ export const attendanceController = new AttendanceController(
     markAttendanceUseCase,
     getTodayAttendanceUseCase,
     getDailyAttendanceReportUseCase,
-    markManualAttendanceUseCase);
+    markManualAttendanceUseCase,
+    getYearlyAttendanceCountUseCase);
 
 
 // export const trainerWorkoutPlanController = new TrainerWorkoutPlanController(createOrUpdateWorkoutPlanUseCase, getWorkoutPlanByClientIdUseCase, trainerRepository);
@@ -291,5 +328,27 @@ export const expenseController = new ExpenseController(
     getExpensesUseCase,
     updateExpenseUseCase,
     deleteExpenseUseCase
+);
+
+export const trainerPayoutController = new TrainerPayoutController(
+    addTrainerPayoutUseCase,
+    getTrainerPayoutsUseCase,
+    updateTrainerPayoutUseCase,
+    deleteTrainerPayoutUseCase,
+    getTrainerEarningsUseCase
+);
+
+export const workoutLibraryController = new WorkoutLibraryController(workoutLibraryUseCase, trainerRepository);
+export const workoutTemplateController = new WorkoutTemplateController(workoutTemplateUseCase);
+export const equipmentBookingController = new EquipmentBookingController(
+    createEquipmentBookingUseCase,
+    getAvailableSlotsUseCase,
+    getClientBookingsUseCase,
+    cancelEquipmentBookingUseCase
+);
+
+export const notificationController = new NotificationController(
+    getNotificationsUseCase,
+    markNotificationUseCase
 );
 

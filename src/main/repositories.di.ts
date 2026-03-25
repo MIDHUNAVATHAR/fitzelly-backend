@@ -14,6 +14,12 @@ import { WorkoutPlanRepository } from "../infrastructure/repositories/WorkoutPla
 import { WorkoutLogRepository } from "../infrastructure/repositories/WorkoutLogRepository";
 import { EnquiryRepository } from "../infrastructure/repositories/EnquiryRepository";
 import { ExpenseRepository } from "../infrastructure/repositories/ExpenseRepository";
+import { ExerciseRepository } from "../infrastructure/repositories/ExerciseRepository";
+import { WorkoutTemplateRepository } from "../infrastructure/repositories/WorkoutTemplateRepository";
+import { TrainerPayoutRepository } from "../infrastructure/repositories/TrainerPayoutRepository";
+import { EquipmentBookingRepository } from "../infrastructure/repositories/EquipmentBookingRepository";
+import { AnalyticsRepository } from "../infrastructure/repositories/AnalyticsRepository";
+import { NotificationRepository } from "../infrastructure/repositories/NotificationRepository";
 
 
 
@@ -33,3 +39,9 @@ export const workoutPlanRepository = new WorkoutPlanRepository();
 export const workoutLogRepository = new WorkoutLogRepository();
 export const enquiryRepository = new EnquiryRepository();
 export const expenseRepository = new ExpenseRepository();
+export const exerciseRepository = new ExerciseRepository();
+export const workoutTemplateRepository = new WorkoutTemplateRepository();
+export const trainerPayoutRepository = new TrainerPayoutRepository();
+export const equipmentBookingRepository = new EquipmentBookingRepository();
+export const analyticsRepository = new AnalyticsRepository();
+export const notificationRepository = new NotificationRepository();

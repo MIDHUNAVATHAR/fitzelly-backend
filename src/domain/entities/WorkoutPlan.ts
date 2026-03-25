@@ -1,13 +1,15 @@
 export interface IExercise {
     id: string;
     name: string;
+    description: string;
     reps: string;
     sets: string;
+    videoUrl?: string;
 }
 
 
 export interface IDayPlan {
-    day: string;
+    day: "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
     exercises: IExercise[];
 }
 

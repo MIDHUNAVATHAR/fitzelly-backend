@@ -7,7 +7,6 @@ export class SocketService implements ISocketService {
 
     public static init(server: HttpServer): SocketServer {
 
-
         this._io = new SocketServer(server, {
             cors: {
                 origin: (origin, callback) => {
@@ -27,7 +26,7 @@ export class SocketService implements ISocketService {
             console.log("A user connected:", socket.id);
 
             socket.on("join-gym", (gymId: string) => {
-                void socket.join(`gym_${gymId}`);
+                socket.join(`gym_${gymId}`);
                 console.log(`User joined room: gym_${gymId}`);
             });
 

@@ -127,13 +127,20 @@ export class GymTrainerController {
 
             // Handle certificates
             let existingCertificates: string[] = [];
-            try {
-                if (req.body.certificates) {
-                    existingCertificates = JSON.parse(req.body.certificates);
-                }
-            } catch {
-                if (Array.isArray(req.body.certificates)) {
-                    existingCertificates = req.body.certificates;
+            const certsInput = req.body.existingCertificates || req.body.certificates;
+            if (certsInput) {
+                try {
+                    if (typeof certsInput === 'string') {
+                        existingCertificates = JSON.parse(certsInput);
+                    } else if (Array.isArray(certsInput)) {
+                        existingCertificates = certsInput;
+                    }
+                } catch {
+                    if (typeof certsInput === 'string') {
+                        existingCertificates = [certsInput];
+                    } else if (Array.isArray(certsInput)) {
+                        existingCertificates = certsInput;
+                    }
                 }
             }
 

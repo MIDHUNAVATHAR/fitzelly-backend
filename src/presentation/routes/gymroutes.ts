@@ -10,6 +10,10 @@ import { gymEquipmentController } from "../../main/controllers.di";
 import { gymMembershipController } from "../../main/controllers.di";
 import { enquiryController } from "../../main/controllers.di";
 import { expenseController } from "../../main/controllers.di";
+import { trainerPayoutController } from "../../main/controllers.di";
+import { gymAnalyticsController } from "../../main/controllers.di";
+import { dashboardController } from "../../main/controllers.di";
+import { notificationController } from "../../main/controllers.di";
 
 
 
@@ -38,6 +42,8 @@ router.route(GYM_ROUTE.GYM_PROFILE)
     .patch(gymProfileController.updateGymProfile.bind(gymProfileController));
 
 router.post(GYM_ROUTE.GYM_LOGO, protect([ROLES.GYM]), upload.single("logo"), gymProfileController.updateGymLogo.bind(gymProfileController));
+router.post(GYM_ROUTE.GYM_CERTIFICATE, protect([ROLES.GYM]), upload.single("certificate"), gymProfileController.uploadCertificate.bind(gymProfileController));
+router.delete(GYM_ROUTE.DELETE_GYM_CERTIFICATE, protect([ROLES.GYM]), gymProfileController.deleteCertificate.bind(gymProfileController));
 
 router.post(GYM_ROUTE.ADD_CLIENT, protect([ROLES.GYM]), gymClientController.addClient.bind(gymClientController));
 router.get(GYM_ROUTE.GET_CLIENTS, protect([ROLES.GYM]), gymClientController.getClients.bind(gymClientController))
@@ -66,13 +72,14 @@ router.patch(GYM_ROUTE.MEMBERSHIP_BY_ID, protect([ROLES.GYM]), gymMembershipCont
 router.delete(GYM_ROUTE.MEMBERSHIP_BY_ID, protect([ROLES.GYM]), gymMembershipController.deleteMembership.bind(gymMembershipController));
 
 // Payments
+router.get(GYM_ROUTE.GET_PAYMENTS, protect([ROLES.GYM]), gymMembershipController.getPayments.bind(gymMembershipController));
 router.post(GYM_ROUTE.ADD_PAYMENT, protect([ROLES.GYM]), gymMembershipController.addPayment.bind(gymMembershipController));
 router.patch(GYM_ROUTE.PAYMENT_BY_ID, protect([ROLES.GYM]), gymMembershipController.updatePayment.bind(gymMembershipController));
 router.delete(GYM_ROUTE.PAYMENT_BY_ID, protect([ROLES.GYM]), gymMembershipController.deletePayment.bind(gymMembershipController));
 
 // Equipments
 router.post(GYM_ROUTE.ADD_EQUIPMENT, protect([ROLES.GYM]), upload.single("image"), gymEquipmentController.addEquipment.bind(gymEquipmentController));
-router.get(GYM_ROUTE.GET_EQUIPMENTS, protect([ROLES.GYM]), gymEquipmentController.getEquipments.bind(gymEquipmentController));
+router.get(GYM_ROUTE.GET_EQUIPMENTS, protect([ROLES.GYM, ROLES.CLIENT, ROLES.TRAINER]), gymEquipmentController.getEquipments.bind(gymEquipmentController));
 router.put(GYM_ROUTE.EQUIPMENT_BY_ID, protect([ROLES.GYM]), upload.single("image"), gymEquipmentController.updateEquipment.bind(gymEquipmentController));
 router.delete(GYM_ROUTE.EQUIPMENT_BY_ID, protect([ROLES.GYM]), gymEquipmentController.deleteEquipment.bind(gymEquipmentController));
 
@@ -88,6 +95,22 @@ router.get(GYM_ROUTE.GET_EXPENSES, protect([ROLES.GYM]), expenseController.getEx
 router.put(GYM_ROUTE.EXPENSE_BY_ID, protect([ROLES.GYM]), expenseController.updateExpense.bind(expenseController));
 router.delete(GYM_ROUTE.EXPENSE_BY_ID, protect([ROLES.GYM]), expenseController.deleteExpense.bind(expenseController));
 
+// Trainer Payouts
+router.post(GYM_ROUTE.ADD_TRAINER_PAYOUT, protect([ROLES.GYM]), trainerPayoutController.addPayout.bind(trainerPayoutController));
+router.get(GYM_ROUTE.GET_TRAINER_PAYOUTS, protect([ROLES.GYM]), trainerPayoutController.getPayouts.bind(trainerPayoutController));
+router.put(GYM_ROUTE.TRAINER_PAYOUT_BY_ID, protect([ROLES.GYM]), trainerPayoutController.updatePayout.bind(trainerPayoutController));
+router.delete(GYM_ROUTE.TRAINER_PAYOUT_BY_ID, protect([ROLES.GYM]), trainerPayoutController.deletePayout.bind(trainerPayoutController));
 
+// Analytics
+router.get(GYM_ROUTE.GET_ANALYTICS, protect([ROLES.GYM]), gymAnalyticsController.getAnalytics.bind(gymAnalyticsController));
+
+// Dashboard
+router.get(GYM_ROUTE.GET_DASHBOARD, protect([ROLES.GYM]), dashboardController.getDashboard.bind(dashboardController));
+
+// Notifications
+router.get(GYM_ROUTE.NOTIFICATIONS_UNREAD, protect([ROLES.GYM]), notificationController.getUnread.bind(notificationController));
+router.get(GYM_ROUTE.NOTIFICATIONS_READ, protect([ROLES.GYM]), notificationController.getRead.bind(notificationController));
+router.patch(GYM_ROUTE.MARK_ALL_NOTIFICATIONS_READ, protect([ROLES.GYM]), notificationController.markAllAsRead.bind(notificationController));
+router.patch(GYM_ROUTE.MARK_NOTIFICATION_READ, protect([ROLES.GYM]), notificationController.markAsRead.bind(notificationController));
 
 export default router;

@@ -51,8 +51,8 @@ export class SuperAdminGymsController {
     async updateGymStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const gymId = req.params.gymId as string;
-            const { approvalStatus } = req.body;
-            const updatedGym = await this._updateGymStatusUseCase.execute(gymId, { approvalStatus })
+
+            const updatedGym = await this._updateGymStatusUseCase.execute(gymId)
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,
@@ -66,8 +66,12 @@ export class SuperAdminGymsController {
 
     async approveGym(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log("xxx")
+
             const gymId = req.params.gymId as string;
+            console.log(gymId)
             const updatedGym = await this._approveGymUseCase.execute(gymId);
+            console.log("updated gym ", updatedGym)
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,

@@ -7,6 +7,7 @@ export class GymLoginMapper {
             id: user.id,
             email: user.email,
             role: user.role,
+            gymId: user.id,
             accessToken,
             refreshToken
         }

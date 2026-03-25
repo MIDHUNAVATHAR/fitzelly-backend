@@ -48,7 +48,9 @@ export class ApproveGymUseCase implements IApproveGymUseCase {
         endDate.setDate(startDate.getDate() + trialDays);
 
         const updatedGym = await this._gymRepository.updateStatus(gymId, {
-            approvalStatus: 'Approved'
+            approvalStatus: 'Approved',
+            subscriptionStatus: 'Trial',
+            expiryDate: endDate
         });
 
         /**

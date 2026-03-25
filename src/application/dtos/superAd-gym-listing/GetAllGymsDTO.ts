@@ -1,4 +1,4 @@
-import type { ApprovalStatus } from "../../../domain/entities/Gym";
+import type { ApprovalStatus, IGymCertificate } from "../../../domain/entities/Gym";
 import type { SubscriptionStatus } from "../../../domain/entities/Gym";
 
 
@@ -16,6 +16,7 @@ export interface GymResponseDTO {
     description?: string;
     location?: { latitude: number, longitude: number };
     createdAt: string;
+    certificates?: IGymCertificate[];
     latestSubscription?: {
         planName: string;
         amount: number;

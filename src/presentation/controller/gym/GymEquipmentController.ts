@@ -1,4 +1,5 @@
 import { Response, NextFunction } from "express";
+import { ROLES } from "../../../constants/roles.constants";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
@@ -26,8 +27,6 @@ export class GymEquipmentController {
             if (typeof data.availableDays === "string") data.availableDays = JSON.parse(data.availableDays);
             if (typeof data.allowedPlans === "string") data.allowedPlans = JSON.parse(data.allowedPlans);
 
-            if (typeof data.startBookingTime === "string") data.startBookingTime = parseInt(data.startBookingTime);
-            if (typeof data.maxUsageMinutes === "string") data.maxUsageMinutes = parseInt(data.maxUsageMinutes);
             if (typeof data.capacity === "string") data.capacity = parseInt(data.capacity);
             if (typeof data.slotIntervalMinutes === "string") data.slotIntervalMinutes = parseInt(data.slotIntervalMinutes);
 
@@ -51,7 +50,8 @@ export class GymEquipmentController {
 
     async getEquipments(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const gymId = req.user!.id;
+            const queryGymId = req.query.gymId as string;
+            const gymId = queryGymId || (req.user?.role === ROLES.GYM ? req.user.id : (req.user?.gymId || req.user?.id || ""));
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const search = req.query.search as string;
@@ -76,8 +76,6 @@ export class GymEquipmentController {
             if (typeof data.availableDays === "string") data.availableDays = JSON.parse(data.availableDays);
             if (typeof data.allowedPlans === "string") data.allowedPlans = JSON.parse(data.allowedPlans);
 
-            if (typeof data.startBookingTime === "string") data.startBookingTime = parseInt(data.startBookingTime);
-            if (typeof data.maxUsageMinutes === "string") data.maxUsageMinutes = parseInt(data.maxUsageMinutes);
             if (typeof data.capacity === "string") data.capacity = parseInt(data.capacity);
             if (typeof data.slotIntervalMinutes === "string") data.slotIntervalMinutes = parseInt(data.slotIntervalMinutes);
 

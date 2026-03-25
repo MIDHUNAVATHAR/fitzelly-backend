@@ -32,6 +32,7 @@ export class GymMapper {
             description: gym.description,
             location: gym.location,
             createdAt: gym.createdAt.toISOString(),
+            certificates: gym.certificates || [],
             latestSubscription: latestSubscription ? {
                 planName: latestSubscription.planName,
                 amount: latestSubscription.amount,

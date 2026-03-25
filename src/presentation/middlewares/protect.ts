@@ -6,8 +6,10 @@ import { ResponseMessage } from "../../constants/response.constants";
 
 const jwtService = new JwtService();
 
+import { JwtPayload } from "../../domain/services/ITokenService";
+
 export interface AuthRequest extends Request {
-    user?: { id: string, role: string, email: string }
+    user?: JwtPayload
 }
 
 export const protect = (roles: string[]) => (req: AuthRequest, res: Response, next: NextFunction) => {

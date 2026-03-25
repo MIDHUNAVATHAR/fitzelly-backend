@@ -5,12 +5,10 @@ export interface IEquipment extends Document {
     name: string;
     description: string;
     image: string;
-    startBookingTime: number;
     availableDays: string[];
     availableFrom: string;
     availableTo: string;
     allowedPlans: mongoose.Types.ObjectId[];
-    maxUsageMinutes: number;
     capacity: number;
     slotIntervalMinutes: number;
     isActive: boolean;

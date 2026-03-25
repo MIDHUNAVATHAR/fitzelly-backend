@@ -1,8 +1,8 @@
-
 export interface JwtPayload {
     id: string;
     email: string;
     role: string;
+    gymId?: string;
 }
 
 export interface ITokenService {

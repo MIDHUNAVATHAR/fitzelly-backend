@@ -7,6 +7,7 @@ import inviteRouter from "./inviteroutes"
 import clientRouter from "./clientroutes";
 import trainerRouter from "./trainerroutes";
 import attendanceRouter from "./attendanceRoutes"
+import equipmentBookingRouter from "./equipmentBookingRoutes"
 
 
 const rootRouter = Router();
@@ -20,5 +21,6 @@ rootRouter.use("/", superAdminRouter);
 rootRouter.use("/", inviteRouter)
 
 rootRouter.use("/api/attendance", attendanceRouter);
+rootRouter.use("/api/equipment-booking", equipmentBookingRouter);
 
 export default rootRouter; 

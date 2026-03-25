@@ -1,4 +1,11 @@
 
+export interface IGymCertificateDTO {
+    url: string;
+    type: 'IMAGE' | 'PDF';
+    name: string;
+    key: string;
+}
+
 export interface GymProfileDTO {
     logoUrl: string;
     gymName: string;
@@ -15,6 +22,7 @@ export interface GymProfileDTO {
     paymentMethod?: string;
     planName?: string;
     amount?: number;
+    certificates?: IGymCertificateDTO[];
 }
 
 

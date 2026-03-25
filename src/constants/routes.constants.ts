@@ -9,6 +9,8 @@ export const GYM_ROUTE = {
 
     GYM_PROFILE: "/api/gym/profile",
     GYM_LOGO: "/api/gym/profile/logo",
+    GYM_CERTIFICATE: "/api/gym/profile/certificate",
+    DELETE_GYM_CERTIFICATE: "/api/gym/profile/certificate/delete",
 
     ADD_CLIENT: "/api/gym/client",
     GET_CLIENTS: "/api/gym/clients",
@@ -30,6 +32,7 @@ export const GYM_ROUTE = {
     MEMBERSHIP_BY_ID: "/api/gym/membership/:id",
 
     ADD_PAYMENT: "/api/gym/membership/:membershipId/payment",
+    GET_PAYMENTS: "/api/gym/payments",
     PAYMENT_BY_ID: "/api/gym/payment/:paymentId",
 
     ADD_EQUIPMENT: "/api/gym/equipment",
@@ -42,9 +45,19 @@ export const GYM_ROUTE = {
 
     ADD_EXPENSE: "/api/gym/expense",
     GET_EXPENSES: "/api/gym/expenses",
-    EXPENSE_BY_ID: "/api/gym/expense/:id"
+    EXPENSE_BY_ID: "/api/gym/expense/:id",
 
+    ADD_TRAINER_PAYOUT: "/api/gym/trainer-payout",
+    GET_TRAINER_PAYOUTS: "/api/gym/trainer-payouts",
+    TRAINER_PAYOUT_BY_ID: "/api/gym/trainer-payout/:id",
 
+    GET_ANALYTICS: "/api/gym/analytics",
+    GET_DASHBOARD: "/api/gym/dashboard",
+
+    NOTIFICATIONS_UNREAD: "/api/gym/notifications/unread",
+    NOTIFICATIONS_READ: "/api/gym/notifications/read",
+    MARK_NOTIFICATION_READ: "/api/gym/notifications/:id/read",
+    MARK_ALL_NOTIFICATIONS_READ: "/api/gym/notifications/read-all"
 }
 
 export const CREATE_PASSWORD_ROUTE = "/api/auth/create-password";
@@ -85,6 +98,18 @@ export const TRAINER_ROUTES = {
     TRAINER_CLIENTS: "/api/trainer/clients",
     TRAINER_CLIENT_VIEW: "/api/trainer/clients/:id",
     TRAINER_WORKOUT_PLAN: "/api/trainer/workout-plan/:clientId",
+
+    // Workout Library & Templates
+    ADD_EXERCISE: "/api/trainer/workout-library",
+    GET_EXERCISES: "/api/trainer/workout-library",
+    UPDATE_EXERCISE: "/api/trainer/workout-library/:id",
+    DELETE_EXERCISE: "/api/trainer/workout-library/:id",
+
+    ADD_TEMPLATE: "/api/trainer/workout-template",
+    GET_TEMPLATES: "/api/trainer/workout-template",
+    DELETE_TEMPLATE: "/api/trainer/workout-template/:id",
+    ASSIGN_TEMPLATE: "/api/trainer/workout-template/assign",
+    TRAINER_EARNINGS: "/api/trainer/earnings",
 }
 
 export const SUPER_ADMIN_ROUTES = {
@@ -96,7 +121,10 @@ export const SUPER_ADMIN_ROUTES = {
     SUPER_ADMIN_PROFILE: "/api/super-admin/profile",
     SUPER_ADMIN_LOGO: "/api/super-admin/profile/logo",
     SUPER_ADMIN_GYMS: "/api/super-admin/gyms",
-    GYM_BY_ID: "/api/super-admin/gyms/:gymId"
+    GYM_BY_ID: "/api/super-admin/gyms/:gymId",
+    APPROVE_GYM: "/api/super-admin/gyms/:gymId/approve",
+    WORKOUT_LIBRARY: "/api/super-admin/workout-library",
+    WORKOUT_LIBRARY_BY_ID: "/api/super-admin/workout-library/:id"
 }
 
 export const GOOGLE_ROUTE = {

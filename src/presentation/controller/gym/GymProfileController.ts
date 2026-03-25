@@ -4,6 +4,8 @@ import { IGetGymProfileUseCase } from "../../../application/IUseCases/gym-profil
 import { IUpdateGymProfileUseCase } from "../../../application/IUseCases/gym-profile/IUpdateGymProfileUseCase";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { IUpdateGymLogoUseCase } from "../../../application/IUseCases/gym-profile/IUpdateGymLogoUseCase";
+import { IUploadGymCertificateUseCase } from "../../../application/IUseCases/gym-profile/IUploadGymCertificateUseCase";
+import { IDeleteGymCertificateUseCase } from "../../../application/IUseCases/gym-profile/IDeleteGymCertificateUseCase";
 import { ResponseMessage } from "../../../constants/response.constants";
 
 export class GymProfileController {
@@ -11,6 +13,8 @@ export class GymProfileController {
         private _getGymProfileUseCase: IGetGymProfileUseCase,
         private _updateGymProfileUseCase: IUpdateGymProfileUseCase,
         private _updateGymLogoUseCase: IUpdateGymLogoUseCase,
+        private _uploadGymCertificateUseCase: IUploadGymCertificateUseCase,
+        private _deleteGymCertificateUseCase: IDeleteGymCertificateUseCase,
     ) { }
 
     async getGymProfile(req: AuthRequest, res: Response, next: NextFunction) {
@@ -54,6 +58,44 @@ export class GymProfileController {
                 message: ResponseMessage.LOGO_UPDATE_SUCCESS,
                 data: { ...updatedProfile }
             })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async uploadCertificate(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const gymId = req.user!.id;
+            const certificateName = req.body.name;
+            if (!req.file) {
+                throw new Error("File required");
+            }
+            if (!certificateName) {
+                throw new Error("Certificate name required");
+            }
+
+            const updatedGym = await this._uploadGymCertificateUseCase.execute(gymId, req.file, certificateName);
+            return res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: "Certificate uploaded successfully",
+                data: updatedGym
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async deleteCertificate(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const gymId = req.user!.id;
+            const certificateKey = req.body.key; // Received key from body
+
+            const updatedGym = await this._deleteGymCertificateUseCase.execute(gymId, certificateKey);
+            return res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: "Certificate deleted successfully",
+                data: updatedGym
+            });
         } catch (error) {
             next(error);
         }

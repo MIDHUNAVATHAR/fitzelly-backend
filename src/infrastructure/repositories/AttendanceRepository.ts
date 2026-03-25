@@ -36,7 +36,7 @@ export class AttendanceRepository extends BaseRepository<Attendance, IAttendance
         const startOfDay = new Date(date);
         startOfDay.setHours(0, 0, 0, 0);
 
-        const filter = {
+        const filter: any = {
             gymId,
             date: startOfDay,
             isDeleted: false,
@@ -49,5 +49,17 @@ export class AttendanceRepository extends BaseRepository<Attendance, IAttendance
 
         const docs = await AttendanceModel.find(filter);
         return docs.map(doc => this.toEntity(doc));
+    }
+
+    async countPresentDaysInYear(userId: string, year: number): Promise<number> {
+        return await AttendanceModel.countDocuments({
+            userId,
+            date: {
+                $gte: new Date(year, 0, 1),
+                $lte: new Date(year, 11, 31, 23, 59, 59)
+            },
+            status: "PRESENT",
+            isDeleted: false
+        });
     }
 }

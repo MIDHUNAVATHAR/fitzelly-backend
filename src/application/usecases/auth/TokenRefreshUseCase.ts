@@ -51,7 +51,8 @@ export class TokenRefreshUseCase implements ITokenRefreshUseCase {
         const accessToken = this._tokenService.generateAccessToken({
             id: payload.id,
             email: payload.email,
-            role: payload.role
+            role: payload.role,
+            gymId: payload.gymId
         })
 
         return { accessToken, user: payload };

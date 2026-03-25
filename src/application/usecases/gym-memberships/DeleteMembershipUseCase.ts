@@ -12,12 +12,9 @@ export class DeleteMembershipUseCase {
         if (!membership || membership.gymId !== gymId) throw new Error("Membership not found.");
 
         /**
-         * take payments based on membership id and delete
+         * soft delete all payments associated with this membership record
          */
-        const membershipPayments = await this.paymentRepository.getPaymentsByMembershipId(membership.id);
-        for (const payment of membershipPayments) {
-            await this.paymentRepository.delete(payment.id);
-        }
+        await this.paymentRepository.deleteManyByMembershipId(membership.id);
 
         return await this.membershipRepository.delete(membershipId);
     }

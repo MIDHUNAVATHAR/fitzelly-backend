@@ -25,7 +25,7 @@ export class GymLoginUseCase implements ILoginUseCase {
             throw new AuthenticationFailedError("Password Mismatch");
         }
 
-        const payload = { id: user.id, email: user.email, role: user.role };
+        const payload = { id: user.id, email: user.email, role: user.role, gymId: user.id };
 
         const accessToken = this._tokenService.generateAccessToken(payload)
         const refreshToken = this._tokenService.generateRefreshToken(payload)

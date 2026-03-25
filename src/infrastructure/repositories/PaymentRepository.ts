@@ -39,9 +39,73 @@ export class PaymentRepository implements IPaymentRepository {
         return result.modifiedCount > 0;
     }
 
+    async deleteManyByMembershipId(membershipId: string): Promise<boolean> {
+        const result = await PaymentModel.updateMany(
+            { membershipId },
+            { $set: { isDeleted: true } }
+        ).exec();
+        return result.modifiedCount > 0;
+    }
+
     async findById(paymentId: string): Promise<Payment | null> {
         const doc = await PaymentModel.findOne({ _id: paymentId, isDeleted: false }).exec();
         return doc ? this.mapToEntity(doc) : null;
+    }
+
+    async getCollectionByGymId(gymId: string, page: number, limit: number, startDate: Date, endDate: Date): Promise<{ payments: any[], total: number, totalAmount: number }> {
+        const skip = (page - 1) * limit;
+
+        const pipeline: any[] = [
+            { $match: { isDeleted: false, paymentDate: { $gte: startDate, $lte: endDate } } },
+            {
+                $addFields: {
+                    membershipObjectId: { $toObjectId: "$membershipId" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "memberships",
+                    localField: "membershipObjectId",
+                    foreignField: "_id",
+                    as: "membership"
+                }
+            },
+            { $unwind: "$membership" },
+            { $match: { "membership.gymId": gymId, "membership.isDeleted": false } },
+            {
+                $addFields: {
+                    clientObjectId: { $toObjectId: "$membership.clientId" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "clients",
+                    localField: "clientObjectId",
+                    foreignField: "_id",
+                    as: "client"
+                }
+            },
+            { $unwind: { path: "$client", preserveNullAndEmptyArrays: true } }
+        ];
+
+        const [results, statsResult] = await Promise.all([
+            PaymentModel.aggregate([...pipeline, { $sort: { paymentDate: -1, createdAt: -1 } }, { $skip: skip }, { $limit: limit }]).exec(),
+            PaymentModel.aggregate([...pipeline, { $group: { _id: null, total: { $sum: 1 }, totalAmount: { $sum: "$amount" } } }]).exec()
+        ]);
+
+        return {
+            payments: results.map(p => ({
+                id: p._id.toString(),
+                membershipId: p.membershipId,
+                clientName: p.membership.clientName,
+                clientId: p.client?.clientId || 'N/A',
+                amount: p.amount,
+                paymentDate: p.paymentDate,
+                note: p.note
+            })),
+            total: statsResult[0]?.total || 0,
+            totalAmount: statsResult[0]?.totalAmount || 0
+        };
     }
 
     private mapToEntity(doc: IPayment): Payment {

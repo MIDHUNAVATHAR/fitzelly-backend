@@ -10,5 +10,6 @@ export interface TrainerLoginResponseDTO {
         id: string;
         email: string;
         role: string;
+        gymId: string;
     };
 }

@@ -1,4 +1,4 @@
-import { Gym } from "../entities/Gym";
+import { Gym, IGymCertificate } from "../entities/Gym";
 import { IBaseRepository } from "./IBaseRepository";
 
 export interface IGymData {
@@ -30,14 +30,14 @@ export interface GymFindOptions {
 export interface IGymStatus {
     approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
     subscriptionStatus?: 'Active' | 'Trial' | 'Expired' | 'Pending';
-    expiryDate?: string;
+    expiryDate?: string | Date;
 }
 
 export interface IGymRepository extends IBaseRepository<Gym> {
     findByEmail(email: string): Promise<Gym | null>;
     updatePassword(email: string, password: string): Promise<void>
     updateLogo(id: string, logoUrl: string): Promise<Gym>;
-
+    updateCertificates(id: string, certificates: IGymCertificate[]): Promise<Gym>;
     findAll(query: GymSearchQuery, options: GymFindOptions): Promise<Gym[]>;
     count(query: GymSearchQuery): Promise<number>
     updateStatus(id: string, gymData: IGymStatus): Promise<Gym>

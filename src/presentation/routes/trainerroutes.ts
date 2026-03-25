@@ -7,8 +7,13 @@ import { protect } from "../middlewares/protect";
 import { ROLES } from "../../constants/roles.constants";
 import multer from "multer";
 
-import { trainerProfileController } from "../../main/controllers.di";
-import { trainerWorkoutPlanController } from "../../main/controllers.di";
+import { 
+    trainerProfileController, 
+    trainerWorkoutPlanController, 
+    workoutLibraryController, 
+    workoutTemplateController,
+    trainerPayoutController
+} from "../../main/controllers.di";
 
 
 const upload = multer();
@@ -30,7 +35,16 @@ router.get(TRAINER_ROUTES.TRAINER_CLIENT_VIEW, protect([ROLES.TRAINER]), trainer
 router.post(TRAINER_ROUTES.TRAINER_WORKOUT_PLAN, protect([ROLES.TRAINER]), trainerWorkoutPlanController.createOrUpdatePlan.bind(trainerWorkoutPlanController));
 router.get(TRAINER_ROUTES.TRAINER_WORKOUT_PLAN, protect([ROLES.TRAINER]), trainerWorkoutPlanController.getClientPlan.bind(trainerWorkoutPlanController));
 
+// Workout Library
+router.get(TRAINER_ROUTES.GET_EXERCISES, protect([ROLES.TRAINER, ROLES.GYM]), workoutLibraryController.getExercises.bind(workoutLibraryController));
 
+// Workout Templates
+router.post(TRAINER_ROUTES.ADD_TEMPLATE, protect([ROLES.TRAINER]), workoutTemplateController.createTemplate.bind(workoutTemplateController));
+router.get(TRAINER_ROUTES.GET_TEMPLATES, protect([ROLES.TRAINER]), workoutTemplateController.getTemplates.bind(workoutTemplateController));
+router.delete(TRAINER_ROUTES.DELETE_TEMPLATE, protect([ROLES.TRAINER]), workoutTemplateController.deleteTemplate.bind(workoutTemplateController));
+router.post(TRAINER_ROUTES.ASSIGN_TEMPLATE, protect([ROLES.TRAINER]), workoutTemplateController.assignTemplate.bind(workoutTemplateController));
+
+router.get(TRAINER_ROUTES.TRAINER_EARNINGS, protect([ROLES.TRAINER]), trainerPayoutController.getEarningsForTrainer.bind(trainerPayoutController));
 
 
 export default router;

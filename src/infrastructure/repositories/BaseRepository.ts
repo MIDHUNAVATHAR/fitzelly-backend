@@ -36,6 +36,11 @@ export abstract class BaseRepository<T extends { id: string }, D> implements IBa
         return this.toEntity(updatedDoc);
     }
 
+    async delete(id: string): Promise<boolean> {
+        const result = await this.model.findByIdAndDelete(id);
+        return !!result;
+    }
+
 }
 
 

@@ -42,7 +42,8 @@ export class ClientLoginUseCase implements IClientLoginUseCase {
         const payload = {
             id: client.id,
             email: client.email,
-            role: ROLES.CLIENT
+            role: ROLES.CLIENT,
+            gymId: client.gymId
         }
 
         const accessToken = this._tokenService.generateAccessToken(payload);
@@ -54,7 +55,8 @@ export class ClientLoginUseCase implements IClientLoginUseCase {
             client: {
                 id: client.id,
                 email: client.email,
-                role: ROLES.CLIENT
+                role: ROLES.CLIENT,
+                gymId: client.gymId
             }
         }
     }

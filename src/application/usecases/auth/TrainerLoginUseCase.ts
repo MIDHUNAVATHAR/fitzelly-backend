@@ -41,7 +41,8 @@ export class TrainerLoginUseCase implements ITrainerLoginUseCase {
         const payload = {
             id: trainer.id,
             email: trainer.email,
-            role: ROLES.TRAINER
+            role: ROLES.TRAINER,
+            gymId: trainer.gymId
         }
 
         const accessToken = this._tokenService.generateAccessToken(payload);
@@ -53,7 +54,8 @@ export class TrainerLoginUseCase implements ITrainerLoginUseCase {
             trainer: {
                 id: trainer.id,
                 email: trainer.email,
-                role: ROLES.TRAINER
+                role: ROLES.TRAINER,
+                gymId: trainer.gymId
             }
         }
 

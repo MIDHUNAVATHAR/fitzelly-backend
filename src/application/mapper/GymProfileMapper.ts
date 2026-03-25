@@ -15,7 +15,8 @@ export class GymProfileMapper {
             location: { latitude: gym.location?.latitude ?? 0, longitude: gym.location?.longitude ?? 0 },
             approvalStatus: gym.approvalStatus ?? "",
             subscriptionStatus: gym.subscriptionStatus ?? "",
-            expiryDate: gym.expiryDate ?? ""
+            expiryDate: gym.expiryDate ?? "",
+            certificates: gym.certificates || []
         }
     }
 }

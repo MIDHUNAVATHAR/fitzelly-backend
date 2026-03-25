@@ -10,5 +10,6 @@ export interface ClientLoginResponseDTO {
         id: string;
         email: string;
         role: string;
+        gymId?: string;
     }
 }

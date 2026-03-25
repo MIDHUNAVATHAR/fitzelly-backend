@@ -51,11 +51,11 @@ import { SendWelcomeEmailUseCase } from "../application/usecases/invite/SendWelc
 import { GetGymProfileUseCase } from "../application/usecases/gym-profile/GetGymProfileUseCase";
 import { UpdateGymProfileUseCase } from "../application/usecases/gym-profile/UpdateGymProfileUseCase";
 import { UpdateGymLogoUseCase } from "../application/usecases/gym-profile/UpdateGymLogoUseCase";
+import { UploadGymCertificateUseCase } from "../application/usecases/gym-profile/UploadGymCertificateUseCase";
+import { DeleteGymCertificateUseCase } from "../application/usecases/gym-profile/DeleteGymCertificateUseCase";
 
 
-/**
- * gym client usecases
- */
+import { GetGymDashboardUseCase } from "../application/usecases/gym-dashboard/GetGymDashboardUseCase";
 import { AddClientUseCase } from "../application/usecases/gym-clients/AddClientUseCase";
 import { GetClientByIdUseCase } from "../application/usecases/gym-clients/GetClientByIdUseCase";
 import { UpdateClientByGymUseCase } from "../application/usecases/gym-clients/UpdateClientByGymUseCase";
@@ -87,6 +87,7 @@ import { DeleteMembershipUseCase } from "../application/usecases/gym-memberships
 import { AddPaymentUseCase } from "../application/usecases/gym-memberships/AddPaymentUseCase";
 import { UpdatePaymentUseCase } from "../application/usecases/gym-memberships/UpdatePaymentUseCase";
 import { DeletePaymentUseCase } from "../application/usecases/gym-memberships/DeletePaymentUseCase";
+import { GetPaymentCollectionUseCase } from "../application/usecases/gym-memberships/GetPaymentCollectionUseCase";
 
 //gym equipment usecases
 import { GetEquipmentsUseCase } from "../application/usecases/gym-equipments/GetEquipmentsUseCase";
@@ -129,6 +130,7 @@ import { MarkAttendenceUseCase } from "../application/usecases/attendance/MarkAt
 import { GetTodayAttendanceUseCase } from "../application/usecases/attendance/GetTodayAttendanceUseCase";
 import { GetDailyAttendanceReportUseCase } from "../application/usecases/attendance/GetDailyAttendanceReportUseCase";
 import { MarkManualAttendanceUseCase } from "../application/usecases/attendance/MarkManualAttendanceUseCase";
+import { GetYearlyAttendanceCountUseCase } from "../application/usecases/attendance/GetYearlyAttendanceCountUseCase";
 
 
 //workout plan usecases
@@ -144,6 +146,25 @@ import { AddEnquiryUseCase, GetEnquiriesUseCase, UpdateEnquiryUseCase, DeleteEnq
 //expense usecases
 import { AddExpenseUseCase, GetExpensesUseCase, UpdateExpenseUseCase, DeleteExpenseUseCase } from "../application/usecases/expense/ExpenseUseCases";
 
+// analytics usecases
+import { GetGymAnalyticsUseCase } from "../application/usecases/gym-analytics/GetGymAnalyticsUseCase";
+
+//trainer payout usecases
+import { AddTrainerPayoutUseCase, GetTrainerPayoutsUseCase, UpdateTrainerPayoutUseCase, DeleteTrainerPayoutUseCase, GetTrainerEarningsUseCase } from "../application/usecases/trainer-payout/TrainerPayoutUseCases";
+
+//workout library and template usecases
+import { WorkoutLibraryUseCase } from "../application/usecases/workout-library/WorkoutLibraryUseCase";
+import { WorkoutTemplateUseCase } from "../application/usecases/workout-template/WorkoutTemplateUseCase";
+
+
+
+import { CreateEquipmentBookingUseCase } from "../application/usecases/equipment-booking/CreateEquipmentBookingUseCase";
+import { GetAvailableSlotsUseCase } from "../application/usecases/equipment-booking/GetAvailableSlotsUseCase";
+import { GetClientBookingsUseCase } from "../application/usecases/equipment-booking/GetClientBookingsUseCase";
+import { CancelEquipmentBookingUseCase } from "../application/usecases/equipment-booking/CancelEquipmentBookingUseCase";
+
+//notification usecases
+import { AddNotificationUseCase, GetNotificationsUseCase, MarkNotificationUseCase } from "../application/usecases/notification/NotificationUseCases";
 
 
 
@@ -162,6 +183,7 @@ import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
 import { enquiryRepository } from "./repositories.di";
 import { expenseRepository } from "./repositories.di";
+import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository } from "./repositories.di";
 
 
 
@@ -211,7 +233,7 @@ export const superAdminCompleteForgotpassUseCase = new SuperAdminCompleteForgotp
 export const superAdminResetPasswordUseCase = new SuperAdminResetPasswordUseCase(superAdminRepository, otpRepository, passwordHasher);
 
 export const sendWelcomeEmailUseCase = new SendWelcomeEmailUseCase(clientRepository, trainerRepository, gymRepository, otpRepository, emailService)
-export const createPasswordUseCase = new CreatePasswordUseCase(clientRepository,trainerRepository, otpRepository, passwordHasher)
+export const createPasswordUseCase = new CreatePasswordUseCase(clientRepository, trainerRepository, otpRepository, passwordHasher)
 
 /**
  * gym profile usecase instances
@@ -219,6 +241,11 @@ export const createPasswordUseCase = new CreatePasswordUseCase(clientRepository,
 export const getGymProfileUseCase = new GetGymProfileUseCase(gymRepository, subscriptionRepository);
 export const updateGymProfileUseCase = new UpdateGymProfileUseCase(gymRepository);
 export const updateGymLogoUseCase = new UpdateGymLogoUseCase(gymRepository, s3Service);
+export const uploadGymCertificateUseCase = new UploadGymCertificateUseCase(gymRepository, s3Service);
+export const deleteGymCertificateUseCase = new DeleteGymCertificateUseCase(gymRepository, s3Service);
+
+export const getGymAnalyticsUseCase = new GetGymAnalyticsUseCase(analyticsRepository);
+export const getGymDashboardUseCase = new GetGymDashboardUseCase(analyticsRepository);
 
 /**
  * gym client usecase instances
@@ -253,6 +280,7 @@ export const deleteMembershipUseCase = new DeleteMembershipUseCase(membershipRep
 export const addPaymentUseCase = new AddPaymentUseCase(paymentRepository, membershipRepository);
 export const updatePaymentUseCase = new UpdatePaymentUseCase(paymentRepository);
 export const deletePaymentUseCase = new DeletePaymentUseCase(paymentRepository);
+export const getPaymentCollectionUseCase = new GetPaymentCollectionUseCase(paymentRepository);
 
 
 //gym equipment usecases
@@ -298,10 +326,11 @@ export const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdmin
 
 
 //attendance usecases
-export const markAttendanceUseCase = new MarkAttendenceUseCase(attendanceRepository, gymRepository, socketService);
-export const markManualAttendanceUseCase = new MarkManualAttendanceUseCase(attendanceRepository, socketService);
+export const markAttendanceUseCase = new MarkAttendenceUseCase(attendanceRepository, gymRepository, socketService, membershipRepository);
+export const markManualAttendanceUseCase = new MarkManualAttendanceUseCase(attendanceRepository, socketService, membershipRepository);
 export const getTodayAttendanceUseCase = new GetTodayAttendanceUseCase(attendanceRepository);
 export const getDailyAttendanceReportUseCase = new GetDailyAttendanceReportUseCase(attendanceRepository, clientRepository, trainerRepository);
+export const getYearlyAttendanceCountUseCase = new GetYearlyAttendanceCountUseCase(attendanceRepository);
 
 
 //workout plan usecases
@@ -322,3 +351,22 @@ export const addExpenseUseCase = new AddExpenseUseCase(expenseRepository);
 export const getExpensesUseCase = new GetExpensesUseCase(expenseRepository);
 export const updateExpenseUseCase = new UpdateExpenseUseCase(expenseRepository);
 export const deleteExpenseUseCase = new DeleteExpenseUseCase(expenseRepository);
+
+//trainer payout usecases
+export const addTrainerPayoutUseCase = new AddTrainerPayoutUseCase(trainerPayoutRepository);
+export const getTrainerPayoutsUseCase = new GetTrainerPayoutsUseCase(trainerPayoutRepository, trainerRepository);
+export const updateTrainerPayoutUseCase = new UpdateTrainerPayoutUseCase(trainerPayoutRepository);
+export const deleteTrainerPayoutUseCase = new DeleteTrainerPayoutUseCase(trainerPayoutRepository);
+export const getTrainerEarningsUseCase = new GetTrainerEarningsUseCase(trainerPayoutRepository);
+
+export const workoutLibraryUseCase = new WorkoutLibraryUseCase(exerciseRepository);
+export const workoutTemplateUseCase = new WorkoutTemplateUseCase(workoutTemplateRepository, exerciseRepository, workoutPlanRepository);
+
+export const addNotificationUseCase = new AddNotificationUseCase(notificationRepository, socketService);
+export const getNotificationsUseCase = new GetNotificationsUseCase(notificationRepository);
+export const markNotificationUseCase = new MarkNotificationUseCase(notificationRepository);
+
+export const createEquipmentBookingUseCase = new CreateEquipmentBookingUseCase(equipmentBookingRepository, equipmentRepository, clientRepository, addNotificationUseCase);
+export const getAvailableSlotsUseCase = new GetAvailableSlotsUseCase(equipmentRepository, equipmentBookingRepository);
+export const getClientBookingsUseCase = new GetClientBookingsUseCase(equipmentBookingRepository);
+export const cancelEquipmentBookingUseCase = new CancelEquipmentBookingUseCase(equipmentBookingRepository);
