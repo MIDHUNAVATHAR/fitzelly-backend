@@ -1,6 +1,9 @@
 import { ISocketService } from "../../domain/services/ISocketService";
 import { Server as SocketServer } from "socket.io";
 import { Server as HttpServer } from "http";
+import { createAdapter } from "@socket.io/redis-adapter";
+import Redis from "ioredis";
+
 
 export class SocketService implements ISocketService {
     private static _io: SocketServer | null = null;
@@ -22,6 +25,18 @@ export class SocketService implements ISocketService {
             }
         });
 
+        /**
+         * setup redis adaptor for clustering
+         */
+        const pubClient = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+        const subClient = pubClient.duplicate();
+
+        this._io.adapter(createAdapter(pubClient, subClient));
+
+        console.log("Socket.io Redis Adapter initialized");
+
+
+        
         this._io.on("connection", (socket) => {
             console.log("A user connected:", socket.id);
 
