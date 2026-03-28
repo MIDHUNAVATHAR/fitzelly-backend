@@ -1,3 +1,5 @@
+import { IDayPlan } from "../../../domain/entities/WorkoutPlan";
+
 export interface IExerciseDTO {
     id: string;
     name: string;
@@ -5,17 +7,17 @@ export interface IExerciseDTO {
     sets: string;
 }
 
-export interface IDayPlanDTO {
-    day: string;
-    exercises: IExerciseDTO[];
-}
+// export interface IDayPlanDTO {
+//     day: string;
+//     exercises: IExerciseDTO[];
+// }
 
 export interface WorkoutPlanDTO {
     id?: string;
     clientId: string;
     trainerId: string;
     gymId: string;
-    weeklyPlan: IDayPlanDTO[];
+    weeklyPlan: IDayPlan[];
     weekStartDate?: Date;
     notes?: string;
 }

@@ -66,12 +66,15 @@ export const GymSchema = new Schema<IGymDocument>({
     expiryDate: {
         type: Date
     },
-    certificates: [{
+   certificates: {
+    type: [{
         url: { type: String, required: true },
         type: { type: String, enum: ['IMAGE', 'PDF'], required: true },
         name: { type: String, required: true },
         key: { type: String, required: true }
     }],
+    default: [] 
+},
   
 
 }, { timestamps: true }); 

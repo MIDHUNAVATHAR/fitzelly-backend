@@ -10,6 +10,7 @@ import { IGetTrainerGymDetailsUseCase } from "../../../application/IUseCases/tra
 import { IGetAssignedClientsUseCase } from "../../../application/IUseCases/trainer-assinged-clients/IGetAssignedClientsUseCase";
 import { IGetClientByIdUseCase } from "../../../application/IUseCases/gym-client/IGetClientByIdUseCase";
 import { UpdateTrainerProfileDTO } from "../../../application/dtos/trainer-profile/UpdateTrainerProfileDTO";
+import { BadRequestError } from "../../../application/errors/AppError";
 
 
 
@@ -68,10 +69,7 @@ export class TrainerProfileController {
             const file = req.file;
 
             if (!file) {
-                return res.status(HttpStatus.BAD_REQUEST).json({
-                    status: ResponseStatus.FAIL,
-                    message: "No image file provided"
-                });
+                throw new BadRequestError("No image file provided");
             }
 
             const updatedProfile = await this._uploadTrainerProfileImageUseCase.execute(trainerId, file);

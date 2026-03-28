@@ -5,12 +5,13 @@ import { IUpdateGymStatusUseCase } from "../../../application/IUseCases/superAd-
 import { IApproveGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IApproveGymUseCase";
 import { ResponseStatus, HttpStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
+import { logger } from "../../../infrastructure/logger/logger";
 
 export class SuperAdminGymsController {
     constructor(
         private readonly _getAllGymsUseCase: IGetAllGymsUseCase,
         private readonly _getGymByIdUseCase: IGetGymByIdUseCase,
-        private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase,
+        // private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase,
         private readonly _approveGymUseCase: IApproveGymUseCase,
     ) { }
 
@@ -48,30 +49,29 @@ export class SuperAdminGymsController {
         }
     }
 
-    async updateGymStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const gymId = req.params.gymId as string;
+    // async updateGymStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+    //     try {
+    //         const gymId = req.params.gymId as string;
 
-            const updatedGym = await this._updateGymStatusUseCase.execute(gymId)
+    //         const updatedGym = await this._updateGymStatusUseCase.execute(gymId)
 
-            res.status(HttpStatus.OK).json({
-                success: ResponseStatus.SUCCESS,
-                message: ResponseMessage.GYM_UPDATE_SUCCESS,
-                data: updatedGym
-            })
-        } catch (error) {
-            next(error)
-        }
-    }
+    //         res.status(HttpStatus.OK).json({
+    //             success: ResponseStatus.SUCCESS,
+    //             message: ResponseMessage.GYM_UPDATE_SUCCESS,
+    //             data: updatedGym
+    //         })
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
 
     async approveGym(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log("xxx")
 
             const gymId = req.params.gymId as string;
             console.log(gymId)
             const updatedGym = await this._approveGymUseCase.execute(gymId);
-            console.log("updated gym ", updatedGym)
+            logger.info("updated gym ", updatedGym)
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,

@@ -56,7 +56,7 @@ export class WorkoutTemplateUseCase implements IWorkoutTemplateUseCase {
                 .map(ex => ({
                     id: ex!.id,
                     name: ex!.name,
-                    description: ex!.description,
+                    description: ex!.instructions,
                     reps: ex!.reps,
                     sets: ex!.sets,
                     videoUrl: ex!.videoUrl
@@ -118,7 +118,7 @@ export class WorkoutTemplateUseCase implements IWorkoutTemplateUseCase {
                     .map(ex => ({
                         id: ex!.id,
                         name: ex!.name,
-                        description: ex!.description,
+                        description: ex!.instructions,
                         reps: ex!.reps,
                         sets: ex!.sets,
                         videoUrl: ex!.videoUrl

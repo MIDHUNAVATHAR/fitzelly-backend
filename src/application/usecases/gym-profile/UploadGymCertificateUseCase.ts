@@ -31,10 +31,6 @@ export class UploadGymCertificateUseCase implements IUploadGymCertificateUseCase
 
         const updatedCertificates = [...(gym.certificates || []), newCertificate];
 
-        // Using a partial update if available, or just update the whole gym
-        // Currently IGymRepository has updateStatus which is used for Status
-        // Let's add a more generic update method or use the base repository's update.
-        // GymRepository inherits from BaseRepository which has update(entity).
         
         return await this._gymRepository.updateCertificates(gymId, updatedCertificates);
     }

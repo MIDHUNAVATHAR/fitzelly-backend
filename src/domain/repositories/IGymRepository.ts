@@ -41,7 +41,7 @@ export interface IGymRepository extends IBaseRepository<Gym> {
     findAll(query: GymSearchQuery, options: GymFindOptions): Promise<Gym[]>;
     count(query: GymSearchQuery): Promise<number>
     updateStatus(id: string, gymData: IGymStatus): Promise<Gym>
-    getGymsBySubscriptionStatus(status:string):Promise<Gym[]>
+    getGymsBySubscriptionStatus(status: string): Promise<Gym[]>
 }
 
 

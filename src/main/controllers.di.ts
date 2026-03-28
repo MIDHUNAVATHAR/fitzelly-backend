@@ -76,7 +76,7 @@ import {
 
     getAllGymsUseCase,
     getGymByIdUseCase,
-    updateGymStatusUseCase,
+    // updateGymStatusUseCase,
     approveGymUseCase,
 
     addClientUseCase,
@@ -225,7 +225,7 @@ export const superAdminProfileController = new SuperAdminProfileController(
 export const superAdminGymsController = new SuperAdminGymsController(
     getAllGymsUseCase,
     getGymByIdUseCase,
-    updateGymStatusUseCase,
+    // updateGymStatusUseCase,
     approveGymUseCase);
 export const gymClientController = new GymClientController(
     addClientUseCase,

@@ -3,6 +3,7 @@ import { GymProfileDTO } from "../../dtos/gym-profile/GymProfileDTO";
 import { IUpdateGymProfileUseCase } from "../../IUseCases/gym-profile/IUpdateGymProfileUseCase";
 import { GymProfileMapper } from "../../mapper/GymProfileMapper";
 import { Gym } from "../../../domain/entities/Gym";
+import { NotFoundError } from "../../errors/AppError";
 
 export class UpdateGymProfileUseCase implements IUpdateGymProfileUseCase {
     constructor(
@@ -10,7 +11,7 @@ export class UpdateGymProfileUseCase implements IUpdateGymProfileUseCase {
     ) { }
     async execute(id: string, gymData: GymProfileDTO): Promise<GymProfileDTO> {
         const gym = await this._gymRepository.findById(id);
-        if (!gym) throw new Error("Gym not found");
+        if (!gym) throw new NotFoundError("Gym not found");
 
         const updatedGym = new Gym(
             gym.id,
@@ -27,6 +28,7 @@ export class UpdateGymProfileUseCase implements IUpdateGymProfileUseCase {
             gym.approvalStatus,
             gym.subscriptionStatus,
             gym.expiryDate,
+            gym.certificates,
             gym.createdAt
         );
 

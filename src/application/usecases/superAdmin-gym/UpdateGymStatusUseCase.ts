@@ -3,14 +3,14 @@ import { IUpdateGymStatusUseCase } from "../../IUseCases/superAd-gym-listing/IUp
 import { IGymRepository } from "../../../domain/repositories/IGymRepository";
 import { GymMapper } from "../../mapper/SuperAdminGymMapper";
 
-export class UpdateGymStatusUseCase implements IUpdateGymStatusUseCase {
-    constructor(
-        private _gymRepository: IGymRepository
-    ) { }
+// export class UpdateGymStatusUseCase implements IUpdateGymStatusUseCase {
+//     constructor(
+//         private _gymRepository: IGymRepository
+//     ) { }
 
-    async execute(gymId: string): Promise<GymResponseDTO> {
+//     async execute(gymId: string): Promise<GymResponseDTO> {
 
-        const updatedData = await this._gymRepository.updateStatus(gymId, updateData);
-        return GymMapper.toResponseDTO(updatedData);
-    }
-}
+//         const updatedData = await this._gymRepository.updateStatus(gymId, updateData);
+//         return GymMapper.toResponseDTO(updatedData);
+//     }
+// }

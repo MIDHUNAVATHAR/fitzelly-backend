@@ -13,7 +13,6 @@ export class AnalyticsRepository implements IAnalyticsRepository {
         sixMonthsAgo.setMonth(currentDate.getMonth() - 6);
 
        
-        // Let's refine pipelines inline.
         const [
             monthlyRevResult,
             membershipsWithPayments,

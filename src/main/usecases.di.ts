@@ -121,7 +121,7 @@ import { UpdateSuperAdminLogoUseCase } from "../application/usecases/superAdmin-
  */
 import { GetAllGymsUseCase } from "../application/usecases/superAdmin-gym/GetAllGymsUseCase";
 import { GetGymByIdUseCase } from "../application/usecases/gym-profile/GetGymByIdUseCase";
-import { UpdateGymStatusUseCase } from "../application/usecases/superAdmin-gym/UpdateGymStatusUseCase";
+// import { UpdateGymStatusUseCase } from "../application/usecases/superAdmin-gym/UpdateGymStatusUseCase";
 import { ApproveGymUseCase } from "../application/usecases/superAdmin-gym/ApproveGymUseCase";
 
 
@@ -321,7 +321,7 @@ export const updateSuperAdminLogoUseCase = new UpdateSuperAdminLogoUseCase(super
  */
 export const getAllGymsUseCase = new GetAllGymsUseCase(gymRepository, subscriptionRepository);
 export const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository, subscriptionRepository);
-export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
+// export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
 export const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdminRepository, subscriptionRepository);
 
 
