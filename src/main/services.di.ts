@@ -1,5 +1,6 @@
 /* ------------------- services (infrastructure) ---------------- */
-import { MailService } from "../infrastructure/services/MailService";
+//import { MailService } from "../infrastructure/services/MailService";
+import { QueuedMailService } from "../infrastructure/services/QueuedMailService";
 import { PasswordHasher } from "../infrastructure/services/PasswordHasher";
 import { JwtService } from "../infrastructure/services/JwtService";
 import { GoogleAuthService } from "../infrastructure/services/GoogleAuthService";
@@ -8,7 +9,7 @@ import { SocketService } from "../infrastructure/services/SocketService";
 
 
 /* ------------------- Instantiate services ---------------- */
-export const emailService = new MailService();
+export const emailService = new QueuedMailService();
 export const passwordHasher = new PasswordHasher();
 export const jwtService = new JwtService();
 export const googleAuthService = new GoogleAuthService();

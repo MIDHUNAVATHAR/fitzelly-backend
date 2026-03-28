@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "npx tsx watch src",
     "cron": "npx tsx watch src/cron.ts",
+    "worker": "npx tsx watch src/worker.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "cron:start": "node dist/cron.js",
+    "worker:start": "node dist/worker.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -19,6 +21,7 @@
     "@aws-sdk/client-s3": "^3.984.0",
     "@socket.io/redis-adapter": "^8.3.0",
     "bcryptjs": "^3.0.3",
+    "bullmq": "^5.71.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
