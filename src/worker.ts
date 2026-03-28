@@ -8,7 +8,7 @@ async function runWorker() {
         console.log("Background Worker Service connected to database");
         new EmailWorker();
         console.log("Background Worker Service is running.");
-
+  
     } catch (error) {
         console.error("Failed to start Worker Service:", error);
         process.exit(1);
