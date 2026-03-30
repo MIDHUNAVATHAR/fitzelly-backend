@@ -9,8 +9,7 @@ export class ClientForgotpassUseCase implements ICompleteForgotpassUseCase {
     async execute(request: CompleteForgotPasswordRequestDTO): Promise<void> {
         const isValid = await this._otpRepository.verifyOtp(request.email, request.otp);
         if (!isValid) {
-            throw new InvalidOtpError("Invalid Otp");
-            
+            throw new InvalidOtpError("Invalid Otp");            
         }
     }
 }

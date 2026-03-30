@@ -4,7 +4,7 @@ import { ITokenService } from "../../../domain/services/ITokenService";
 import { LoginRequestDTO, LoginResponseDTO } from "../../dtos/auth/LoginDTO";
 import { ILoginUseCase } from "../../IUseCases/auth/ILoginUseCase";
 import { GymLoginMapper } from "../../mapper/GymLoginMapper";
-import { AuthenticationFailedError } from "../../errors/AppError";
+import { AuthenticationFailedError, NotFoundError } from "../../errors/AppError";
 
 
 export class GymLoginUseCase implements ILoginUseCase {
@@ -17,7 +17,7 @@ export class GymLoginUseCase implements ILoginUseCase {
     async execute(request: LoginRequestDTO): Promise<LoginResponseDTO> {
         const user = await this._userRepository.findByEmail(request.email);
         if (!user) {
-            throw new AuthenticationFailedError("Email not exists");
+            throw new NotFoundError("Gym not found")
         }
 
         const isPasswordMatch = await this._passwordHasher.compare(request.password, user.password);
@@ -27,9 +27,10 @@ export class GymLoginUseCase implements ILoginUseCase {
 
         const payload = { id: user.id, email: user.email, role: user.role, gymId: user.id };
 
-        const accessToken = this._tokenService.generateAccessToken(payload)
-        const refreshToken = this._tokenService.generateRefreshToken(payload)
+        const accessToken = this._tokenService.generateAccessToken(payload);
+        const refreshToken = this._tokenService.generateRefreshToken(payload);
 
         return GymLoginMapper.toDTO(user, accessToken, refreshToken);
     }
 }
+

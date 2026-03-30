@@ -3,7 +3,7 @@ import { IClientRepository } from "../../../domain/repositories/IClientRepositor
 import { IEmailService } from "../../../domain/services/IEmailService";
 import { IInitiateForgotPasswordUseCase } from "../../IUseCases/auth/IInitiateForgotpassUseCase";
 import { ForgotPasswordRequestDTO } from "../../dtos/auth/ForgotPasswordDTO";
-import { AuthenticationFailedError, ServiceUnavailableError } from "../../errors/AppError";
+import { AuthenticationFailedError, NotFoundError, ServiceUnavailableError } from "../../errors/AppError";
 
 
 export class ClientInitiateForgotpassUseCase implements IInitiateForgotPasswordUseCase {
@@ -16,7 +16,7 @@ export class ClientInitiateForgotpassUseCase implements IInitiateForgotPasswordU
     async execute(request: ForgotPasswordRequestDTO): Promise<void> {
         const client = await this._clientRepository.findByEmail(request.email);
         if (!client) {
-            throw new AuthenticationFailedError("Invalid email")
+            throw new AuthenticationFailedError("invalid email")
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
