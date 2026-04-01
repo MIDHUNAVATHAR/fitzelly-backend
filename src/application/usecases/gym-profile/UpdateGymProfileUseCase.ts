@@ -28,6 +28,7 @@ export class UpdateGymProfileUseCase implements IUpdateGymProfileUseCase {
             gym.approvalStatus,
             gym.subscriptionStatus,
             gym.expiryDate,
+            gym.rejectionReason,
             gym.certificates,
             gym.createdAt
         );

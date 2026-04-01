@@ -4,5 +4,6 @@ const NotificationSchema = new Schema({
     message: { type: String, required: true },
     isRead: { type: Boolean, default: false },
     type: { type: String, required: true },
+    targetRole: { type: String, default: 'GYM' },
 }, { timestamps: true });
 export default NotificationSchema;

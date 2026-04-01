@@ -78,6 +78,7 @@ import {
     getGymByIdUseCase,
     // updateGymStatusUseCase,
     approveGymUseCase,
+    rejectGymUseCase,
 
     addClientUseCase,
     getClientsUseCase,
@@ -160,7 +161,8 @@ import {
     getClientBookingsUseCase,
     cancelEquipmentBookingUseCase,
     getNotificationsUseCase,
-    markNotificationUseCase
+    markNotificationUseCase,
+    reApplyGymUseCase
 } from "./usecases.di";
 import { trainerRepository } from "./repositories.di";
 
@@ -217,6 +219,7 @@ export const gymProfileController = new GymProfileController(
     updateGymLogoUseCase,
     uploadGymCertificateUseCase,
     deleteGymCertificateUseCase,
+    reApplyGymUseCase,
 );
 export const superAdminProfileController = new SuperAdminProfileController(
     getSuperAdminProfileUseCase,
@@ -226,7 +229,8 @@ export const superAdminGymsController = new SuperAdminGymsController(
     getAllGymsUseCase,
     getGymByIdUseCase,
     // updateGymStatusUseCase,
-    approveGymUseCase);
+    approveGymUseCase,
+    rejectGymUseCase);
 export const gymClientController = new GymClientController(
     addClientUseCase,
     getClientsUseCase,

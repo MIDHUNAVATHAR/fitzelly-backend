@@ -16,7 +16,8 @@ export class GymProfileMapper {
             approvalStatus: gym.approvalStatus ?? "",
             subscriptionStatus: gym.subscriptionStatus ?? "",
             expiryDate: gym.expiryDate ?? "",
-            certificates: gym.certificates || []
+            certificates: gym.certificates || [],
+            rejectionReason: gym.rejectionReason ?? ""
         }
     }
 }

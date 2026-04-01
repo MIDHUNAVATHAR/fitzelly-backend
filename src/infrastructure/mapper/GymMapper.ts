@@ -18,6 +18,7 @@ export class GymMapper {
             doc.approvalStatus,
             doc.subscriptionStatus,
             doc.expiryDate,
+            doc.rejectionReason,
             doc.certificates,
             doc.createdAt,
         )
@@ -38,6 +39,7 @@ export class GymMapper {
             approvalStatus: entity.approvalStatus,
             subscriptionStatus: entity.subscriptionStatus,
             expiryDate: entity.expiryDate,
+            rejectionReason: entity.rejectionReason,
             certificates: entity.certificates
         }
     }

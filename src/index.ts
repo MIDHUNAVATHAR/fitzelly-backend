@@ -4,6 +4,8 @@ import { app } from "./presentation/app"
 
 import { connectDB } from "./infrastructure/database/connectDB";
 
+import { connectRedis } from "./infrastructure/database/RedisConnection";
+
 import http from "http";
 import { SocketService } from "./infrastructure/services/SocketService";
 
@@ -11,6 +13,7 @@ import { SocketService } from "./infrastructure/services/SocketService";
 async function bootstrap() {
 
     await connectDB();
+    await connectRedis(); 
 
     const PORT = process.env.PORT;
     const server = http.createServer(app);

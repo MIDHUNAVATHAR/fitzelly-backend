@@ -26,6 +26,7 @@ export class Gym {
         public readonly approvalStatus: ApprovalStatus = "Pending",
         public readonly subscriptionStatus: SubscriptionStatus = "Pending",
         public readonly expiryDate?: Date,
+        public readonly rejectionReason?: string,
         public readonly certificates: IGymCertificate[] = [],
         public readonly createdAt: Date = new Date(),
     ) { }

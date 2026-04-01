@@ -31,6 +31,7 @@ export interface IGymStatus {
     approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
     subscriptionStatus?: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate?: string | Date;
+    rejectionReason?: string;
 }
 
 export interface IGymRepository extends IBaseRepository<Gym> {

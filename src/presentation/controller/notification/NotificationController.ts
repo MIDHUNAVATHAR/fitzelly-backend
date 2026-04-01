@@ -14,7 +14,7 @@ export class NotificationController {
     */
     async getUnread(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const result = await this.getNotifUseCase.getUnread(req.user!.id);
+            const result = await this.getNotifUseCase.getUnread(req.user!.id, req.user!.role);
             return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error);
@@ -27,7 +27,7 @@ export class NotificationController {
     async getRead(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const page = parseInt(req.query.page as string) || 1;
-            const result = await this.getNotifUseCase.getRead(req.user!.id, page, 10);
+            const result = await this.getNotifUseCase.getRead(req.user!.id, page, 10, req.user!.role);
             return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error);

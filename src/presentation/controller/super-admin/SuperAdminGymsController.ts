@@ -3,6 +3,7 @@ import { IGetAllGymsUseCase } from "../../../application/IUseCases/superAd-gym-l
 import { IGetGymByIdUseCase } from "../../../application/IUseCases/gym-profile/IGetGymByIdUseCase";
 import { IUpdateGymStatusUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymStatusUseCase";
 import { IApproveGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IApproveGymUseCase";
+import { IRejectGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IRejectGymUseCase";
 import { ResponseStatus, HttpStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
 import { logger } from "../../../infrastructure/logger/logger";
@@ -13,6 +14,7 @@ export class SuperAdminGymsController {
         private readonly _getGymByIdUseCase: IGetGymByIdUseCase,
         // private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase,
         private readonly _approveGymUseCase: IApproveGymUseCase,
+        private readonly _rejectGymUseCase: IRejectGymUseCase,
     ) { }
 
     async getAllGyms(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -72,6 +74,32 @@ export class SuperAdminGymsController {
             console.log(gymId)
             const updatedGym = await this._approveGymUseCase.execute(gymId);
             logger.info("updated gym ", updatedGym)
+
+            res.status(HttpStatus.OK).json({
+                success: ResponseStatus.SUCCESS,
+                message: ResponseMessage.GYM_UPDATE_SUCCESS,
+                data: updatedGym
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async rejectGym(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const gymId = req.params.gymId as string;
+            const { rejectionReason } = req.body;
+            
+            if (!rejectionReason) {
+                res.status(HttpStatus.BAD_REQUEST).json({
+                    success: ResponseStatus.ERROR,
+                    message: "Rejection reason is required"
+                });
+                return;
+            }
+
+            const updatedGym = await this._rejectGymUseCase.execute(gymId, rejectionReason);
+            logger.info("rejected gym ", updatedGym)
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,

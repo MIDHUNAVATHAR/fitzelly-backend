@@ -5,6 +5,7 @@ export class Notification {
         public message: string,
         public isRead: boolean,
         public type: string,
-        public createdAt: Date
+        public createdAt: Date,
+        public targetRole: string = 'GYM',
     ) {}
 }

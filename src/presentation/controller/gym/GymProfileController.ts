@@ -6,6 +6,7 @@ import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.const
 import { IUpdateGymLogoUseCase } from "../../../application/IUseCases/gym-profile/IUpdateGymLogoUseCase";
 import { IUploadGymCertificateUseCase } from "../../../application/IUseCases/gym-profile/IUploadGymCertificateUseCase";
 import { IDeleteGymCertificateUseCase } from "../../../application/IUseCases/gym-profile/IDeleteGymCertificateUseCase";
+import { IReApplyGymUseCase } from "../../../application/IUseCases/gym-profile/IReApplyGymUseCase";
 import { ResponseMessage } from "../../../constants/response.constants";
 
 export class GymProfileController {
@@ -15,6 +16,7 @@ export class GymProfileController {
         private _updateGymLogoUseCase: IUpdateGymLogoUseCase,
         private _uploadGymCertificateUseCase: IUploadGymCertificateUseCase,
         private _deleteGymCertificateUseCase: IDeleteGymCertificateUseCase,
+        private _reApplyGymUseCase: IReApplyGymUseCase,
     ) { }
 
     async getGymProfile(req: AuthRequest, res: Response, next: NextFunction) {
@@ -94,6 +96,20 @@ export class GymProfileController {
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: "Certificate deleted successfully",
+                data: updatedGym
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async reApply(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const gymId = req.user!.id;
+            const updatedGym = await this._reApplyGymUseCase.execute(gymId);
+            return res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: "Re-application submitted successfully",
                 data: updatedGym
             });
         } catch (error) {

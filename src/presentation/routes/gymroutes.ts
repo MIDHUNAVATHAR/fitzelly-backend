@@ -45,6 +45,7 @@ router.route(GYM_ROUTE.GYM_PROFILE)
 router.post(GYM_ROUTE.GYM_LOGO, protect([ROLES.GYM]), upload.single("logo"), gymProfileController.updateGymLogo.bind(gymProfileController));
 router.post(GYM_ROUTE.GYM_CERTIFICATE, protect([ROLES.GYM]), upload.single("certificate"), gymProfileController.uploadCertificate.bind(gymProfileController));
 router.delete(GYM_ROUTE.DELETE_GYM_CERTIFICATE, protect([ROLES.GYM]), gymProfileController.deleteCertificate.bind(gymProfileController));
+router.post(GYM_ROUTE.RE_APPLY, protect([ROLES.GYM]), gymProfileController.reApply.bind(gymProfileController));
 
 router.post(GYM_ROUTE.ADD_CLIENT, protect([ROLES.GYM]), gymClientController.addClient.bind(gymClientController));
 router.get(GYM_ROUTE.GET_CLIENTS, protect([ROLES.GYM]), gymClientController.getClients.bind(gymClientController))
@@ -109,9 +110,9 @@ router.get(GYM_ROUTE.GET_ANALYTICS, protect([ROLES.GYM]), gymAnalyticsController
 router.get(GYM_ROUTE.GET_DASHBOARD, protect([ROLES.GYM]), dashboardController.getDashboard.bind(dashboardController));
 
 // Notifications
-router.get(GYM_ROUTE.NOTIFICATIONS_UNREAD, protect([ROLES.GYM]), notificationController.getUnread.bind(notificationController));
-router.get(GYM_ROUTE.NOTIFICATIONS_READ, protect([ROLES.GYM]), notificationController.getRead.bind(notificationController));
-router.patch(GYM_ROUTE.MARK_ALL_NOTIFICATIONS_READ, protect([ROLES.GYM]), notificationController.markAllAsRead.bind(notificationController));
-router.patch(GYM_ROUTE.MARK_NOTIFICATION_READ, protect([ROLES.GYM]), notificationController.markAsRead.bind(notificationController));
+router.get(GYM_ROUTE.NOTIFICATIONS_UNREAD, protect([ROLES.GYM, ROLES.SUPERADMIN, ROLES.CLIENT, ROLES.TRAINER]), notificationController.getUnread.bind(notificationController));
+router.get(GYM_ROUTE.NOTIFICATIONS_READ, protect([ROLES.GYM, ROLES.SUPERADMIN, ROLES.CLIENT, ROLES.TRAINER]), notificationController.getRead.bind(notificationController));
+router.patch(GYM_ROUTE.MARK_ALL_NOTIFICATIONS_READ, protect([ROLES.GYM, ROLES.SUPERADMIN, ROLES.CLIENT, ROLES.TRAINER]), notificationController.markAllAsRead.bind(notificationController));
+router.patch(GYM_ROUTE.MARK_NOTIFICATION_READ, protect([ROLES.GYM, ROLES.SUPERADMIN, ROLES.CLIENT, ROLES.TRAINER]), notificationController.markAsRead.bind(notificationController));
 
 export default router;

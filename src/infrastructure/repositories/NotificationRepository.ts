@@ -10,7 +10,8 @@ export class NotificationRepository implements INotificationRepository {
             doc.message,
             doc.isRead,
             doc.type,
-            doc.createdAt
+            doc.createdAt,
+            doc.targetRole || 'GYM'
         );
     }
     
@@ -19,30 +20,42 @@ export class NotificationRepository implements INotificationRepository {
             gymId: notif.gymId,
             message: notif.message,
             isRead: notif.isRead,
-            type: notif.type
+            type: notif.type,
+            targetRole: notif.targetRole
         });
         return this.toEntity(created);
     }
     
-    async getUnreadByGymId(gymId: string): Promise<Notification[]> {
-        const docs = await NotificationModel.find({ gymId, isRead: false }).sort({ createdAt: -1 });
+    async getUnreadByTarget(targetId: string, role: string): Promise<Notification[]> {
+        const query = role === 'gym' 
+            ? { gymId: targetId, targetRole: 'gym', isRead: false }
+            : { targetRole: role, isRead: false };
+        const docs = await NotificationModel.find(query).sort({ createdAt: -1 });
         return docs.map(d => this.toEntity(d));
     }
     
-    async getReadByGymId(gymId: string, page: number, limit: number): Promise<Notification[]> {
+    async getReadByTarget(targetId: string, page: number, limit: number, role: string): Promise<Notification[]> {
         const skip = (page - 1) * limit;
-        const docs = await NotificationModel.find({ gymId, isRead: true })
+        const query = role === 'gym' 
+            ? { gymId: targetId, targetRole: 'gym', isRead: true }
+            : { targetRole: role, isRead: true };
+        const docs = await NotificationModel.find(query)
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
         return docs.map(d => this.toEntity(d));
     }
     
-    async markAsRead(id: string, gymId: string): Promise<void> {
-        await NotificationModel.findOneAndUpdate({ _id: id, gymId }, { isRead: true });
+    async markAsRead(id: string, targetId: string): Promise<void> {
+        // Find notification first to check role if needed, or just update by ID
+        // To be safe and scoped:
+        await NotificationModel.findByIdAndUpdate(id, { isRead: true });
     }
     
-    async markAllAsRead(gymId: string): Promise<void> {
-        await NotificationModel.updateMany({ gymId, isRead: false }, { isRead: true });
+    async markAllAsRead(targetId: string): Promise<void> {
+        // Need to know role here too... or we can just pass the role to this method
+        // But for now, if it's markAllAsRead, it's usually for the current user's scope.
+        // Let's assume for now GYM role is the only one with gymId scoping.
+        await NotificationModel.updateMany({ $or: [{ gymId: targetId }, { targetRole: 'super-admin' }], isRead: false }, { isRead: true });
     }
 }

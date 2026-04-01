@@ -28,6 +28,7 @@ router.get(SUPER_ADMIN_ROUTES.SUPER_ADMIN_GYMS, protect([ROLES.SUPERADMIN]), sup
 
 router.get(SUPER_ADMIN_ROUTES.GYM_BY_ID, protect([ROLES.SUPERADMIN]), superAdminGymsController.getGymById.bind(superAdminGymsController));
 router.post(SUPER_ADMIN_ROUTES.APPROVE_GYM, protect([ROLES.SUPERADMIN]), superAdminGymsController.approveGym.bind(superAdminGymsController));
+router.post(SUPER_ADMIN_ROUTES.REJECT_GYM, protect([ROLES.SUPERADMIN]), superAdminGymsController.rejectGym.bind(superAdminGymsController));
 
 // Workout Library (Global)
 router.route(SUPER_ADMIN_ROUTES.WORKOUT_LIBRARY)

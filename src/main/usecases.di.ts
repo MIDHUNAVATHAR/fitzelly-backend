@@ -123,6 +123,7 @@ import { GetAllGymsUseCase } from "../application/usecases/superAdmin-gym/GetAll
 import { GetGymByIdUseCase } from "../application/usecases/gym-profile/GetGymByIdUseCase";
 // import { UpdateGymStatusUseCase } from "../application/usecases/superAdmin-gym/UpdateGymStatusUseCase";
 import { ApproveGymUseCase } from "../application/usecases/superAdmin-gym/ApproveGymUseCase";
+import { RejectGymUseCase } from "../application/usecases/superAdmin-gym/RejectGymUseCase";
 
 
 //attendance usecases
@@ -162,6 +163,7 @@ import { CreateEquipmentBookingUseCase } from "../application/usecases/equipment
 import { GetAvailableSlotsUseCase } from "../application/usecases/equipment-booking/GetAvailableSlotsUseCase";
 import { GetClientBookingsUseCase } from "../application/usecases/equipment-booking/GetClientBookingsUseCase";
 import { CancelEquipmentBookingUseCase } from "../application/usecases/equipment-booking/CancelEquipmentBookingUseCase";
+import { ReApplyGymUseCase } from "../application/usecases/gym-profile/ReApplyGymUseCase";
 
 //notification usecases
 import { AddNotificationUseCase, GetNotificationsUseCase, MarkNotificationUseCase } from "../application/usecases/notification/NotificationUseCases";
@@ -323,6 +325,7 @@ export const getAllGymsUseCase = new GetAllGymsUseCase(gymRepository, subscripti
 export const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository, subscriptionRepository);
 // export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
 export const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdminRepository, subscriptionRepository);
+export const rejectGymUseCase = new RejectGymUseCase(gymRepository);
 
 
 //attendance usecases
@@ -370,3 +373,4 @@ export const createEquipmentBookingUseCase = new CreateEquipmentBookingUseCase(e
 export const getAvailableSlotsUseCase = new GetAvailableSlotsUseCase(equipmentRepository, equipmentBookingRepository);
 export const getClientBookingsUseCase = new GetClientBookingsUseCase(equipmentBookingRepository);
 export const cancelEquipmentBookingUseCase = new CancelEquipmentBookingUseCase(equipmentBookingRepository);
+export const reApplyGymUseCase = new ReApplyGymUseCase(gymRepository, addNotificationUseCase);

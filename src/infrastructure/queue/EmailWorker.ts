@@ -23,7 +23,7 @@ export class EmailWorker {
                     case "WELCOME_INVITE":
                         await mailService.sendWelcomeInvite(
                             payload.email,
-                            payload.inviteLint,
+                            payload.inviteLink, // Fixed typo: was inviteLint
                             payload.gymName,
                             payload.userName
                         );
@@ -33,7 +33,10 @@ export class EmailWorker {
                 }
 
             },
-            { connection: redisConnection }
+            { 
+                connection: redisConnection,
+                concurrency: 5 // Process 5 emails at a time to improve speed
+            }
         );
 
         this.worker.on("completed", (job) => {

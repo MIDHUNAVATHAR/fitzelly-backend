@@ -12,14 +12,7 @@ export class SocketService implements ISocketService {
 
         this._io = new SocketServer(server, {
             cors: {
-                origin: (origin, callback) => {
-                    // Allow all ngrok-free.dev subdomains and local origins
-                    if (!origin || origin.includes("localhost") || origin.includes("ngrok-free.dev")) {
-                        callback(null, true);
-                    } else {
-                        callback(new Error("Not allowed by CORS"));
-                    }
-                },
+                origin: "*", // allow all origins
                 methods: ["GET", "POST"],
                 credentials: true
             }
@@ -40,13 +33,13 @@ export class SocketService implements ISocketService {
         this._io.on("connection", (socket) => {
             console.log("A user connected:", socket.id);
 
-            socket.on("join-gym", (gymId: string) => {
-                socket.join(`gym_${gymId}`);
-                console.log(`User joined room: gym_${gymId}`);
+            socket.on("join", (room: string) => {
+                socket.join(room);
+                console.log(`User ${socket.id} joined room: ${room}`);
             });
 
             socket.on("disconnect", () => {
-                console.log("A user disconnected");
+                console.log(`User ${socket.id} disconnected`);
             });
         });
 
@@ -62,7 +55,15 @@ export class SocketService implements ISocketService {
 
     public emitToGym(gymId: string, event: string, data: unknown): void {
         if (SocketService._io) {
+            console.log(`Emitting event "${event}" to room "gym_${gymId}"`);
             SocketService._io.to(`gym_${gymId}`).emit(event, data);
+        }
+    }
+
+    public emitToRole(role: string, event: string, data: unknown): void {
+        if (SocketService._io) {
+            console.log(`Emitting event "${event}" to rooms "role_${role}" and "${role}"`);
+            SocketService._io.to(`role_${role}`).to(role).emit(event, data);
         }
     }
 }

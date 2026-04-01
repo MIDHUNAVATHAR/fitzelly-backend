@@ -1,13 +1,4 @@
 services:
-  # Database service
-  mongodb:
-    image: mongo:latest
-    container_name: fitzelly-mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - fitzelly-db-data:/data/db
 
   # In-memory store/queue service
   redis:
@@ -23,14 +14,12 @@ services:
     container_name: fitzelly-api
     restart: unless-stopped
     depends_on:
-      - mongodb
       - redis
     ports:
       - "8000:8000"
     environment:
       - NODE_ENV=production
       - PORT=8000
-      - MONGO_URI=mongodb://mongodb:27017/fitzelly-gym-managment-app
       - REDIS_URL=redis://redis:6379
       - FRONTEND_URL=http://localhost:80
     env_file:
@@ -42,12 +31,10 @@ services:
     container_name: fitzelly-cron
     restart: unless-stopped
     depends_on:
-      - mongodb
       - redis
     command: ["npm", "run", "cron:start"]
     environment:
       - NODE_ENV=production
-      - MONGO_URI=mongodb://mongodb:27017/fitzelly-gym-managment-app
       - REDIS_URL=redis://redis:6379
     env_file:
       - .env
@@ -58,12 +45,10 @@ services:
     container_name: fitzelly-worker
     restart: unless-stopped
     depends_on:
-      - mongodb
       - redis
     command: ["npm", "run", "worker:start"]
     environment:
       - NODE_ENV=production
-      - MONGO_URI=mongodb://mongodb:27017/fitzelly-gym-managment-app
       - REDIS_URL=redis://redis:6379
     env_file:
       - .env

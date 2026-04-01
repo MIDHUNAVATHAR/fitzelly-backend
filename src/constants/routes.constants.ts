@@ -11,6 +11,7 @@ export const GYM_ROUTE = {
     GYM_LOGO: "/api/gym/profile/logo",
     GYM_CERTIFICATE: "/api/gym/profile/certificate",
     DELETE_GYM_CERTIFICATE: "/api/gym/profile/certificate/delete",
+    RE_APPLY: "/api/gym/re-apply",
 
     ADD_CLIENT: "/api/gym/client",
     GET_CLIENTS: "/api/gym/clients",
@@ -123,6 +124,7 @@ export const SUPER_ADMIN_ROUTES = {
     SUPER_ADMIN_GYMS: "/api/super-admin/gyms",
     GYM_BY_ID: "/api/super-admin/gyms/:gymId",
     APPROVE_GYM: "/api/super-admin/gyms/:gymId/approve",
+    REJECT_GYM: "/api/super-admin/gyms/:gymId/reject",
     WORKOUT_LIBRARY: "/api/super-admin/workout-library",
     WORKOUT_LIBRARY_BY_ID: "/api/super-admin/workout-library/:id"
 }

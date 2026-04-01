@@ -22,6 +22,7 @@ export interface IGymDocument extends Document {
     subscriptionStatus: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate: Date;
     certificates: IGymCertificate[];
+    rejectionReason?: string;
     createdAt: Date;
     isDeleted: boolean;
 }

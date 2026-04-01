@@ -75,6 +75,10 @@ export const GymSchema = new Schema<IGymDocument>({
     }],
     default: [] 
 },
-  
+      rejectionReason: {
+        type: String,
+        default: ""
+    }
+
 
 }, { timestamps: true }); 
