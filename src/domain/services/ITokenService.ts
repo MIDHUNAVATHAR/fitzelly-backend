@@ -3,10 +3,12 @@ export interface JwtPayload {
     email: string;
     role: string;
     gymId?: string;
+    sessionId?: string;
 }
 
 export interface ITokenService {
     generateAccessToken(payload: object): string;
     generateRefreshToken(payload: object): string;
-    verifyRefrshToken(token: string): JwtPayload
+    verifyRefreshToken(token: string): JwtPayload;
+    verifyAccessToken(token: string): JwtPayload;
 }

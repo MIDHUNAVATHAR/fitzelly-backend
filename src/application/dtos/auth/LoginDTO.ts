@@ -2,7 +2,11 @@
 
 export interface LoginRequestDTO {
     email: string,
-    password: string
+    password: string,
+    device?: string,
+    browser?: string,
+    os?: string,
+    ip?: string
 }
 
 export interface LoginResponseDTO {

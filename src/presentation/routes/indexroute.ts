@@ -8,6 +8,7 @@ import clientRouter from "./clientroutes";
 import trainerRouter from "./trainerroutes";
 import attendanceRouter from "./attendanceRoutes"
 import equipmentBookingRouter from "./equipmentBookingRoutes"
+import securityRouter from "./securityRoutes";
 
 
 const rootRouter = Router();
@@ -22,5 +23,6 @@ rootRouter.use("/", inviteRouter)
 
 rootRouter.use("/api/attendance", attendanceRouter);
 rootRouter.use("/api/equipment-booking", equipmentBookingRouter);
+rootRouter.use("/api/security", securityRouter);
 
 export default rootRouter; 

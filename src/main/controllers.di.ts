@@ -35,6 +35,7 @@ import { TrainerWorkoutPlanController } from "../presentation/controller/trainer
 import { ClientWorkoutPlanController } from "../presentation/controller/client/ClientWorkoutPlanController";
 import { EquipmentBookingController } from "../presentation/controller/equipment-booking/EquipmentBookingController";
 import { NotificationController } from "../presentation/controller/notification/NotificationController";
+import { SecurityController } from "../presentation/controller/security/SecurityController";
 
 
 import {
@@ -162,7 +163,9 @@ import {
     cancelEquipmentBookingUseCase,
     getNotificationsUseCase,
     markNotificationUseCase,
-    reApplyGymUseCase
+    reApplyGymUseCase,
+    getActiveSessionsUseCase,
+    revokeSessionUseCase
 } from "./usecases.di";
 import { trainerRepository } from "./repositories.di";
 
@@ -354,5 +357,10 @@ export const equipmentBookingController = new EquipmentBookingController(
 export const notificationController = new NotificationController(
     getNotificationsUseCase,
     markNotificationUseCase
+);
+
+export const securityController = new SecurityController(
+    getActiveSessionsUseCase,
+    revokeSessionUseCase
 );
 

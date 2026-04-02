@@ -16,8 +16,8 @@ export class TrainerAuthController {
 
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, password } = req.body;
-            const result = await this.trainerLoginUseCase.execute({ email, password });
+            const { email, password, device, browser, os, ip } = req.body;
+            const result = await this.trainerLoginUseCase.execute({ email, password, device, browser, os, ip });
 
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,

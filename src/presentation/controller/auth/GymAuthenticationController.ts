@@ -50,8 +50,8 @@ export class GymAuthenticationController {
 
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email, password } = req.body;
-            const data = await this._gymLoginUseCase.execute({ email, password });
+            const { email, password, device, browser, os, ip } = req.body;
+            const data = await this._gymLoginUseCase.execute({ email, password, device, browser, os, ip });
 
             res.cookie("refreshToken", data.refreshToken, {
                 httpOnly: true,

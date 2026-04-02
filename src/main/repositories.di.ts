@@ -20,10 +20,10 @@ import { TrainerPayoutRepository } from "../infrastructure/repositories/TrainerP
 import { EquipmentBookingRepository } from "../infrastructure/repositories/EquipmentBookingRepository";
 import { AnalyticsRepository } from "../infrastructure/repositories/AnalyticsRepository";
 import { NotificationRepository } from "../infrastructure/repositories/NotificationRepository";
-
-
+import { SessionRepository } from "../infrastructure/repositories/SessionRepository";
 
 /* ------------------- Instantiate Repositories ---------------- */
+export const sessionRepository = new SessionRepository();
 export const gymRepository = new GymRepository();
 export const otpRepository = new OtpRepository();
 export const superAdminRepository = new SuperAdminRepository();

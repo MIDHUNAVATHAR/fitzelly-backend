@@ -13,7 +13,7 @@ export class JwtService implements ITokenService {
         return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn: Number(process.env.REFRESH_MAX_AGE) });
     }
 
-    verifyRefrshToken(token: string): JwtPayload {
+    verifyRefreshToken(token: string): JwtPayload {
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET!);

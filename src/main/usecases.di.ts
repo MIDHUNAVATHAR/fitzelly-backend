@@ -167,6 +167,7 @@ import { ReApplyGymUseCase } from "../application/usecases/gym-profile/ReApplyGy
 
 //notification usecases
 import { AddNotificationUseCase, GetNotificationsUseCase, MarkNotificationUseCase } from "../application/usecases/notification/NotificationUseCases";
+import { GetActiveSessionsUseCase, RevokeSessionUseCase } from "../application/usecases/security/SessionUseCases";
 
 
 
@@ -185,7 +186,7 @@ import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
 import { enquiryRepository } from "./repositories.di";
 import { expenseRepository } from "./repositories.di";
-import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository } from "./repositories.di";
+import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository } from "./repositories.di";
 
 
 
@@ -207,29 +208,29 @@ import { socketService } from "./services.di";
 /**
  * auth usecase instances
  */
-export const tokenRefreshUseCase = new TokenRefreshUseCase(jwtService, gymRepository, superAdminRepository, clientRepository, trainerRepository);
+export const tokenRefreshUseCase = new TokenRefreshUseCase(jwtService, gymRepository, superAdminRepository, clientRepository, trainerRepository, sessionRepository);
 
 export const initiateGoogleAuthUseCase = new InitiateGoogleAuthUseCase(googleAuthService);
-export const googleAuthUseCase = new GoogleAuthUseCase(gymRepository, clientRepository, trainerRepository, jwtService, googleAuthService);
+export const googleAuthUseCase = new GoogleAuthUseCase(gymRepository, clientRepository, trainerRepository, jwtService, googleAuthService, sessionRepository);
 
-export const gymLoginUseCase = new GymLoginUseCase(gymRepository, passwordHasher, jwtService);
+export const gymLoginUseCase = new GymLoginUseCase(gymRepository, passwordHasher, jwtService, sessionRepository);
 export const initiateSignupUseCase = new InitiateSignupUseCase(gymRepository, otpRepository, emailService)
 export const completeSignupUseCase = new CompleteSignupUseCase(gymRepository, otpRepository, passwordHasher)
 export const gymInitiateForgotpassUseCase = new GymInitiateForgotpassUseCase(gymRepository, otpRepository, emailService)
 export const gymCompleteForgotpassUseCase = new GymCompleteForgotpassUseCase(otpRepository);
 export const gymResetPasswordUseCase = new GymResetPasswordUseCase(gymRepository, passwordHasher, otpRepository);
 
-export const clientLoginUseCase = new ClientLoginUseCase(clientRepository, passwordHasher, jwtService);
+export const clientLoginUseCase = new ClientLoginUseCase(clientRepository, passwordHasher, jwtService, sessionRepository);
 export const clientInitiateForgotpassUseCase = new ClientInitiateForgotpassUseCase(clientRepository, otpRepository, emailService)
 export const clientCompleteForgotpassUseCase = new ClientForgotpassUseCase(otpRepository);
 export const clientResetPasswordUseCase = new ClientResetPasswordUseCase(clientRepository, passwordHasher, otpRepository)
 
-export const trainerLoginUseCase = new TrainerLoginUseCase(trainerRepository, passwordHasher, jwtService);
+export const trainerLoginUseCase = new TrainerLoginUseCase(trainerRepository, passwordHasher, jwtService, sessionRepository);
 export const trainerInitiateForgotpassUseCase = new TrainerInitiateForgotpassUseCase(trainerRepository, otpRepository, emailService)
 export const trainerCompleteForgotpassUseCase = new TrainerCompleteForgotpassUseCase(otpRepository)
 export const trainerResetPasswordUseCase = new TrainerResetPasswordUseCase(trainerRepository, passwordHasher, otpRepository);
 
-export const superAdminLoginUseCase = new SuperAdminLoginUseCase(superAdminRepository, passwordHasher, jwtService)
+export const superAdminLoginUseCase = new SuperAdminLoginUseCase(superAdminRepository, passwordHasher, jwtService, sessionRepository)
 export const superAdminInitiateForgotpassUseCase = new SuperAdminInitiateForgotpassUseCase(superAdminRepository, otpRepository, emailService)
 export const superAdminCompleteForgotpassUseCase = new SuperAdminCompleteForgotpassUseCase(otpRepository);
 export const superAdminResetPasswordUseCase = new SuperAdminResetPasswordUseCase(superAdminRepository, otpRepository, passwordHasher);
@@ -374,3 +375,6 @@ export const getAvailableSlotsUseCase = new GetAvailableSlotsUseCase(equipmentRe
 export const getClientBookingsUseCase = new GetClientBookingsUseCase(equipmentBookingRepository);
 export const cancelEquipmentBookingUseCase = new CancelEquipmentBookingUseCase(equipmentBookingRepository);
 export const reApplyGymUseCase = new ReApplyGymUseCase(gymRepository, addNotificationUseCase);
+
+export const getActiveSessionsUseCase = new GetActiveSessionsUseCase(sessionRepository);
+export const revokeSessionUseCase = new RevokeSessionUseCase(sessionRepository);
