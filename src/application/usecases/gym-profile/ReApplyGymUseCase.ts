@@ -38,9 +38,9 @@ export class ReApplyGymUseCase implements IReApplyGymUseCase {
             throw new AppError("Profile is incomplete. Please fill all details before re-applying.", 400);
         }
 
-        // Update status to Pending
+        // Update status to Reapplied
         const updatedGym = await this.gymRepository.updateStatus(gymId, {
-            approvalStatus: 'Pending',
+            approvalStatus: 'Reapplied',
             rejectionReason: '' // Clear rejection reason
         });
 

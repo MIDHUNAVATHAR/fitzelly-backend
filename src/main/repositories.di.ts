@@ -21,6 +21,7 @@ import { EquipmentBookingRepository } from "../infrastructure/repositories/Equip
 import { AnalyticsRepository } from "../infrastructure/repositories/AnalyticsRepository";
 import { NotificationRepository } from "../infrastructure/repositories/NotificationRepository";
 import { SessionRepository } from "../infrastructure/repositories/SessionRepository";
+import { SubscriptionPlanRepository } from "../infrastructure/repositories/SubscriptionPlanRepository";
 
 /* ------------------- Instantiate Repositories ---------------- */
 export const sessionRepository = new SessionRepository();
@@ -34,6 +35,7 @@ export const paymentRepository = new PaymentRepository();
 export const planRepository = new PlanRepository();
 export const equipmentRepository = new EquipmentRepository();
 export const subscriptionRepository = new SubscriptionRepository();
+export const subscriptionPlanRepository = new SubscriptionPlanRepository();
 export const attendanceRepository = new AttendanceRepository();
 export const workoutPlanRepository = new WorkoutPlanRepository();
 export const workoutLogRepository = new WorkoutLogRepository();

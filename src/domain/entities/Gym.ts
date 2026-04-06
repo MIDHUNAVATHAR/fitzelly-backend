@@ -1,6 +1,6 @@
 import { ROLES } from "../../constants/roles.constants";
 
-export type ApprovalStatus = "Approved" | "Pending" | "Rejected";
+export type ApprovalStatus = "Approved" | "Pending" | "Rejected" | "Reapplied";
 export type SubscriptionStatus = "Active" | "Trial" | "Expired" | "Pending";
 
 export interface IGymCertificate {

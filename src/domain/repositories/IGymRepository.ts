@@ -28,7 +28,7 @@ export interface GymFindOptions {
 }
 
 export interface IGymStatus {
-    approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
+    approvalStatus?: 'Approved' | 'Pending' | 'Rejected' | 'Reapplied';
     subscriptionStatus?: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate?: string | Date;
     rejectionReason?: string;

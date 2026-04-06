@@ -8,6 +8,7 @@ import { ISubscriptionRepository } from "../../../domain/repositories/ISubscript
 
 interface SearchQuery {
     gymName?: { $regex: string; $options: string };
+    approvalStatus?: string;
 }
 
 export class GetAllGymsUseCase implements IGetAllGymsUseCase {
@@ -16,7 +17,7 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
         private _subscriptionRepository: ISubscriptionRepository
     ) { }
 
-    async execute(page: number, limit: number, search: string): Promise<GymsListResponseDTO> {
+    async execute(page: number, limit: number, search: string, status?: string): Promise<GymsListResponseDTO> {
         const skip = (page - 1) * limit;
 
         /**
@@ -25,6 +26,10 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
         const searchQuery: SearchQuery = {};
         if (search) {
             searchQuery.gymName = { $regex: search, $options: "i" };
+        }
+
+        if (status && status !== 'all') {
+            searchQuery.approvalStatus = status;
         }
 
         /**

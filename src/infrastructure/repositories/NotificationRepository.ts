@@ -47,15 +47,12 @@ export class NotificationRepository implements INotificationRepository {
     }
     
     async markAsRead(id: string, targetId: string): Promise<void> {
-        // Find notification first to check role if needed, or just update by ID
-        // To be safe and scoped:
+      
         await NotificationModel.findByIdAndUpdate(id, { isRead: true });
     }
     
     async markAllAsRead(targetId: string): Promise<void> {
-        // Need to know role here too... or we can just pass the role to this method
-        // But for now, if it's markAllAsRead, it's usually for the current user's scope.
-        // Let's assume for now GYM role is the only one with gymId scoping.
+        
         await NotificationModel.updateMany({ $or: [{ gymId: targetId }, { targetRole: 'super-admin' }], isRead: false }, { isRead: true });
     }
 }

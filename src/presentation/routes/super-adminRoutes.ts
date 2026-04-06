@@ -2,7 +2,7 @@ import { Router } from "express";
 import { SUPER_ADMIN_ROUTES } from "../../constants/routes.constants"
 import { superAdminAuthenticationController } from "../../main/controllers.di";
 import { superAdminProfileController } from "../../main/controllers.di";
-import { superAdminGymsController, workoutLibraryController } from "../../main/controllers.di";
+import { superAdminGymsController, workoutLibraryController, subscriptionPlanController } from "../../main/controllers.di";
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";
@@ -40,5 +40,16 @@ router.route(SUPER_ADMIN_ROUTES.WORKOUT_LIBRARY_BY_ID)
     .all(protect([ROLES.SUPERADMIN]))
     .patch(workoutLibraryController.updateExercise.bind(workoutLibraryController))
     .delete(workoutLibraryController.deleteExercise.bind(workoutLibraryController));
+
+// Subscription Plans
+router.route(SUPER_ADMIN_ROUTES.SUBSCRIPTION_PLANS)
+    .all(protect([ROLES.SUPERADMIN]))
+    .get(subscriptionPlanController.getAll.bind(subscriptionPlanController))
+    .post(subscriptionPlanController.create.bind(subscriptionPlanController));
+
+router.route(SUPER_ADMIN_ROUTES.SUBSCRIPTION_PLAN_BY_ID)
+    .all(protect([ROLES.SUPERADMIN]))
+    .patch(subscriptionPlanController.update.bind(subscriptionPlanController))
+    .delete(subscriptionPlanController.delete.bind(subscriptionPlanController));
 
 export default router;

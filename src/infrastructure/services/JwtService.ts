@@ -6,11 +6,13 @@ import { InvalidTokenError } from "../../domain/errors/InvalidTokenError";
 
 export class JwtService implements ITokenService {
     generateAccessToken(payload: object): string {
-        return jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, { expiresIn: Number(process.env.ACCESS_MAX_AGE) });
+        const expiresIn = Number(process.env.ACCESS_MAX_AGE) || 3600; // 1 hour default
+        return jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, { expiresIn });
     }
 
     generateRefreshToken(payload: object): string {
-        return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn: Number(process.env.REFRESH_MAX_AGE) });
+        const expiresIn = Number(process.env.REFRESH_MAX_AGE) || 604800; // 7 days default
+        return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, { expiresIn });
     }
 
     verifyRefreshToken(token: string): JwtPayload {

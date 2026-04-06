@@ -126,7 +126,9 @@ export const SUPER_ADMIN_ROUTES = {
     APPROVE_GYM: "/api/super-admin/gyms/:gymId/approve",
     REJECT_GYM: "/api/super-admin/gyms/:gymId/reject",
     WORKOUT_LIBRARY: "/api/super-admin/workout-library",
-    WORKOUT_LIBRARY_BY_ID: "/api/super-admin/workout-library/:id"
+    WORKOUT_LIBRARY_BY_ID: "/api/super-admin/workout-library/:id",
+    SUBSCRIPTION_PLANS: "/api/super-admin/subscription-plans",
+    SUBSCRIPTION_PLAN_BY_ID: "/api/super-admin/subscription-plans/:id",
 }
 
 export const GOOGLE_ROUTE = {

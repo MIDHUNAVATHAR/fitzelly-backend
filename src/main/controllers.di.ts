@@ -27,6 +27,7 @@ import { TrainerProfileController } from "../presentation/controller/trainer/Tra
 
 import { SuperAdminProfileController } from "../presentation/controller/super-admin/SuperAdminProfileController";
 import { SuperAdminGymsController } from "../presentation/controller/super-admin/SuperAdminGymsController";
+import { SubscriptionPlanController } from "../presentation/controller/super-admin/SubscriptionPlanController";
 import { WorkoutLibraryController } from "../presentation/controller/workout-library/WorkoutLibraryController";
 import { WorkoutTemplateController } from "../presentation/controller/workout-template/WorkoutTemplateController";
 
@@ -165,7 +166,11 @@ import {
     markNotificationUseCase,
     reApplyGymUseCase,
     getActiveSessionsUseCase,
-    revokeSessionUseCase
+    revokeSessionUseCase,
+    addSubscriptionPlanUseCase,
+    getAllSubscriptionPlansUseCase,
+    updateSubscriptionPlanUseCase,
+    deleteSubscriptionPlanUseCase
 } from "./usecases.di";
 import { trainerRepository } from "./repositories.di";
 
@@ -234,6 +239,12 @@ export const superAdminGymsController = new SuperAdminGymsController(
     // updateGymStatusUseCase,
     approveGymUseCase,
     rejectGymUseCase);
+export const subscriptionPlanController = new SubscriptionPlanController(
+    addSubscriptionPlanUseCase,
+    getAllSubscriptionPlansUseCase,
+    updateSubscriptionPlanUseCase,
+    deleteSubscriptionPlanUseCase
+);
 export const gymClientController = new GymClientController(
     addClientUseCase,
     getClientsUseCase,

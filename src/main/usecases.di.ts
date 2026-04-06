@@ -125,6 +125,12 @@ import { GetGymByIdUseCase } from "../application/usecases/gym-profile/GetGymByI
 import { ApproveGymUseCase } from "../application/usecases/superAdmin-gym/ApproveGymUseCase";
 import { RejectGymUseCase } from "../application/usecases/superAdmin-gym/RejectGymUseCase";
 
+/**
+ * superadmin plans usecases
+ */
+import { AddSubscriptionPlanUseCase, GetAllSubscriptionPlansUseCase, UpdateSubscriptionPlanUseCase, DeleteSubscriptionPlanUseCase } from "../application/usecases/superAdmin-plans/SubscriptionPlanUseCases";
+
+
 
 //attendance usecases
 import { MarkAttendenceUseCase } from "../application/usecases/attendance/MarkAttendanceUseCase";
@@ -186,7 +192,7 @@ import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
 import { enquiryRepository } from "./repositories.di";
 import { expenseRepository } from "./repositories.di";
-import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository } from "./repositories.di";
+import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository, subscriptionPlanRepository } from "./repositories.di";
 
 
 
@@ -327,6 +333,13 @@ export const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository, subscripti
 // export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
 export const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdminRepository, subscriptionRepository);
 export const rejectGymUseCase = new RejectGymUseCase(gymRepository);
+/**
+ * superadmin plans usecase instances
+ */
+export const addSubscriptionPlanUseCase = new AddSubscriptionPlanUseCase(subscriptionPlanRepository);
+export const getAllSubscriptionPlansUseCase = new GetAllSubscriptionPlansUseCase(subscriptionPlanRepository);
+export const updateSubscriptionPlanUseCase = new UpdateSubscriptionPlanUseCase(subscriptionPlanRepository);
+export const deleteSubscriptionPlanUseCase = new DeleteSubscriptionPlanUseCase(subscriptionPlanRepository);
 
 
 //attendance usecases

@@ -45,6 +45,5 @@ export class UpdateTrainerUseCase implements IUpdateTrainerUseCase {
 
         return TrainerMapper.toTrainerResponseDTO(updatedTrainer);
 
-
     }
 }

@@ -53,7 +53,7 @@ export const GymSchema = new Schema<IGymDocument>({
     },
     approvalStatus: {
         type: String,
-        enum: ['Approved', 'Pending', 'Rejected'],
+        enum: ['Approved', 'Pending', 'Rejected', 'Reapplied'],
         default: 'Pending'
     },
 
