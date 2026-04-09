@@ -3,6 +3,7 @@ import { IUpdateClientByGymUseCase } from "../../IUseCases/gym-client/IUpdateCli
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { NotFoundError, BadRequestError } from "../../errors/AppError";
 import { ClientMapper } from "../../mapper/ClientMapper";
+import { validateAge } from "../../utils/validation.util";
 
 
 export class UpdateClientByGymUseCase implements IUpdateClientByGymUseCase {
@@ -13,6 +14,13 @@ export class UpdateClientByGymUseCase implements IUpdateClientByGymUseCase {
         const client = await this._clientRepository.findById(clientId);
         if (!client) {
             throw new NotFoundError("Client not found");
+        }
+
+        if (clientData.dateOfBirth) {
+            const ageValidation = validateAge(clientData.dateOfBirth);
+            if (!ageValidation.isValid) {
+                throw new BadRequestError(ageValidation.message);
+            }
         }
 
         if (clientData.email !== client.email) {

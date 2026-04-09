@@ -4,6 +4,7 @@ import { IGetGymByIdUseCase } from "../../../application/IUseCases/gym-profile/I
 import { IUpdateGymStatusUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymStatusUseCase";
 import { IApproveGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IApproveGymUseCase";
 import { IRejectGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IRejectGymUseCase";
+import { IUpdateGymSubscriptionUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymSubscriptionUseCase";
 import { ResponseStatus, HttpStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
 import { logger } from "../../../infrastructure/logger/logger";
@@ -12,9 +13,9 @@ export class SuperAdminGymsController {
     constructor(
         private readonly _getAllGymsUseCase: IGetAllGymsUseCase,
         private readonly _getGymByIdUseCase: IGetGymByIdUseCase,
-        // private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase,
         private readonly _approveGymUseCase: IApproveGymUseCase,
         private readonly _rejectGymUseCase: IRejectGymUseCase,
+        private readonly _updateGymSubscriptionUseCase: IUpdateGymSubscriptionUseCase,
     ) { }
 
     async getAllGyms(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -52,21 +53,8 @@ export class SuperAdminGymsController {
         }
     }
 
-    // async updateGymStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
-    //     try {
-    //         const gymId = req.params.gymId as string;
-
-    //         const updatedGym = await this._updateGymStatusUseCase.execute(gymId)
-
-    //         res.status(HttpStatus.OK).json({
-    //             success: ResponseStatus.SUCCESS,
-    //             message: ResponseMessage.GYM_UPDATE_SUCCESS,
-    //             data: updatedGym
-    //         })
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+   
+   
 
     async approveGym(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -101,6 +89,27 @@ export class SuperAdminGymsController {
 
             const updatedGym = await this._rejectGymUseCase.execute(gymId, rejectionReason);
             logger.info("rejected gym ", updatedGym)
+
+            res.status(HttpStatus.OK).json({
+                success: ResponseStatus.SUCCESS,
+                message: ResponseMessage.GYM_UPDATE_SUCCESS,
+                data: updatedGym
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async updateSubscription(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const gymId = req.params.gymId as string;
+            const { subscriptionStatus, expiryDate } = req.body;
+
+            const updatedGym = await this._updateGymSubscriptionUseCase.execute(
+                gymId,
+                subscriptionStatus,
+                new Date(expiryDate)
+            );
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,

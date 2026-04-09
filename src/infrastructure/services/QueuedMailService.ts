@@ -30,4 +30,29 @@ export class QueuedMailService implements IEmailService {
         logger.info(`[QueuedMailService] Welcome email job added to queue for ${email}`);
     }
 
+    async sendMembershipExpiryReminder(to: string, clientName: string, expiryDate: string, planName: string): Promise<void> {
+        await emailQueue.add(`reminder_${to}_${Date.now()}`, {
+            type: 'MEMBERSHIP_REMINDER',
+            payload: { to, clientName, expiryDate, planName }
+        }, {
+            removeOnComplete: true,
+            attempts: 3,
+            backoff: { type: 'exponential', delay: 3000 }
+        });
+
+        logger.info(`[QueuedMailService] Membership reminder job added to queue for ${to}`);
+    }
+
+    async sendMembershipExpiredNotification(to: string, clientName: string, planName: string): Promise<void> {
+        await emailQueue.add(`expired_${to}_${Date.now()}`, {
+            type: 'MEMBERSHIP_EXPIRED',
+            payload: { to, clientName, planName }
+        }, {
+            removeOnComplete: true,
+            attempts: 3,
+            backoff: { type: 'exponential', delay: 3000 }
+        });
+
+        logger.info(`[QueuedMailService] Membership expired job added to queue for ${to}`);
+    }
 }

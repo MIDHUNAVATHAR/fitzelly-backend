@@ -23,9 +23,24 @@ export class EmailWorker {
                     case "WELCOME_INVITE":
                         await mailService.sendWelcomeInvite(
                             payload.email,
-                            payload.inviteLink, // Fixed typo: was inviteLint
+                            payload.inviteLink,
                             payload.gymName,
                             payload.userName
+                        );
+                        break;
+                    case "MEMBERSHIP_REMINDER":
+                        await mailService.sendMembershipExpiryReminder(
+                            payload.to,
+                            payload.clientName,
+                            payload.expiryDate,
+                            payload.planName
+                        );
+                        break;
+                    case "MEMBERSHIP_EXPIRED":
+                        await mailService.sendMembershipExpiredNotification(
+                            payload.to,
+                            payload.clientName,
+                            payload.planName
                         );
                         break;
                     default:

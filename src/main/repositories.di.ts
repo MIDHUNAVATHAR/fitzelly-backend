@@ -22,10 +22,14 @@ import { AnalyticsRepository } from "../infrastructure/repositories/AnalyticsRep
 import { NotificationRepository } from "../infrastructure/repositories/NotificationRepository";
 import { SessionRepository } from "../infrastructure/repositories/SessionRepository";
 import { SubscriptionPlanRepository } from "../infrastructure/repositories/SubscriptionPlanRepository";
+import { ChatRepository } from "../infrastructure/repositories/ChatRepository";
+import { WeightLogRepository } from "../infrastructure/repositories/WeightLogRepository";
+
 
 /* ------------------- Instantiate Repositories ---------------- */
 export const sessionRepository = new SessionRepository();
 export const gymRepository = new GymRepository();
+export const chatRepository = new ChatRepository();
 export const otpRepository = new OtpRepository();
 export const superAdminRepository = new SuperAdminRepository();
 export const clientRepository = new ClientRepository();
@@ -47,3 +51,4 @@ export const trainerPayoutRepository = new TrainerPayoutRepository();
 export const equipmentBookingRepository = new EquipmentBookingRepository();
 export const analyticsRepository = new AnalyticsRepository();
 export const notificationRepository = new NotificationRepository();
+export const weightLogRepository = new WeightLogRepository();

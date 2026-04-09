@@ -35,7 +35,65 @@ export class SocketService implements ISocketService {
 
             socket.on("join", (room: string) => {
                 socket.join(room);
-                console.log(`User ${socket.id} joined room: ${room}`);
+                console.log(`[Socket] User ${socket.id} joined room: ${room}`);
+            });
+
+            // Messaging
+            socket.on("SEND_MESSAGE", (data) => {
+                const { receiverId } = data;
+                console.log(`[Socket] Sending message to room 'user_${receiverId}'`);
+                // Emit to the specific user's room
+                socket.to(`user_${receiverId}`).emit("RECEIVE_MESSAGE", data);
+            });
+
+            // Read Receipts & Delivery Status
+            socket.on("MESSAGE_DELIVERED", (data) => {
+                // When user B receives user A's message, user B emits this. It routes back to user A.
+                const { senderId, messageId } = data;
+                socket.to(`user_${senderId}`).emit("MESSAGE_DELIVERED", { messageId });
+            });
+
+            socket.on("MESSAGE_SEEN", (data) => {
+                // When user B opens the chat and sees user A's message.
+                const { senderId, messageId, conversationId } = data;
+                socket.to(`user_${senderId}`).emit("MESSAGE_SEEN", { messageId, conversationId });
+            });
+
+            // Typing Indicators
+            socket.on("TYPING_START", (data) => {
+                const { receiverId, conversationId } = data;
+                socket.to(`user_${receiverId}`).emit("TYPING_START", { conversationId });
+            });
+
+            socket.on("TYPING_STOP", (data) => {
+                const { receiverId, conversationId } = data;
+                socket.to(`user_${receiverId}`).emit("TYPING_STOP", { conversationId });
+            });
+
+            // WebRTC Signaling
+            socket.on("CALL_USER", (data) => {
+                const { to, offer, from, callerName, callType } = data;
+                socket.to(`user_${to}`).emit("INCOMING_CALL", { from, offer, callerName, callType });
+            });
+
+            socket.on("ANSWER_CALL", (data) => {
+                const { to, answer } = data;
+                socket.to(`user_${to}`).emit("CALL_ACCEPTED", { answer });
+            });
+
+            socket.on("ICE_CANDIDATE", (data) => {
+                const { to, candidate } = data;
+                socket.to(`user_${to}`).emit("RECEIVE_ICE_CANDIDATE", { candidate });
+            });
+
+            socket.on("END_CALL", (data) => {
+                const { to } = data;
+                socket.to(`user_${to}`).emit("CALL_ENDED");
+            });
+
+            socket.on("CALL_FAILED", (data) => {
+                const { to, reason } = data;
+                socket.to(`user_${to}`).emit("CALL_FAILED", { reason });
             });
 
             socket.on("disconnect", () => {

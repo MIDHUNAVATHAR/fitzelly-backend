@@ -1,6 +1,7 @@
 
 /* ------------------- controllers (presentation) ---------------- */
 import { InviteController } from "../presentation/controller/auth/InviteController";
+import { ChatController } from "../presentation/controller/chat/ChatController";
 
 import { GymAuthenticationController } from "../presentation/controller/auth/GymAuthenticationController";
 import { SuperAdminAuthenticationController } from "../presentation/controller/auth/SuperAdminAuthenticationController";
@@ -17,16 +18,21 @@ import { EnquiryController } from "../presentation/controller/gym/EnquiryControl
 import { ExpenseController } from "../presentation/controller/gym/ExpenseController";
 import { TrainerPayoutController } from "../presentation/controller/gym/TrainerPayoutController";
 import { DashboardController } from "../presentation/controller/gym/DashboardController";
+import { SubscriptionController } from "../presentation/controller/gym/SubscriptionController";
+import { WebhookController } from "../presentation/controller/gym/WebhookController";
 
 
 import { ClientAuthController } from "../presentation/controller/auth/ClientAuthController";
 import { ClientProfileController } from "../presentation/controller/client/ClientProfileController";
+import { HealthTrackingController } from "../presentation/controller/client/HealthTrackingController";
+
 
 import { TrainerAuthController } from "../presentation/controller/auth/TrainerAuthController";
 import { TrainerProfileController } from "../presentation/controller/trainer/TrainerProfileController";
 
 import { SuperAdminProfileController } from "../presentation/controller/super-admin/SuperAdminProfileController";
 import { SuperAdminGymsController } from "../presentation/controller/super-admin/SuperAdminGymsController";
+import { SuperAdminDashboardController } from "../presentation/controller/super-admin/SuperAdminDashboardController";
 import { SubscriptionPlanController } from "../presentation/controller/super-admin/SubscriptionPlanController";
 import { WorkoutLibraryController } from "../presentation/controller/workout-library/WorkoutLibraryController";
 import { WorkoutTemplateController } from "../presentation/controller/workout-template/WorkoutTemplateController";
@@ -81,6 +87,7 @@ import {
     // updateGymStatusUseCase,
     approveGymUseCase,
     rejectGymUseCase,
+    updateGymSubscriptionUseCase,
 
     addClientUseCase,
     getClientsUseCase,
@@ -170,9 +177,18 @@ import {
     addSubscriptionPlanUseCase,
     getAllSubscriptionPlansUseCase,
     updateSubscriptionPlanUseCase,
-    deleteSubscriptionPlanUseCase
+    deleteSubscriptionPlanUseCase,
+    getSuperAdminDashboardUseCase,
+    getConversationsUseCase,
+    getMessagesUseCase,
+    sendMessageUseCase,
+    getOrCreateConversationUseCase,
+    markMessagesAsReadUseCase,
+    addWeightLogUseCase,
+    getWeightLogsUseCase
 } from "./usecases.di";
-import { trainerRepository } from "./repositories.di";
+
+import { trainerRepository, gymRepository, subscriptionRepository, subscriptionPlanRepository } from "./repositories.di";
 
 
 
@@ -238,7 +254,11 @@ export const superAdminGymsController = new SuperAdminGymsController(
     getGymByIdUseCase,
     // updateGymStatusUseCase,
     approveGymUseCase,
-    rejectGymUseCase);
+    rejectGymUseCase,
+    updateGymSubscriptionUseCase);
+
+export const superAdminDashboardController = new SuperAdminDashboardController(getSuperAdminDashboardUseCase);
+
 export const subscriptionPlanController = new SubscriptionPlanController(
     addSubscriptionPlanUseCase,
     getAllSubscriptionPlansUseCase,
@@ -291,6 +311,18 @@ export const gymAnalyticsController = new GymAnalyticsController(getGymAnalytics
 
 // gym dashboard
 export const dashboardController = new DashboardController(getGymDashboardUseCase);
+
+export const subscriptionController = new SubscriptionController(
+    subscriptionRepository,
+    subscriptionPlanRepository,
+    gymRepository
+);
+
+export const webhookController = new WebhookController(
+    subscriptionRepository,
+    subscriptionPlanRepository,
+    gymRepository
+);
 
 //client
 export const clientProfileController = new ClientProfileController(
@@ -374,4 +406,18 @@ export const securityController = new SecurityController(
     getActiveSessionsUseCase,
     revokeSessionUseCase
 );
+
+export const chatController = new ChatController(
+    getConversationsUseCase,
+    getMessagesUseCase,
+    sendMessageUseCase,
+    getOrCreateConversationUseCase,
+    markMessagesAsReadUseCase
+);
+
+export const healthTrackingController = new HealthTrackingController(
+    addWeightLogUseCase,
+    getWeightLogsUseCase
+);
+
 

@@ -4,6 +4,7 @@ import { NotFoundError, BadRequestError } from "../../errors/AppError";
 import { IUpdateTrainerUseCase } from "../../IUseCases/gym-trainer/IUpdateTrainerUseCase";
 import { TrainerMapper } from "../../mapper/TrainerMapper";
 import { IS3Service } from "../../../domain/services/IS3Service";
+import { validateAge } from "../../utils/validation.util";
 
 
 
@@ -18,6 +19,17 @@ export class UpdateTrainerUseCase implements IUpdateTrainerUseCase {
 
         if (!trainer || trainer.gymId !== gymId || trainer.isDeleted) {
             throw new NotFoundError("Trainer not found");
+        }
+
+        if (data.salary && Number(data.salary) <= 0) {
+            throw new BadRequestError("Salary must be greater than 0");
+        }
+
+        if (data.dateOfBirth) {
+            const ageValidation = validateAge(data.dateOfBirth);
+            if (!ageValidation.isValid) {
+                throw new BadRequestError(ageValidation.message);
+            }
         }
 
         if (data.email && data.email !== trainer.email) {

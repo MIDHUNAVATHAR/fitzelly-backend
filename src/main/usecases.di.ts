@@ -124,11 +124,13 @@ import { GetGymByIdUseCase } from "../application/usecases/gym-profile/GetGymByI
 // import { UpdateGymStatusUseCase } from "../application/usecases/superAdmin-gym/UpdateGymStatusUseCase";
 import { ApproveGymUseCase } from "../application/usecases/superAdmin-gym/ApproveGymUseCase";
 import { RejectGymUseCase } from "../application/usecases/superAdmin-gym/RejectGymUseCase";
+import { UpdateGymSubscriptionUseCase } from "../application/usecases/superAdmin-gym/UpdateGymSubscriptionUseCase";
 
 /**
  * superadmin plans usecases
  */
 import { AddSubscriptionPlanUseCase, GetAllSubscriptionPlansUseCase, UpdateSubscriptionPlanUseCase, DeleteSubscriptionPlanUseCase } from "../application/usecases/superAdmin-plans/SubscriptionPlanUseCases";
+import { GetSuperAdminDashboardUseCase } from "../application/usecases/superAdmin-dashboard/GetSuperAdminDashboardUseCase";
 
 
 
@@ -174,11 +176,25 @@ import { ReApplyGymUseCase } from "../application/usecases/gym-profile/ReApplyGy
 //notification usecases
 import { AddNotificationUseCase, GetNotificationsUseCase, MarkNotificationUseCase } from "../application/usecases/notification/NotificationUseCases";
 import { GetActiveSessionsUseCase, RevokeSessionUseCase } from "../application/usecases/security/SessionUseCases";
+import { 
+    GetConversationsUseCase, 
+    GetMessagesUseCase, 
+    SendMessageUseCase, 
+    GetOrCreateConversationUseCase,
+    MarkMessagesAsReadUseCase
+} from "../application/usecases/chat/ChatUseCases";
 
+import { AddWeightLogUseCase } from "../application/usecases/health-tracking/AddWeightLogUseCase";
+import { GetWeightLogsUseCase } from "../application/usecases/health-tracking/GetWeightLogsUseCase";
 
+export const getConversationsUseCase = new GetConversationsUseCase(chatRepository);
+export const getMessagesUseCase = new GetMessagesUseCase(chatRepository);
+export const sendMessageUseCase = new SendMessageUseCase(chatRepository);
+export const getOrCreateConversationUseCase = new GetOrCreateConversationUseCase(chatRepository);
+export const markMessagesAsReadUseCase = new MarkMessagesAsReadUseCase(chatRepository);
+import { weightLogRepository } from "./repositories.di";
+import { superAdminRepository, gymRepository } from "./repositories.di";
 
-import { gymRepository } from "./repositories.di";
-import { superAdminRepository } from "./repositories.di";
 import { clientRepository } from "./repositories.di";
 import { trainerRepository } from "./repositories.di";
 import { otpRepository } from "./repositories.di";
@@ -192,7 +208,7 @@ import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
 import { enquiryRepository } from "./repositories.di";
 import { expenseRepository } from "./repositories.di";
-import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository, subscriptionPlanRepository } from "./repositories.di";
+import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository, subscriptionPlanRepository, chatRepository } from "./repositories.di";
 
 
 
@@ -333,6 +349,7 @@ export const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository, subscripti
 // export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
 export const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdminRepository, subscriptionRepository);
 export const rejectGymUseCase = new RejectGymUseCase(gymRepository);
+export const updateGymSubscriptionUseCase = new UpdateGymSubscriptionUseCase(gymRepository, subscriptionRepository);
 /**
  * superadmin plans usecase instances
  */
@@ -340,6 +357,8 @@ export const addSubscriptionPlanUseCase = new AddSubscriptionPlanUseCase(subscri
 export const getAllSubscriptionPlansUseCase = new GetAllSubscriptionPlansUseCase(subscriptionPlanRepository);
 export const updateSubscriptionPlanUseCase = new UpdateSubscriptionPlanUseCase(subscriptionPlanRepository);
 export const deleteSubscriptionPlanUseCase = new DeleteSubscriptionPlanUseCase(subscriptionPlanRepository);
+
+export const getSuperAdminDashboardUseCase = new GetSuperAdminDashboardUseCase(analyticsRepository);
 
 
 //attendance usecases
@@ -391,3 +410,6 @@ export const reApplyGymUseCase = new ReApplyGymUseCase(gymRepository, addNotific
 
 export const getActiveSessionsUseCase = new GetActiveSessionsUseCase(sessionRepository);
 export const revokeSessionUseCase = new RevokeSessionUseCase(sessionRepository);
+
+export const addWeightLogUseCase = new AddWeightLogUseCase(weightLogRepository);
+export const getWeightLogsUseCase = new GetWeightLogsUseCase(weightLogRepository);

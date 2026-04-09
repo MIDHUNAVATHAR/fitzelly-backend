@@ -8,6 +8,6 @@ export const emailQueue = new Queue(EMAIL_QUEUE_NAME, {
 })
 
 export interface EmailJobData {
-    type: "OTP" | "WELCOME_INVITE",
-    payload:any
+    type: "OTP" | "WELCOME_INVITE" | "MEMBERSHIP_REMINDER" | "MEMBERSHIP_EXPIRED",
+    payload: any
 }

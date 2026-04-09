@@ -37,7 +37,7 @@ export interface GymsListResponseDTO {
 }
 
 export interface GymUpdateRequestDTO {
-    approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
+    approvalStatus?: 'Approved' | 'Pending' | 'Rejected' | 'Reapplied';
     subscriptionStatus?: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate?: string;
     rejectionReason?: string;

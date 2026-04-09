@@ -1,4 +1,3 @@
-import { Express } from "express";
 
 export interface UpdateTrainerProfileDTO {
     fullName: string;

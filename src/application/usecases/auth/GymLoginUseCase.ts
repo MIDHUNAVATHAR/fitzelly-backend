@@ -55,9 +55,7 @@ export class GymLoginUseCase implements ILoginUseCase {
 
         const accessToken = this._tokenService.generateAccessToken(payload);
         const refreshToken = this._tokenService.generateRefreshToken(payload);
-        console.log(accessToken);
-        console.log(refreshToken);
-        console.log(GymLoginMapper.toDTO(user, accessToken, refreshToken))
+        
         return GymLoginMapper.toDTO(user, accessToken, refreshToken);
     }
 }

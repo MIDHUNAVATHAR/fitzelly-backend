@@ -7,10 +7,6 @@ export interface IExerciseDTO {
     sets: string;
 }
 
-// export interface IDayPlanDTO {
-//     day: string;
-//     exercises: IExerciseDTO[];
-// }
 
 export interface WorkoutPlanDTO {
     id?: string;

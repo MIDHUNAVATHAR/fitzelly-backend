@@ -95,4 +95,67 @@ export class MailService implements IEmailService {
             throw new ServiceUnavailableError("Email Service");
         }
     }
+
+    async sendMembershipExpiryReminder(to: string, clientName: string, expiryDate: string, planName: string): Promise<void> {
+        const transporter = this.getTransporter();
+
+        if (!transporter) {
+            logger.warn("Running in DEV mode - no email credentials configured");
+            logger.info(`Reminder for ${to}: ${planName} expires on ${expiryDate}`);
+            return;
+        }
+
+        try {
+            await transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to,
+                subject: `Plan Expiry Reminder - FITZELLY`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6;">
+                        <h2 style="color: #008080;">Hi ${clientName},</h2>
+                        <p>Your <strong>${planName}</strong> plan membership will expire within <strong>3 days</strong>.</p>
+                        <p>Expiry Date: <strong>${expiryDate}</strong></p>
+                        <p>Please renew your plan to avoid any disruption in your fitness journey.</p>
+                        <br/>
+                        <p>Best regards,<br/>Team FITZELLY</p>
+                    </div>
+                `
+            });
+            logger.info(`[MailService] Expiry reminder sent to ${to}`);
+        } catch (error) {
+            logger.error("[MailService] Failed to send expiry reminder.");
+            logger.error(error);
+        }
+    }
+
+    async sendMembershipExpiredNotification(to: string, clientName: string, planName: string): Promise<void> {
+        const transporter = this.getTransporter();
+
+        if (!transporter) {
+            logger.warn("Running in DEV mode - no email credentials configured");
+            logger.info(`Expiry notification for ${to}: ${planName} expired`);
+            return;
+        }
+
+        try {
+            await transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to,
+                subject: `Plan Expired - FITZELLY`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6;">
+                        <h2 style="color: #008080;">Hi ${clientName},</h2>
+                        <p>Your <strong>${planName}</strong> plan membership has <strong>expired</strong> today.</p>
+                        <p>We'd love to see you back at the gym. Please renew your membership to continue with your progress.</p>
+                        <br/>
+                        <p>Best regards,<br/>Team FITZELLY</p>
+                    </div>
+                `
+            });
+            logger.info(`[MailService] Expiration notice sent to ${to}`);
+        } catch (error) {
+            logger.error("[MailService] Failed to send expiration notice.");
+            logger.error(error);
+        }
+    }
 }

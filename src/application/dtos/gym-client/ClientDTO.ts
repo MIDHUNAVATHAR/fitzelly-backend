@@ -35,9 +35,9 @@ export interface GetClientResponseDTO {
     joinedDate: string;
     isEmailVerified: boolean;
     clientId?: string;
-    height?: number;
-    weight?: number;
-    gender?: string;
+    height?: number | null;
+    weight?: number | null;
+    gender?: string | null;
 
 }
 

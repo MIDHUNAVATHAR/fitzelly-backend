@@ -9,7 +9,10 @@ export interface ClientProfileDTO {
     dateOfBirth?: string | null;
     profileUrl?: string | null;
     joinedDate?: string;
-    isEmailVerified:boolean
+    isEmailVerified:boolean;
+    height?: number | null;
+    weight?: number | null;
+    gender?: string | null;
 }
 
 export interface UpdateClientProfileRequestDTO {
