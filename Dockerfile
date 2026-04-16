@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build the application (compiles TS to JS)
-RUN npm run build
+RUN NODE_OPTIONS="--max-old-space-size=1024" npm run build
 
 # Production stage
 FROM node:20-alpine

@@ -190,13 +190,6 @@ import { SaveCallHistoryUseCase, GetUserCallHistoryUseCase } from "../applicatio
 import { AddWeightLogUseCase } from "../application/usecases/health-tracking/AddWeightLogUseCase";
 import { GetWeightLogsUseCase } from "../application/usecases/health-tracking/GetWeightLogsUseCase";
 
-export const getConversationsUseCase = new GetConversationsUseCase(chatRepository);
-export const getMessagesUseCase = new GetMessagesUseCase(chatRepository);
-export const sendMessageUseCase = new SendMessageUseCase(chatRepository);
-export const getOrCreateConversationUseCase = new GetOrCreateConversationUseCase(chatRepository);
-export const markMessagesAsReadUseCase = new MarkMessagesAsReadUseCase(chatRepository);
-export const deleteMessageUseCase = new DeleteMessageUseCase(chatRepository);
-export const getMessageByIdUseCase = new GetMessageByIdUseCase(chatRepository);
 import { weightLogRepository } from "./repositories.di";
 import { superAdminRepository, gymRepository } from "./repositories.di";
 
@@ -420,4 +413,12 @@ export const addWeightLogUseCase = new AddWeightLogUseCase(weightLogRepository);
 export const getWeightLogsUseCase = new GetWeightLogsUseCase(weightLogRepository);
 
 export const saveCallHistoryUseCase = new SaveCallHistoryUseCase(callHistoryRepository);
-export const getUserCallHistoryUseCase = new GetUserCallHistoryUseCase(callHistoryRepository);
+export const getUserCallHistoryUseCase = new GetUserCallHistoryUseCase(callHistoryRepository);
+
+export const getConversationsUseCase = new GetConversationsUseCase(chatRepository);
+export const getMessagesUseCase = new GetMessagesUseCase(chatRepository);
+export const sendMessageUseCase = new SendMessageUseCase(chatRepository);
+export const getOrCreateConversationUseCase = new GetOrCreateConversationUseCase(chatRepository);
+export const markMessagesAsReadUseCase = new MarkMessagesAsReadUseCase(chatRepository);
+export const deleteMessageUseCase = new DeleteMessageUseCase(chatRepository);
+export const getMessageByIdUseCase = new GetMessageByIdUseCase(chatRepository);
