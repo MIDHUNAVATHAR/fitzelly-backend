@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { IWorkoutTemplateUseCase } from "../../../application/IUseCases/workout-template/IWorkoutTemplateUseCase";
 import { ResponseStatus, HttpStatus } from "../../../constants/statusCodes.constants";
 import { AuthRequest } from "../../middlewares/protect";

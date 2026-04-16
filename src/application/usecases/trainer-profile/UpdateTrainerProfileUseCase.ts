@@ -3,6 +3,8 @@ import { UpdateTrainerProfileDTO } from "../../dtos/trainer-profile/UpdateTraine
 import { TrainerResponseDTO } from "../../dtos/gym-trainer/TrainerDTO";
 import { IUpdateTrainerProfileUseCase } from "../../IUseCases/trainer-profile/IUpdateTrainerProfileUseCase";
 import { TrainerMapper } from "../../mapper/TrainerMapper";
+import { validateAge } from "../../utils/validation.util";
+import { BadRequestError } from "../../errors/AppError";
 
 
 export class UpdateTrainerProfileUseCase implements IUpdateTrainerProfileUseCase {
@@ -16,6 +18,14 @@ export class UpdateTrainerProfileUseCase implements IUpdateTrainerProfileUseCase
         if (!trainer) {
             throw new Error("Trainer not found");
         }
+
+        if (data.dateOfBirth) {
+            const ageValidation = validateAge(data.dateOfBirth);
+            if (!ageValidation.isValid) {
+                throw new BadRequestError(ageValidation.message);
+            }
+        }
+
         const dateOfBirth = data.dateOfBirth ? new Date(data.dateOfBirth) : trainer.dateOfBirth;
 
         const updatedTrainer = Object.assign(Object.create(Object.getPrototypeOf(trainer)), trainer, {

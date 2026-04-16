@@ -1,17 +1,21 @@
 import { Request, Response, NextFunction } from "express";
 import { IGetAllGymsUseCase } from "../../../application/IUseCases/superAd-gym-listing/IGetAllGymsUseCase";
 import { IGetGymByIdUseCase } from "../../../application/IUseCases/gym-profile/IGetGymByIdUseCase";
-import { IUpdateGymStatusUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymStatusUseCase";
+
 import { IApproveGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IApproveGymUseCase";
+import { IRejectGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IRejectGymUseCase";
+import { IUpdateGymSubscriptionUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymSubscriptionUseCase";
 import { ResponseStatus, HttpStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
+import { logger } from "../../../infrastructure/logger/logger";
 
 export class SuperAdminGymsController {
     constructor(
         private readonly _getAllGymsUseCase: IGetAllGymsUseCase,
         private readonly _getGymByIdUseCase: IGetGymByIdUseCase,
-        private readonly _updateGymStatusUseCase: IUpdateGymStatusUseCase,
         private readonly _approveGymUseCase: IApproveGymUseCase,
+        private readonly _rejectGymUseCase: IRejectGymUseCase,
+        private readonly _updateGymSubscriptionUseCase: IUpdateGymSubscriptionUseCase,
     ) { }
 
     async getAllGyms(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -19,8 +23,9 @@ export class SuperAdminGymsController {
             const page = Number(req.query.page) || 1;
             const limit = Number(req.query.limit) || 10;
             const search = (req.query.search as string) || "";
+            const status = (req.query.status as string) || "all";
 
-            const result = await this._getAllGymsUseCase.execute(page, limit, search);
+            const result = await this._getAllGymsUseCase.execute(page, limit, search, status);
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,
@@ -48,11 +53,16 @@ export class SuperAdminGymsController {
         }
     }
 
-    async updateGymStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const gymId = req.params.gymId as string;
+   
+   
 
-            const updatedGym = await this._updateGymStatusUseCase.execute(gymId)
+    async approveGym(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+            const gymId = req.params.gymId as string;
+            console.log(gymId)
+            const updatedGym = await this._approveGymUseCase.execute(gymId);
+            logger.info("updated gym ", updatedGym)
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,
@@ -64,14 +74,42 @@ export class SuperAdminGymsController {
         }
     }
 
-    async approveGym(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async rejectGym(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log("xxx")
-
             const gymId = req.params.gymId as string;
-            console.log(gymId)
-            const updatedGym = await this._approveGymUseCase.execute(gymId);
-            console.log("updated gym ", updatedGym)
+            const { rejectionReason } = req.body;
+            
+            if (!rejectionReason) {
+                res.status(HttpStatus.BAD_REQUEST).json({
+                    success: ResponseStatus.ERROR,
+                    message: "Rejection reason is required"
+                });
+                return;
+            }
+
+            const updatedGym = await this._rejectGymUseCase.execute(gymId, rejectionReason);
+            logger.info("rejected gym ", updatedGym)
+
+            res.status(HttpStatus.OK).json({
+                success: ResponseStatus.SUCCESS,
+                message: ResponseMessage.GYM_UPDATE_SUCCESS,
+                data: updatedGym
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async updateSubscription(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const gymId = req.params.gymId as string;
+            const { subscriptionStatus, expiryDate } = req.body;
+
+            const updatedGym = await this._updateGymSubscriptionUseCase.execute(
+                gymId,
+                subscriptionStatus,
+                new Date(expiryDate)
+            );
 
             res.status(HttpStatus.OK).json({
                 success: ResponseStatus.SUCCESS,

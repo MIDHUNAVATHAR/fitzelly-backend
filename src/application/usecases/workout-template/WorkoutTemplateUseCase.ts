@@ -3,7 +3,7 @@ import { IWorkoutTemplateRepository } from "../../../domain/repositories/IWorkou
 import { IExerciseRepository } from "../../../domain/repositories/IExerciseRepository";
 import { IWorkoutPlanRepository } from "../../../domain/repositories/IWorkoutPlanRepository";
 import { CreateWorkoutTemplateDTO, WorkoutTemplateResponseDTO } from "../../dtos/workout-template/WorkoutTemplateDTO";
-import { WorkoutTemplate, ITemplateDay } from "../../../domain/entities/WorkoutTemplate";
+import { WorkoutTemplate } from "../../../domain/entities/WorkoutTemplate";
 import { WorkoutPlan, IDayPlan, IExercise } from "../../../domain/entities/WorkoutPlan";
 import { NotFoundError } from "../../errors/AppError";
 
@@ -42,7 +42,7 @@ export class WorkoutTemplateUseCase implements IWorkoutTemplateUseCase {
         return await this._templateRepository.delete(id);
     }
 
-    async assignTemplateToClient(templateId: string, clientId: string, trainerId: string, gymId: string, weekStartDate: Date, notes?: string): Promise<any> {
+    async assignTemplateToClient(templateId: string, clientId: string, trainerId: string, gymId: string, weekStartDate: Date, notes?: string): Promise<WorkoutPlan> {
         const template = await this._templateRepository.findById(templateId);
         if (!template) throw new NotFoundError("Template");
 
@@ -56,7 +56,7 @@ export class WorkoutTemplateUseCase implements IWorkoutTemplateUseCase {
                 .map(ex => ({
                     id: ex!.id,
                     name: ex!.name,
-                    description: ex!.description,
+                    description: ex!.instructions,
                     reps: ex!.reps,
                     sets: ex!.sets,
                     videoUrl: ex!.videoUrl
@@ -118,7 +118,7 @@ export class WorkoutTemplateUseCase implements IWorkoutTemplateUseCase {
                     .map(ex => ({
                         id: ex!.id,
                         name: ex!.name,
-                        description: ex!.description,
+                        description: ex!.instructions,
                         reps: ex!.reps,
                         sets: ex!.sets,
                         videoUrl: ex!.videoUrl

@@ -18,7 +18,17 @@ export interface DashboardData {
     inactiveClients: { clientId: string; name: string; lastCheckIn: Date | null; daysSinceLastSeen: number }[];
 }
 
+export interface SuperAdminDashboardData {
+    totalGyms: number;
+    activeGyms: number;
+    pendingGyms: number;
+    totalRevenue: number;
+    revenueTrend: { month: string; revenue: number }[];
+    recentGyms: { id: string; name: string; ownerName: string; registrationDate: Date; status: string }[];
+}
+
 export interface IAnalyticsRepository {
     getGymAnalytics(gymId: string): Promise<GymAnalyticsData>;
     getGymDashboardData(gymId: string): Promise<DashboardData>;
+    getSuperAdminDashboardData(): Promise<SuperAdminDashboardData>;
 }

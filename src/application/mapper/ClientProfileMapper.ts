@@ -15,7 +15,10 @@ export class ClientProfileMapper {
             dateOfBirth: client.dateOfBirth ? client.dateOfBirth.toISOString() : null,
             profileUrl: client.profileUrl,
             joinedDate: client.joinedDate ? client.joinedDate.toISOString() : undefined,
-            isEmailVerified :client.isEmailVerified
+            isEmailVerified :client.isEmailVerified,
+            height: client.height,
+            weight: client.weight,
+            gender: client.gender
         };
     }
 }

@@ -5,6 +5,13 @@ import { ITrainerPayoutDocument } from "../database/mongoose/types/ITrainerPayou
 import { BaseRepository } from "./BaseRepository";
 import { TrainerPayoutMapper } from "../mapper/TrainerPayoutMapper";
 
+interface PayoutQuery {
+    gymId?: string;
+    trainerId?: string;
+    isDeleted: boolean;
+    date?: { $gte?: Date; $lte?: Date };
+}
+
 export class TrainerPayoutRepository extends BaseRepository<TrainerPayout, ITrainerPayoutDocument> implements ITrainerPayoutRepository {
     constructor() {
         super(TrainerPayoutModel);
@@ -26,7 +33,7 @@ export class TrainerPayoutRepository extends BaseRepository<TrainerPayout, ITrai
         startDate?: Date,
         endDate?: Date
     ): Promise<{ payouts: TrainerPayout[]; totalCount: number }> {
-        const query: any = {
+        const query: PayoutQuery = {
             gymId,
             isDeleted: false,
         };
@@ -60,7 +67,7 @@ export class TrainerPayoutRepository extends BaseRepository<TrainerPayout, ITrai
         skip: number,
         limit: number
     ): Promise<{ payouts: TrainerPayout[]; totalCount: number }> {
-        const query: any = {
+        const query: PayoutQuery = {
             trainerId,
             isDeleted: false,
         };

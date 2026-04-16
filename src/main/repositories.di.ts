@@ -20,11 +20,17 @@ import { TrainerPayoutRepository } from "../infrastructure/repositories/TrainerP
 import { EquipmentBookingRepository } from "../infrastructure/repositories/EquipmentBookingRepository";
 import { AnalyticsRepository } from "../infrastructure/repositories/AnalyticsRepository";
 import { NotificationRepository } from "../infrastructure/repositories/NotificationRepository";
-
+import { SessionRepository } from "../infrastructure/repositories/SessionRepository";
+import { SubscriptionPlanRepository } from "../infrastructure/repositories/SubscriptionPlanRepository";
+import { ChatRepository } from "../infrastructure/repositories/ChatRepository";
+import { WeightLogRepository } from "../infrastructure/repositories/WeightLogRepository";
+import { CallHistoryRepository } from "../infrastructure/repositories/CallHistoryRepository";
 
 
 /* ------------------- Instantiate Repositories ---------------- */
+export const sessionRepository = new SessionRepository();
 export const gymRepository = new GymRepository();
+export const chatRepository = new ChatRepository();
 export const otpRepository = new OtpRepository();
 export const superAdminRepository = new SuperAdminRepository();
 export const clientRepository = new ClientRepository();
@@ -34,6 +40,7 @@ export const paymentRepository = new PaymentRepository();
 export const planRepository = new PlanRepository();
 export const equipmentRepository = new EquipmentRepository();
 export const subscriptionRepository = new SubscriptionRepository();
+export const subscriptionPlanRepository = new SubscriptionPlanRepository();
 export const attendanceRepository = new AttendanceRepository();
 export const workoutPlanRepository = new WorkoutPlanRepository();
 export const workoutLogRepository = new WorkoutLogRepository();
@@ -45,3 +52,5 @@ export const trainerPayoutRepository = new TrainerPayoutRepository();
 export const equipmentBookingRepository = new EquipmentBookingRepository();
 export const analyticsRepository = new AnalyticsRepository();
 export const notificationRepository = new NotificationRepository();
+export const weightLogRepository = new WeightLogRepository();
+export const callHistoryRepository = new CallHistoryRepository();

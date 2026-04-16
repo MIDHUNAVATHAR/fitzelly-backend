@@ -1,9 +1,14 @@
 import cron from 'node-cron';
 import { MembershipModel } from '../database/mongoose/models/MembershipModel';
 import { GymModel } from '../database/mongoose/models/GymModel';
+import { clientModel } from '../database/mongoose/models/ClientModel';
+import { QueuedMailService } from './QueuedMailService';
 
 export class AutomatedExpiryCronService {
-    constructor() { }
+    private _mailService: QueuedMailService;
+    constructor() {
+        this._mailService = new QueuedMailService();
+    }
 
     init() {
         console.log("Initializing Automated Expiry Cron Job...");
@@ -32,24 +37,65 @@ export class AutomatedExpiryCronService {
             today.setHours(0, 0, 0, 0);
 
             /**
-             *  Find memberships where status is ACTIVE but date passed today
+             * 1. Handle Membership Expiry Reminders (3 days before)
              */
+            const threeDaysFromNow = new Date(today);
+            threeDaysFromNow.setDate(today.getDate() + 3);
+            const nextDayAfterThree = new Date(threeDaysFromNow);
+            nextDayAfterThree.setDate(threeDaysFromNow.getDate() + 1);
 
-            const expiredMemberships = await MembershipModel.updateMany(
-                {
-                    status: 'ACTIVE',
-                    expiryDate: { $lt: today },
-                    isDeleted: false
-                },
-                { $set: { status: 'EXPIRED' } }
-            );
+            const membershipsToRemind = await MembershipModel.find({
+                status: 'ACTIVE',
+                planType: 'CATEGORY_BASED',
+                expiryDate: { $gte: threeDaysFromNow, $lt: nextDayAfterThree },
+                isDeleted: false
+            });
 
-            if (expiredMemberships.modifiedCount > 0) {
-                console.log(`[ExpiryJob] Expired ${expiredMemberships.modifiedCount} client memberships`);
+            for (const m of membershipsToRemind) {
+                const client = await clientModel.findById(m.clientId);
+                if (client?.email) {
+                    await this._mailService.sendMembershipExpiryReminder(
+                        client.email,
+                        m.clientName,
+                        m.expiryDate!.toLocaleDateString(),
+                        m.planName
+                    );
+                }
             }
 
             /**
-             * Find gyms where status is NOT 'Expired' but expiryDate passed today
+             * 2. Handle Membership Expirations and Notifications
+             */
+            const membershipsToExpire = await MembershipModel.find({
+                status: 'ACTIVE',
+                expiryDate: { $lt: today },
+                isDeleted: false
+            });
+
+            if (membershipsToExpire.length > 0) {
+                await MembershipModel.updateMany(
+                    { _id: { $in: membershipsToExpire.map(m => m._id) } },
+                    { $set: { status: 'EXPIRED' } }
+                );
+
+                for (const m of membershipsToExpire) {
+                    // Send notification 
+
+                    const client = await clientModel.findById(m.clientId);
+                    if (client?.email) {
+                        await this._mailService.sendMembershipExpiredNotification(
+                            client.email,
+                            m.clientName,
+                            m.planName
+                        );
+                    }
+
+                }
+                console.log(`[ExpiryJob] Expired ${membershipsToExpire.length} client memberships`);
+            }
+
+            /**
+             * 3. Find gyms where status is NOT 'Expired' but expiryDate passed today
              */
             const expiredGyms = await GymModel.updateMany(
                 {

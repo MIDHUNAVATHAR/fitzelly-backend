@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { IWorkoutLibraryUseCase } from "../../../application/IUseCases/workout-library/IWorkoutLibraryUseCase";
 import { ResponseStatus, HttpStatus } from "../../../constants/statusCodes.constants";
 import { AuthRequest } from "../../middlewares/protect";
@@ -88,7 +88,7 @@ export class WorkoutLibraryController {
             }
 
             // Otherwise fetch by gymId (support for GYM role)
-            let gymId = (req.params.gymId as string) || (req.user?.role === ROLES.GYM ? req.user.id : req.user?.gymId);
+            const gymId = (req.params.gymId as string) || (req.user?.role === ROLES.GYM ? req.user.id : req.user?.gymId);
             
             if (!gymId) {
                 throw new Error("Gym ID is required. Please logout and login again.");

@@ -6,5 +6,6 @@ export interface IEquipmentRepository {
     findAllByGym(gymId: string, page: number, limit: number, search?: string): Promise<{
         equipments: Equipment[],
         total:number
-    }>
+    }>;
+    findByName(gymId: string, name: string): Promise<Equipment | null>;
 }

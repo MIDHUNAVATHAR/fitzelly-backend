@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ICreateOrUpdateWorkoutPlanUseCase } from "../../../application/IUseCases/workout-plan/ICreateOrUpdateWorkoutPlanUseCase";
 import { IGetWorkoutPlanByClientIdUseCase } from "../../../application/IUseCases/workout-plan/IGetWorkoutPlanByClientIdUseCase";
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
+import { NotFoundError } from "../../../application/errors/AppError";
 
 interface CustomRequest extends Request {
     user: {
@@ -19,7 +20,7 @@ export class TrainerWorkoutPlanController {
         private trainerRepository: ITrainerRepository
     ) { }
 
-    async createOrUpdatePlan(req: Request, res: Response,next:NextFunction): Promise<void> {
+    async createOrUpdatePlan(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const authReq = req as unknown as CustomRequest;
             const trainerId = authReq.user.id;
@@ -28,7 +29,7 @@ export class TrainerWorkoutPlanController {
 
             if (!gymId) {
                 const trainer = await this.trainerRepository.findById(trainerId);
-                if (!trainer) throw new Error("Trainer not found");
+                if (!trainer) throw new NotFoundError("Trainer not found");
                 gymId = trainer.gymId;
             }
 
@@ -42,11 +43,11 @@ export class TrainerWorkoutPlanController {
 
             res.status(200).json({ status: "success", data: plan });
         } catch (error) {
-           next(error)
+            next(error)
         }
     }
 
-    async getClientPlan(req: Request, res: Response,next:NextFunction): Promise<void> {
+    async getClientPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const authReq = req as unknown as CustomRequest;
             const { clientId } = req.params;
@@ -54,7 +55,7 @@ export class TrainerWorkoutPlanController {
             const plan = await this.getWorkoutPlanByClientIdUseCase.execute(clientId as string, trainerId);
             res.status(200).json({ status: "success", data: plan });
         } catch (error) {
-              next(error)
+            next(error)
         }
     }
 }

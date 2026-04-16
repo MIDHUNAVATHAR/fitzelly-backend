@@ -65,6 +65,16 @@ export class EquipmentRepository implements IEquipmentRepository {
         };
     }
 
+    async findByName(gymId: string, name: string): Promise<Equipment | null> {
+        const doc = await EquipmentModel.findOne({ 
+            gymId: new mongoose.Types.ObjectId(gymId), 
+            name: { $regex: new RegExp(`^${name}$`, 'i') },
+            isDeleted: false 
+        }).exec();
+        return doc ? this.mapToEntity(doc) : null;
+    }
+
+
     private mapToEntity(doc: IEquipment & { _id: mongoose.Types.ObjectId }): Equipment {
         return new Equipment(
             doc._id.toString(),

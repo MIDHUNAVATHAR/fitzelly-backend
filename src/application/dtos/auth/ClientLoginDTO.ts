@@ -1,6 +1,10 @@
 export interface ClientLoginRequestDTO {
     email: string;
     password: string;
+    device?: string;
+    browser?: string;
+    os?: string;
+    ip?: string;
 }
 
 export interface ClientLoginResponseDTO {
@@ -11,5 +15,6 @@ export interface ClientLoginResponseDTO {
         email: string;
         role: string;
         gymId?: string;
+        sessionId?: string;
     }
 }

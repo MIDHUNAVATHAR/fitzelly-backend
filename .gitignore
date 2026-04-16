@@ -6,3 +6,7 @@ dist/
 
 # API keys and Secrets
 .env
+
+# Logs
+logs/
+*.log

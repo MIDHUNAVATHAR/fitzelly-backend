@@ -18,10 +18,11 @@ export interface IGymDocument extends Document {
     address: string;
     description: string;
     location: { latitude: number, longitude: number };
-    approvalStatus: 'Approved' | 'Pending' | 'Rejected';
+    approvalStatus: 'Approved' | 'Pending' | 'Rejected' | 'Reapplied';
     subscriptionStatus: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate: Date;
     certificates: IGymCertificate[];
+    rejectionReason?: string;
     createdAt: Date;
     isDeleted: boolean;
 }

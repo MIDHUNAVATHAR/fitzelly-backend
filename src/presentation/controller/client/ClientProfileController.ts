@@ -2,12 +2,15 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
+import { BadRequestError } from "../../../application/errors/AppError";
+
 
 import { IGetClientProfileWithMembershipUseCase } from "../../../application/IUseCases/client-profile/IGetClientProfileWithMembershipUseCase";
 import { IUpdateClientProfileUseCase } from "../../../application/IUseCases/client-profile/IUpdateClientProfileUseCase";
 import { IUpdateClientProfileImageUseCase } from "../../../application/IUseCases/client-profile/IUploadClientProfileImageUseCase";
 import { IGetClientGymDetailsUseCase } from "../../../application/IUseCases/client-profile/IGetClientGymDetailsUseCase";
 import { IGetClientAssignedTrainerUseCase } from "../../../application/IUseCases/client-profile/IGetClientAssignedTrainerUseCase";
+
 
 
 export class ClientProfileController {
@@ -19,6 +22,9 @@ export class ClientProfileController {
         private _getClientAssignedTrainerUseCase: IGetClientAssignedTrainerUseCase
     ) { }
 
+    /*
+    * get client profile details including gym membership 
+    */
     async getClientProfile(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const clientId = req.user!.id;
@@ -33,6 +39,9 @@ export class ClientProfileController {
         }
     }
 
+    /*
+    * get gym details of client
+    */
     async getClientGymDetails(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const clientId = req.user!.id;
@@ -47,6 +56,9 @@ export class ClientProfileController {
         }
     }
 
+    /*
+    * client profile update
+    */
     async updateClientProfile(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const clientId = req.user!.id;
@@ -61,11 +73,14 @@ export class ClientProfileController {
         }
     }
 
+    /*
+    * client profile image update
+    */
     async uploadClientProfileImage(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const clientId = req.user!.id;
             if (!req.file) {
-                throw Error("File required");
+                throw new BadRequestError("File required");
             }
 
             const updatedProfile = await this._updateClientProfileImageUseCase.execute(clientId, req.file as Express.Multer.File);
@@ -80,6 +95,9 @@ export class ClientProfileController {
         }
     }
 
+    /*
+    * get trainer details of client 
+    */
     async getClientAssignedTrainer(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const clientId = req.user!.id;

@@ -2,17 +2,17 @@ import { Request, Response, NextFunction } from "express";
 import { JwtService } from "../../infrastructure/services/JwtService";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../constants/response.constants";
-
+import { SessionRepository } from "../../infrastructure/repositories/SessionRepository";
+import { JwtPayload } from "../../domain/services/ITokenService";
 
 const jwtService = new JwtService();
-
-import { JwtPayload } from "../../domain/services/ITokenService";
+const sessionRepository = new SessionRepository();
 
 export interface AuthRequest extends Request {
     user?: JwtPayload
 }
 
-export const protect = (roles: string[]) => (req: AuthRequest, res: Response, next: NextFunction) => {
+export const protect = (roles: string[]) => async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -24,6 +24,17 @@ export const protect = (roles: string[]) => (req: AuthRequest, res: Response, ne
 
         const token = authHeader.split(" ")[1];
         const payload = jwtService.verifyAccessToken(token);
+
+        // Check session validity
+        if (payload.sessionId) {
+            const isActive = await sessionRepository.isSessionActive(payload.sessionId);
+            if (!isActive) {
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: "Session expired or revoked"
+                })
+            }
+        }
 
         if (roles.length > 0 && !roles.includes(payload.role)) {
             return res.status(HttpStatus.FORBIDDEN).json({

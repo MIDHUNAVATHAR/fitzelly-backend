@@ -4,6 +4,7 @@ export class Subscription {
     constructor(
         public readonly id: string,
         public readonly gymId: string,
+        public readonly gymName: string,
         public readonly planName: string,
         public readonly amount: number,
         public readonly startDate: Date,

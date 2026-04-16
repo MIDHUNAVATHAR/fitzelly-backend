@@ -11,6 +11,7 @@ export const GYM_ROUTE = {
     GYM_LOGO: "/api/gym/profile/logo",
     GYM_CERTIFICATE: "/api/gym/profile/certificate",
     DELETE_GYM_CERTIFICATE: "/api/gym/profile/certificate/delete",
+    RE_APPLY: "/api/gym/re-apply",
 
     ADD_CLIENT: "/api/gym/client",
     GET_CLIENTS: "/api/gym/clients",
@@ -57,7 +58,11 @@ export const GYM_ROUTE = {
     NOTIFICATIONS_UNREAD: "/api/gym/notifications/unread",
     NOTIFICATIONS_READ: "/api/gym/notifications/read",
     MARK_NOTIFICATION_READ: "/api/gym/notifications/:id/read",
-    MARK_ALL_NOTIFICATIONS_READ: "/api/gym/notifications/read-all"
+    MARK_ALL_NOTIFICATIONS_READ: "/api/gym/notifications/read-all",
+
+    GYM_SUBSCRIPTIONS: "/api/gym/subscriptions",
+    CREATE_SUBSCRIPTION_SESSION: "/api/gym/subscriptions/create-session",
+    CONFIRM_SUBSCRIPTION: "/api/gym/subscriptions/confirm"
 }
 
 export const CREATE_PASSWORD_ROUTE = "/api/auth/create-password";
@@ -84,6 +89,8 @@ export const CLIENT_ROUTES = {
     CLIENT_WORKOUT_PLAN: "/api/client/workout-plan",
     CLIENT_WORKOUT_PROGRESS: "/api/client/workout-progress",
     CLIENT_WORKOUT_STREAK: "/api/client/workout-streak",
+    CLIENT_WEIGHT_LOG: "/api/client/weight-log",
+    CLIENT_WEIGHT_HISTORY: "/api/client/weight-history",
 }
 
 export const TRAINER_ROUTES = {
@@ -123,8 +130,13 @@ export const SUPER_ADMIN_ROUTES = {
     SUPER_ADMIN_GYMS: "/api/super-admin/gyms",
     GYM_BY_ID: "/api/super-admin/gyms/:gymId",
     APPROVE_GYM: "/api/super-admin/gyms/:gymId/approve",
+    REJECT_GYM: "/api/super-admin/gyms/:gymId/reject",
     WORKOUT_LIBRARY: "/api/super-admin/workout-library",
-    WORKOUT_LIBRARY_BY_ID: "/api/super-admin/workout-library/:id"
+    WORKOUT_LIBRARY_BY_ID: "/api/super-admin/workout-library/:id",
+    SUBSCRIPTION_PLANS: "/api/super-admin/subscription-plans",
+    SUBSCRIPTION_PLAN_BY_ID: "/api/super-admin/subscription-plans/:id",
+    UPDATE_GYM_SUBSCRIPTION: "/api/super-admin/gyms/:gymId/subscription",
+    GET_DASHBOARD: "/api/super-admin/dashboard"
 }
 
 export const GOOGLE_ROUTE = {

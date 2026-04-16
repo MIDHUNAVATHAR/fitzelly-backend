@@ -6,6 +6,7 @@ import { HttpStatus } from "../../../constants/statusCodes.constants";
 import { ResponseStatus } from "../../../constants/statusCodes.constants";
 import { IUpdateSuperAdminLogoUseCase } from "../../../application/IUseCases/superAd-profile/IUpdateSuperAdminLogoUseCase";
 import { ResponseMessage } from "../../../constants/response.constants";
+import { BadRequestError } from "../../../application/errors/AppError";
 
 
 export class SuperAdminProfileController {
@@ -48,7 +49,7 @@ export class SuperAdminProfileController {
         try {
             const userId = req.user!.id;
             if (!req.file) {
-                throw new Error("File required")
+                throw new BadRequestError("File required")
             }
             const newLogoUrl = await this._updateSuperAdminLogoUseCase.execute(userId, req.file);
 

@@ -43,7 +43,6 @@ export class GetAvailableSlotsUseCase implements IGetAvailableSlotsUseCase {
             const endStr = `${eh.toString().padStart(2, '0')}:${em.toString().padStart(2, '0')}`;
 
             // Count bookings that overlap with this slot [startStr, endStr]
-            // For now, simplicity: only check exact slot start time as it's the standard for gym equipment booking
             const bookedCount = currentBookings.filter(b => b.startTime === startStr).length;
 
             slots.push({

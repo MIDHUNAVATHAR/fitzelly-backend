@@ -13,6 +13,7 @@ export class ClientWorkoutPlanController {
         private getWorkoutStreakUseCase: IGetWorkoutStreakUseCase
     ) { }
 
+   
     async getMyPlan(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const clientId = req.user!.id;

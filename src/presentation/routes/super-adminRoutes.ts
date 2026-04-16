@@ -2,7 +2,7 @@ import { Router } from "express";
 import { SUPER_ADMIN_ROUTES } from "../../constants/routes.constants"
 import { superAdminAuthenticationController } from "../../main/controllers.di";
 import { superAdminProfileController } from "../../main/controllers.di";
-import { superAdminGymsController, workoutLibraryController } from "../../main/controllers.di";
+import { superAdminGymsController, workoutLibraryController, subscriptionPlanController, superAdminDashboardController } from "../../main/controllers.di";
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";
@@ -25,9 +25,12 @@ router.route(SUPER_ADMIN_ROUTES.SUPER_ADMIN_PROFILE)
 
 router.post(SUPER_ADMIN_ROUTES.SUPER_ADMIN_LOGO, protect([ROLES.SUPERADMIN]), upload.single('logo'), superAdminProfileController.updateSuperAdminLogo.bind(superAdminProfileController));
 router.get(SUPER_ADMIN_ROUTES.SUPER_ADMIN_GYMS, protect([ROLES.SUPERADMIN]), superAdminGymsController.getAllGyms.bind(superAdminGymsController));
+router.get(SUPER_ADMIN_ROUTES.GET_DASHBOARD, protect([ROLES.SUPERADMIN]), superAdminDashboardController.getDashboard.bind(superAdminDashboardController));
 
 router.get(SUPER_ADMIN_ROUTES.GYM_BY_ID, protect([ROLES.SUPERADMIN]), superAdminGymsController.getGymById.bind(superAdminGymsController));
 router.post(SUPER_ADMIN_ROUTES.APPROVE_GYM, protect([ROLES.SUPERADMIN]), superAdminGymsController.approveGym.bind(superAdminGymsController));
+router.post(SUPER_ADMIN_ROUTES.REJECT_GYM, protect([ROLES.SUPERADMIN]), superAdminGymsController.rejectGym.bind(superAdminGymsController));
+router.patch(SUPER_ADMIN_ROUTES.UPDATE_GYM_SUBSCRIPTION, protect([ROLES.SUPERADMIN]), superAdminGymsController.updateSubscription.bind(superAdminGymsController));
 
 // Workout Library (Global)
 router.route(SUPER_ADMIN_ROUTES.WORKOUT_LIBRARY)
@@ -39,5 +42,16 @@ router.route(SUPER_ADMIN_ROUTES.WORKOUT_LIBRARY_BY_ID)
     .all(protect([ROLES.SUPERADMIN]))
     .patch(workoutLibraryController.updateExercise.bind(workoutLibraryController))
     .delete(workoutLibraryController.deleteExercise.bind(workoutLibraryController));
+
+// Subscription Plans
+router.route(SUPER_ADMIN_ROUTES.SUBSCRIPTION_PLANS)
+    .all(protect([ROLES.SUPERADMIN]))
+    .get(subscriptionPlanController.getAll.bind(subscriptionPlanController))
+    .post(subscriptionPlanController.create.bind(subscriptionPlanController));
+
+router.route(SUPER_ADMIN_ROUTES.SUBSCRIPTION_PLAN_BY_ID)
+    .all(protect([ROLES.SUPERADMIN]))
+    .patch(subscriptionPlanController.update.bind(subscriptionPlanController))
+    .delete(subscriptionPlanController.delete.bind(subscriptionPlanController));
 
 export default router;

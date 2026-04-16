@@ -2,6 +2,7 @@ import { Document, Types } from "mongoose";
 
 export interface ISubscriptionDocument extends Document {
     gymId: Types.ObjectId;
+    gymName: string;
     planName: string;
     amount: number;
     startDate: Date;

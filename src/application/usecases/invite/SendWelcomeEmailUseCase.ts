@@ -43,13 +43,14 @@ export class SendWelcomeEmailUseCase implements ISendWelcomeEmailUseCase {
 
         await this._otpRepository.upsertOtp(user.email, otp, expiresAt, user.id);
 
-        const frontendUrl = process.env.FRONTEND_URL;
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
         const urlPrefix = `${frontendUrl}/create-password?type=${params.role}&id=${params.userId}`;
         const inviteLink = `${urlPrefix}&otp=${otp}`;
 
         try {
             await this._emailService.sendWelcomeInvite(user.email, inviteLink, gym.gymName || "Our Gym", user.fullName);
-        } catch {
+        } catch (error) {
+            console.error("Welcome email failed to queue:", error);
             throw new ServiceUnavailableError("Failed to send welcome email");
         }
 

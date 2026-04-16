@@ -89,6 +89,9 @@ export class AttendanceController {
         }
     }
 
+    /**
+     * gym mark attendance of client and trainer
+     */
     async markManualAttendance(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gym = req.user!;
@@ -107,11 +110,14 @@ export class AttendanceController {
         }
     }
 
+    /*
+    *get the total attendance of client/trainer in the whole year
+    */
     async getYearlyAttendanceCount(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const user = req.user!;
             const year = req.query.year ? parseInt(req.query.year as string) : new Date().getFullYear();
-            
+
             const result = await this._getYearlyAttendanceCountUseCase.execute(user.id, year);
 
             return res.status(HttpStatus.OK).json({

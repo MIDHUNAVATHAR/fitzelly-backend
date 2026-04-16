@@ -4,6 +4,7 @@ import { CreateEquipmentDTO, EquipmentDTO } from "../../dtos/gym-equipment/Equip
 import { Equipment } from "../../../domain/entities/Equipment";
 import { EquipmentMapper } from "../../mapper/EquipmentMapper";
 import { IS3Service, IS3UploadFile } from "../../../domain/services/IS3Service";
+import { BadRequestError } from "../../errors/AppError";
 
 export class AddEquipmentUseCase implements IAddEquipmentUseCase {
     constructor(
@@ -12,6 +13,12 @@ export class AddEquipmentUseCase implements IAddEquipmentUseCase {
     ) { }
 
     async execute(data: CreateEquipmentDTO, file?: IS3UploadFile): Promise<EquipmentDTO> {
+        const existingEquipment = await this.equipmentRepository.findByName(data.gymId, data.name);
+
+        if (existingEquipment) {
+            throw new BadRequestError("Equipment with this name already exists in your gym");
+        }
+
         let imageUrl = "";
 
         if (file) {

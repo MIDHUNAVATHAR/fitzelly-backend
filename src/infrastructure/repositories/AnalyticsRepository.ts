@@ -5,6 +5,9 @@ import { MembershipModel } from "../database/mongoose/models/MembershipModel";
 import { clientModel as ClientModel } from "../database/mongoose/models/ClientModel";
 import { AttendanceModel } from "../database/mongoose/models/AttendanceModel";
 import { TrainerModel } from "../database/mongoose/models/TrainerModel";
+import { GymModel } from "../database/mongoose/models/GymModel";
+import { SubscriptionModel } from "../database/mongoose/models/SubscriptionModel";
+import { SuperAdminDashboardData } from "../../domain/repositories/IAnalyticsRepository";
 
 export class AnalyticsRepository implements IAnalyticsRepository {
     async getGymAnalytics(gymId: string): Promise<GymAnalyticsData> {
@@ -12,8 +15,7 @@ export class AnalyticsRepository implements IAnalyticsRepository {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(currentDate.getMonth() - 6);
 
-       
-        // Let's refine pipelines inline.
+
         const [
             monthlyRevResult,
             membershipsWithPayments,
@@ -274,6 +276,71 @@ export class AnalyticsRepository implements IAnalyticsRepository {
             expiries: upcomingExpiries,
             birthdays: birthdays,
             inactiveClients: finalInactiveClients
+        };
+    }
+
+    async getSuperAdminDashboardData(): Promise<SuperAdminDashboardData> {
+        const [totalGyms, activeGyms, pendingGyms, totalRevenueRes, revenueTrendResult, recentGymsResult] = await Promise.all([
+            GymModel.countDocuments({}), // Removed isDeleted: false as it's missing in GymSchema
+            GymModel.countDocuments({ subscriptionStatus: "Active" }),
+            GymModel.countDocuments({ approvalStatus: "Pending" }),
+            SubscriptionModel.aggregate([
+                { $group: { _id: null, total: { $sum: "$amount" } } }
+            ]),
+            SubscriptionModel.aggregate([
+                {
+                    $match: {
+                        createdAt: { $gte: new Date(new Date().setMonth(new Date().getMonth() - 6)) }
+                    }
+                },
+                {
+                    $group: {
+                        _id: { month: { $month: "$createdAt" }, year: { $year: "$createdAt" } },
+                        revenue: { $sum: "$amount" }
+                    }
+                },
+                { $sort: { "_id.year": 1, "_id.month": 1 } }
+            ]),
+            GymModel.find({}).sort({ createdAt: -1 }).limit(5)
+        ]);
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        // Generate last 6 months trend
+        const revenueTrend = [];
+        const now = new Date();
+        
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const month = d.getMonth() + 1;
+            const year = d.getFullYear();
+            
+            // Find existing revenue for this month/year from aggregate
+            const existing = revenueTrendResult.find((item: { _id: { month: number; year: number }; revenue: number }) => 
+                item._id.month === month && item._id.year === year
+            );
+            
+            revenueTrend.push({
+                month: `${monthNames[month - 1]} ${year}`,
+                revenue: existing ? existing.revenue : 0
+            });
+        }
+
+        const recentGyms = recentGymsResult.map((gym: { _id: Types.ObjectId; gymName: string; email: string; createdAt: Date; approvalStatus: string }) => ({
+            id: gym._id.toString(),
+            name: gym.gymName,
+            ownerName: gym.email,
+            registrationDate: gym.createdAt,
+            status: gym.approvalStatus
+        }));
+
+        return {
+            totalGyms,
+            activeGyms,
+            pendingGyms,
+            totalRevenue: totalRevenueRes[0]?.total || 0,
+            revenueTrend,
+            recentGyms
         };
     }
 }

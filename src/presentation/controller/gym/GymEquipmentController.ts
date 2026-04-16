@@ -83,8 +83,6 @@ export class GymEquipmentController {
                 data.isActive = data.isActive === "true";
             }
 
-
-
             const file = req.file;
 
             const updatedEquipment = await this._updateEquipmentUseCase.execute({ ...data, gymId, id }, file);
@@ -116,3 +114,4 @@ export class GymEquipmentController {
         }
     }
 }
+

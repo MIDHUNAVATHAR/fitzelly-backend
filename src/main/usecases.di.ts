@@ -121,8 +121,17 @@ import { UpdateSuperAdminLogoUseCase } from "../application/usecases/superAdmin-
  */
 import { GetAllGymsUseCase } from "../application/usecases/superAdmin-gym/GetAllGymsUseCase";
 import { GetGymByIdUseCase } from "../application/usecases/gym-profile/GetGymByIdUseCase";
-import { UpdateGymStatusUseCase } from "../application/usecases/superAdmin-gym/UpdateGymStatusUseCase";
+// import { UpdateGymStatusUseCase } from "../application/usecases/superAdmin-gym/UpdateGymStatusUseCase";
 import { ApproveGymUseCase } from "../application/usecases/superAdmin-gym/ApproveGymUseCase";
+import { RejectGymUseCase } from "../application/usecases/superAdmin-gym/RejectGymUseCase";
+import { UpdateGymSubscriptionUseCase } from "../application/usecases/superAdmin-gym/UpdateGymSubscriptionUseCase";
+
+/**
+ * superadmin plans usecases
+ */
+import { AddSubscriptionPlanUseCase, GetAllSubscriptionPlansUseCase, UpdateSubscriptionPlanUseCase, DeleteSubscriptionPlanUseCase } from "../application/usecases/superAdmin-plans/SubscriptionPlanUseCases";
+import { GetSuperAdminDashboardUseCase } from "../application/usecases/superAdmin-dashboard/GetSuperAdminDashboardUseCase";
+
 
 
 //attendance usecases
@@ -162,14 +171,35 @@ import { CreateEquipmentBookingUseCase } from "../application/usecases/equipment
 import { GetAvailableSlotsUseCase } from "../application/usecases/equipment-booking/GetAvailableSlotsUseCase";
 import { GetClientBookingsUseCase } from "../application/usecases/equipment-booking/GetClientBookingsUseCase";
 import { CancelEquipmentBookingUseCase } from "../application/usecases/equipment-booking/CancelEquipmentBookingUseCase";
+import { ReApplyGymUseCase } from "../application/usecases/gym-profile/ReApplyGymUseCase";
 
 //notification usecases
 import { AddNotificationUseCase, GetNotificationsUseCase, MarkNotificationUseCase } from "../application/usecases/notification/NotificationUseCases";
+import { GetActiveSessionsUseCase, RevokeSessionUseCase } from "../application/usecases/security/SessionUseCases";
+import { 
+    GetConversationsUseCase, 
+    GetMessagesUseCase, 
+    SendMessageUseCase, 
+    GetOrCreateConversationUseCase,
+    MarkMessagesAsReadUseCase,
+    DeleteMessageUseCase,
+    GetMessageByIdUseCase
+} from "../application/usecases/chat/ChatUseCases";
+import { SaveCallHistoryUseCase, GetUserCallHistoryUseCase } from "../application/usecases/chat/CallHistoryUseCases";
 
+import { AddWeightLogUseCase } from "../application/usecases/health-tracking/AddWeightLogUseCase";
+import { GetWeightLogsUseCase } from "../application/usecases/health-tracking/GetWeightLogsUseCase";
 
+export const getConversationsUseCase = new GetConversationsUseCase(chatRepository);
+export const getMessagesUseCase = new GetMessagesUseCase(chatRepository);
+export const sendMessageUseCase = new SendMessageUseCase(chatRepository);
+export const getOrCreateConversationUseCase = new GetOrCreateConversationUseCase(chatRepository);
+export const markMessagesAsReadUseCase = new MarkMessagesAsReadUseCase(chatRepository);
+export const deleteMessageUseCase = new DeleteMessageUseCase(chatRepository);
+export const getMessageByIdUseCase = new GetMessageByIdUseCase(chatRepository);
+import { weightLogRepository } from "./repositories.di";
+import { superAdminRepository, gymRepository } from "./repositories.di";
 
-import { gymRepository } from "./repositories.di";
-import { superAdminRepository } from "./repositories.di";
 import { clientRepository } from "./repositories.di";
 import { trainerRepository } from "./repositories.di";
 import { otpRepository } from "./repositories.di";
@@ -183,7 +213,7 @@ import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
 import { enquiryRepository } from "./repositories.di";
 import { expenseRepository } from "./repositories.di";
-import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository } from "./repositories.di";
+import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository, subscriptionPlanRepository, chatRepository, callHistoryRepository } from "./repositories.di";
 
 
 
@@ -205,29 +235,29 @@ import { socketService } from "./services.di";
 /**
  * auth usecase instances
  */
-export const tokenRefreshUseCase = new TokenRefreshUseCase(jwtService, gymRepository, superAdminRepository, clientRepository, trainerRepository);
+export const tokenRefreshUseCase = new TokenRefreshUseCase(jwtService, gymRepository, superAdminRepository, clientRepository, trainerRepository, sessionRepository);
 
 export const initiateGoogleAuthUseCase = new InitiateGoogleAuthUseCase(googleAuthService);
-export const googleAuthUseCase = new GoogleAuthUseCase(gymRepository, clientRepository, trainerRepository, jwtService, googleAuthService);
+export const googleAuthUseCase = new GoogleAuthUseCase(gymRepository, clientRepository, trainerRepository, jwtService, googleAuthService, sessionRepository);
 
-export const gymLoginUseCase = new GymLoginUseCase(gymRepository, passwordHasher, jwtService);
+export const gymLoginUseCase = new GymLoginUseCase(gymRepository, passwordHasher, jwtService, sessionRepository);
 export const initiateSignupUseCase = new InitiateSignupUseCase(gymRepository, otpRepository, emailService)
 export const completeSignupUseCase = new CompleteSignupUseCase(gymRepository, otpRepository, passwordHasher)
 export const gymInitiateForgotpassUseCase = new GymInitiateForgotpassUseCase(gymRepository, otpRepository, emailService)
 export const gymCompleteForgotpassUseCase = new GymCompleteForgotpassUseCase(otpRepository);
 export const gymResetPasswordUseCase = new GymResetPasswordUseCase(gymRepository, passwordHasher, otpRepository);
 
-export const clientLoginUseCase = new ClientLoginUseCase(clientRepository, passwordHasher, jwtService);
+export const clientLoginUseCase = new ClientLoginUseCase(clientRepository, passwordHasher, jwtService, sessionRepository);
 export const clientInitiateForgotpassUseCase = new ClientInitiateForgotpassUseCase(clientRepository, otpRepository, emailService)
 export const clientCompleteForgotpassUseCase = new ClientForgotpassUseCase(otpRepository);
 export const clientResetPasswordUseCase = new ClientResetPasswordUseCase(clientRepository, passwordHasher, otpRepository)
 
-export const trainerLoginUseCase = new TrainerLoginUseCase(trainerRepository, passwordHasher, jwtService);
+export const trainerLoginUseCase = new TrainerLoginUseCase(trainerRepository, passwordHasher, jwtService, sessionRepository);
 export const trainerInitiateForgotpassUseCase = new TrainerInitiateForgotpassUseCase(trainerRepository, otpRepository, emailService)
 export const trainerCompleteForgotpassUseCase = new TrainerCompleteForgotpassUseCase(otpRepository)
 export const trainerResetPasswordUseCase = new TrainerResetPasswordUseCase(trainerRepository, passwordHasher, otpRepository);
 
-export const superAdminLoginUseCase = new SuperAdminLoginUseCase(superAdminRepository, passwordHasher, jwtService)
+export const superAdminLoginUseCase = new SuperAdminLoginUseCase(superAdminRepository, passwordHasher, jwtService, sessionRepository)
 export const superAdminInitiateForgotpassUseCase = new SuperAdminInitiateForgotpassUseCase(superAdminRepository, otpRepository, emailService)
 export const superAdminCompleteForgotpassUseCase = new SuperAdminCompleteForgotpassUseCase(otpRepository);
 export const superAdminResetPasswordUseCase = new SuperAdminResetPasswordUseCase(superAdminRepository, otpRepository, passwordHasher);
@@ -321,8 +351,19 @@ export const updateSuperAdminLogoUseCase = new UpdateSuperAdminLogoUseCase(super
  */
 export const getAllGymsUseCase = new GetAllGymsUseCase(gymRepository, subscriptionRepository);
 export const getGymByIdUseCase = new GetGymByIdUseCase(gymRepository, subscriptionRepository);
-export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
+// export const updateGymStatusUseCase = new UpdateGymStatusUseCase(gymRepository);
 export const approveGymUseCase = new ApproveGymUseCase(gymRepository, superAdminRepository, subscriptionRepository);
+export const rejectGymUseCase = new RejectGymUseCase(gymRepository);
+export const updateGymSubscriptionUseCase = new UpdateGymSubscriptionUseCase(gymRepository, subscriptionRepository);
+/**
+ * superadmin plans usecase instances
+ */
+export const addSubscriptionPlanUseCase = new AddSubscriptionPlanUseCase(subscriptionPlanRepository);
+export const getAllSubscriptionPlansUseCase = new GetAllSubscriptionPlansUseCase(subscriptionPlanRepository);
+export const updateSubscriptionPlanUseCase = new UpdateSubscriptionPlanUseCase(subscriptionPlanRepository);
+export const deleteSubscriptionPlanUseCase = new DeleteSubscriptionPlanUseCase(subscriptionPlanRepository);
+
+export const getSuperAdminDashboardUseCase = new GetSuperAdminDashboardUseCase(analyticsRepository);
 
 
 //attendance usecases
@@ -370,3 +411,13 @@ export const createEquipmentBookingUseCase = new CreateEquipmentBookingUseCase(e
 export const getAvailableSlotsUseCase = new GetAvailableSlotsUseCase(equipmentRepository, equipmentBookingRepository);
 export const getClientBookingsUseCase = new GetClientBookingsUseCase(equipmentBookingRepository);
 export const cancelEquipmentBookingUseCase = new CancelEquipmentBookingUseCase(equipmentBookingRepository);
+export const reApplyGymUseCase = new ReApplyGymUseCase(gymRepository, addNotificationUseCase);
+
+export const getActiveSessionsUseCase = new GetActiveSessionsUseCase(sessionRepository);
+export const revokeSessionUseCase = new RevokeSessionUseCase(sessionRepository);
+
+export const addWeightLogUseCase = new AddWeightLogUseCase(weightLogRepository);
+export const getWeightLogsUseCase = new GetWeightLogsUseCase(weightLogRepository);
+
+export const saveCallHistoryUseCase = new SaveCallHistoryUseCase(callHistoryRepository);
+export const getUserCallHistoryUseCase = new GetUserCallHistoryUseCase(callHistoryRepository);

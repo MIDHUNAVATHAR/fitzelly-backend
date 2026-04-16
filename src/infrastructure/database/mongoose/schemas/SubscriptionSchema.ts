@@ -10,6 +10,10 @@ export const SubscriptionSchema = new Schema<ISubscriptionDocument>({
         ref: 'Gym',
         required: true
     },
+    gymName: {
+        type: String,
+        required: true
+    },
     planName: {
         type: String,
         required: true

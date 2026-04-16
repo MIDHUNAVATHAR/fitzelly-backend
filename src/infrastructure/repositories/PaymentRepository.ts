@@ -1,7 +1,8 @@
-import { IPaymentRepository } from "../../domain/repositories/IPaymentRepository";
+import { IPaymentRepository, PaymentCollectionItem } from "../../domain/repositories/IPaymentRepository";
 import { Payment } from "../../domain/entities/Payment";
 import { PaymentModel } from "../database/mongoose/models/PaymentModel";
 import { IPayment } from "../database/mongoose/types/IPayment";
+import { PipelineStage } from "mongoose";
 
 export class PaymentRepository implements IPaymentRepository {
     async create(payment: Payment): Promise<Payment> {
@@ -52,10 +53,10 @@ export class PaymentRepository implements IPaymentRepository {
         return doc ? this.mapToEntity(doc) : null;
     }
 
-    async getCollectionByGymId(gymId: string, page: number, limit: number, startDate: Date, endDate: Date): Promise<{ payments: any[], total: number, totalAmount: number }> {
+    async getCollectionByGymId(gymId: string, page: number, limit: number, startDate: Date, endDate: Date): Promise<{ payments: PaymentCollectionItem[], total: number, totalAmount: number }> {
         const skip = (page - 1) * limit;
 
-        const pipeline: any[] = [
+        const pipeline: PipelineStage[] = [
             { $match: { isDeleted: false, paymentDate: { $gte: startDate, $lte: endDate } } },
             {
                 $addFields: {

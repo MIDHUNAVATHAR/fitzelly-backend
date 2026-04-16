@@ -5,10 +5,14 @@ import { Notification } from '../../../domain/entities/Notification';
 export class AddNotificationUseCase {
     constructor(private notificationRepo: INotificationRepository, private socketService: ISocketService) {}
     
-    async execute(gymId: string, message: string, type: string): Promise<Notification> {
-        const notif = new Notification('', gymId, message, false, type, new Date());
+    async execute(gymId: string, message: string, type: string, targetRole: string = 'gym'): Promise<Notification> {
+        const notif = new Notification('', gymId, message, false, type, new Date(), targetRole);
         const saved = await this.notificationRepo.create(notif);
-        this.socketService.emitToGym(gymId, 'NEW_NOTIFICATION', saved);
+        if (targetRole === 'gym') {
+            this.socketService.emitToGym(gymId, 'NEW_NOTIFICATION', saved);
+        } else {
+            this.socketService.emitToRole(targetRole, 'NEW_NOTIFICATION', saved);
+        }
         return saved;
     }
 }
@@ -16,12 +20,12 @@ export class AddNotificationUseCase {
 export class GetNotificationsUseCase {
     constructor(private notificationRepo: INotificationRepository) {}
     
-    async getUnread(gymId: string) { 
-        return await this.notificationRepo.getUnreadByGymId(gymId); 
+    async getUnread(targetId: string, role: string = 'GYM') { 
+        return await this.notificationRepo.getUnreadByTarget(targetId, role); 
     }
     
-    async getRead(gymId: string, page: number, limit: number) { 
-        return await this.notificationRepo.getReadByGymId(gymId, page, limit); 
+    async getRead(targetId: string, page: number, limit: number, role: string = 'GYM') { 
+        return await this.notificationRepo.getReadByTarget(targetId, page, limit, role); 
     }
 }
 

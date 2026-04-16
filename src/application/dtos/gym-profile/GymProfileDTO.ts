@@ -23,8 +23,5 @@ export interface GymProfileDTO {
     planName?: string;
     amount?: number;
     certificates?: IGymCertificateDTO[];
+    rejectionReason?: string;
 }
-
-
-
-

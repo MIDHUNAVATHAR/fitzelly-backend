@@ -9,10 +9,20 @@ export const app = express();
 
 
 /* GLOBAL MIDDLEWARES */
+app.post(
+    "/api/webhook",
+    express.raw({ type: "application/json" }),
+    (req, res, next) => {
+        void import("../main/controllers.di").then(({ webhookController }) => {
+            return webhookController.handleStripeWebhook(req, res, next);
+        }).catch(next);
+    }
+);
+
 app.use(express.json());
 
 app.use(cors({
-    origin: ["http://localhost:5174", "http://localhost:5173"],
+    origin: ["http://localhost:5174", "http://localhost:5173", "http://192.168.1.56:5173"],
     credentials: true
 }));
 

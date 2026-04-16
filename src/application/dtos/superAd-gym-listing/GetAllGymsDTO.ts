@@ -17,6 +17,7 @@ export interface GymResponseDTO {
     location?: { latitude: number, longitude: number };
     createdAt: string;
     certificates?: IGymCertificate[];
+    rejectionReason?: string;
     latestSubscription?: {
         planName: string;
         amount: number;
@@ -36,7 +37,8 @@ export interface GymsListResponseDTO {
 }
 
 export interface GymUpdateRequestDTO {
-    approvalStatus?: 'Approved' | 'Pending' | 'Rejected';
+    approvalStatus?: 'Approved' | 'Pending' | 'Rejected' | 'Reapplied';
     subscriptionStatus?: 'Active' | 'Trial' | 'Expired' | 'Pending';
     expiryDate?: string;
+    rejectionReason?: string;
 }

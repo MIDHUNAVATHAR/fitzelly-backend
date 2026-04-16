@@ -4,7 +4,7 @@ export interface CreateExerciseDTO {
     instructions: string;
     reps: string;
     sets: string;
-    videoFile?: any;
+    videoFile?: Express.Multer.File;
     videoUrl?: string;
 }
 

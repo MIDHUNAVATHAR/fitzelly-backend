@@ -3,6 +3,7 @@ import { IGymRepository } from "../../../domain/repositories/IGymRepository";
 import { ISuperAdminRepository } from "../../../domain/repositories/ISuperAdminRepository";
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
+import { ISessionRepository } from "../../../domain/repositories/ISessionRepository";
 import { AuthenticationFailedError } from "../../errors/AppError";
 import { TokenRefreshResponseDTO, TokenRefreshRequestDTO } from "../../dtos/auth/TokenRefreshDTO";
 import { ROLES } from "../../../constants/roles.constants";
@@ -15,7 +16,8 @@ export class TokenRefreshUseCase implements ITokenRefreshUseCase {
         private _gymRepository: IGymRepository,
         private _superAdminRepository: ISuperAdminRepository,
         private _clientRepository: IClientRepository,
-        private _trainerRepository: ITrainerRepository
+        private _trainerRepository: ITrainerRepository,
+        private _sessionRepository: ISessionRepository
     ) { }
 
     async execute(request: TokenRefreshRequestDTO): Promise<TokenRefreshResponseDTO> {
@@ -24,12 +26,18 @@ export class TokenRefreshUseCase implements ITokenRefreshUseCase {
         }
         let payload;
         try {
-            payload = this._tokenService.verifyRefrshToken(request.refreshToken);
+            payload = this._tokenService.verifyRefreshToken(request.refreshToken);
         } catch {
-
             throw new AuthenticationFailedError("Token expired");
         }
 
+        // Check session validity
+        if (payload.sessionId) {
+            const isActive = await this._sessionRepository.isSessionActive(payload.sessionId);
+            if (!isActive) {
+                throw new AuthenticationFailedError("Session expired or revoked");
+            }
+        }
 
         let user = null
         if (payload.role == ROLES.GYM) {
@@ -52,7 +60,8 @@ export class TokenRefreshUseCase implements ITokenRefreshUseCase {
             id: payload.id,
             email: payload.email,
             role: payload.role,
-            gymId: payload.gymId
+            gymId: payload.gymId,
+            sessionId: payload.sessionId
         })
 
         return { accessToken, user: payload };

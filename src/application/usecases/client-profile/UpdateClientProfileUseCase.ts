@@ -3,6 +3,8 @@ import { UpdateClientProfileRequestDTO, ClientProfileDTO } from "../../dtos/clie
 import { IUpdateClientProfileUseCase } from "../../IUseCases/client-profile/IUpdateClientProfileUseCase";
 import { ClientProfileMapper } from "../../mapper/ClientProfileMapper";
 import { NotFoundError } from "../../../domain/errors/NotFoundError";
+import { validateAge } from "../../utils/validation.util";
+import { BadRequestError } from "../../errors/AppError";
 
 export class UpdateClientProfileUseCase implements IUpdateClientProfileUseCase {
     constructor(private clientRepository: IClientRepository) { }
@@ -11,6 +13,13 @@ export class UpdateClientProfileUseCase implements IUpdateClientProfileUseCase {
         const client = await this.clientRepository.findById(clientId);
         if (!client) {
             throw new NotFoundError("Client");
+        }
+
+        if (data.dateOfBirth) {
+            const ageValidation = validateAge(data.dateOfBirth);
+            if (!ageValidation.isValid) {
+                throw new BadRequestError(ageValidation.message);
+            }
         }
 
         const clientDataUpdate = {
