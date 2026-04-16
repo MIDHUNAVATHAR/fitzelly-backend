@@ -33,8 +33,8 @@ export class SocketService implements ISocketService {
         this._io.on("connection", (socket) => {
             console.log("A user connected:", socket.id);
 
-            socket.on("join", (room: string) => {
-                socket.join(room);
+            socket.on("join", async (room: string) => {
+                await socket.join(room);
                 console.log(`[Socket] User ${socket.id} joined room: ${room}`);
             });
 

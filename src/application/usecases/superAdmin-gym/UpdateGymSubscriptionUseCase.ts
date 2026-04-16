@@ -4,6 +4,7 @@ import { NotFoundError } from "../../errors/AppError";
 import { GymMapper } from "../../mapper/SuperAdminGymMapper";
 import { ISubscriptionRepository } from "../../../domain/repositories/ISubscriptionRepository";
 import { Subscription } from "../../../domain/entities/Subscription";
+import { SubscriptionStatus } from "../../../domain/entities/Gym";
 
 export class UpdateGymSubscriptionUseCase implements IUpdateGymSubscriptionUseCase {
     constructor(
@@ -11,7 +12,7 @@ export class UpdateGymSubscriptionUseCase implements IUpdateGymSubscriptionUseCa
         private _subscriptionRepository: ISubscriptionRepository
     ) { }
 
-    async execute(gymId: string, subscriptionStatus: any, expiryDate: Date): Promise<GymResponseDTO> {
+    async execute(gymId: string, subscriptionStatus: SubscriptionStatus, expiryDate: Date): Promise<GymResponseDTO> {
         const gym = await this._gymRepository.findById(gymId);
         if (!gym) {
             throw new NotFoundError("Gym");

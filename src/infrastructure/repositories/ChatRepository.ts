@@ -1,4 +1,4 @@
-import { IChatRepository } from "../../domain/repositories/IChatRepository";
+import { IChatRepository, IConversationSummary } from "../../domain/repositories/IChatRepository";
 import { ConversationModel } from "../database/mongoose/models/ConversationModel";
 import { MessageModel } from "../database/mongoose/models/MessageModel";
 import { IMessageDocument } from "../database/mongoose/types/IMessageDocument";
@@ -7,8 +7,10 @@ import { GymModel } from "../database/mongoose/models/GymModel";
 import { clientModel } from "../database/mongoose/models/ClientModel";
 import { TrainerModel } from "../database/mongoose/models/TrainerModel";
 
+type UserLookup = { gymName?: string; fullName?: string; logoUrl?: string; profileUrl?: string } | null;
+
 export class ChatRepository implements IChatRepository {
-    async getConversations(userId: string): Promise<any[]> {
+    async getConversations(userId: string): Promise<IConversationSummary[]> {
         const sortedUserId = userId.toString();
         const conversations = await ConversationModel.find({
             participants: { $in: [sortedUserId] }
@@ -18,7 +20,7 @@ export class ChatRepository implements IChatRepository {
             const otherParticipantId = conv.participants.find(p => p !== sortedUserId);
             
             // Try to find in all roles
-            let otherUser: any = null;
+            let otherUser: UserLookup = null;
             if (otherParticipantId) {
                 otherUser = await GymModel.findById(otherParticipantId).select('gymName logoUrl email').lean();
                 if (!otherUser) {
@@ -58,25 +60,25 @@ export class ChatRepository implements IChatRepository {
         return message;
     }
 
-    async getOrCreateConversation(participants: string[]): Promise<any> {
+    async getOrCreateConversation(participants: string[]): Promise<IConversationSummary> {
         // Sort participants to ensure consistency (e.g. [A, B] is same as [B, A])
         const sortedParticipants = [...participants].sort();
         
-        let conversation = await ConversationModel.findOne({
+        let conversation: IConversationDocument | null = await ConversationModel.findOne({
             participants: { $all: sortedParticipants, $size: sortedParticipants.length }
         }).lean();
 
         if (!conversation) {
-            conversation = await ConversationModel.create({
+            const created = await ConversationModel.create({
                 participants: sortedParticipants
             });
-            conversation = (conversation as any).toObject();
+            conversation = created.toObject() as IConversationDocument;
         }
 
         const currentUserId = participants[0]; // Assuming first one is the searcher (usually req.user.id)
         const otherParticipantId = sortedParticipants.find(p => p !== currentUserId);
         
-        let otherUser: any = null;
+        let otherUser: UserLookup = null;
         if (otherParticipantId) {
             otherUser = await GymModel.findById(otherParticipantId).select('gymName logoUrl email').lean();
             if (!otherUser) {
@@ -88,10 +90,10 @@ export class ChatRepository implements IChatRepository {
         }
 
         return {
-            id: (conversation as any)._id,
-            participants: (conversation as any).participants,
-            lastMessage: (conversation as any).lastMessage,
-            updatedAt: (conversation as any).updatedAt,
+            id: conversation._id,
+            participants: conversation.participants,
+            lastMessage: conversation.lastMessage,
+            updatedAt: conversation.updatedAt,
             otherUser: (otherUser && otherParticipantId) ? {
                 id: otherParticipantId.toString(),
                 name: otherUser.gymName || otherUser.fullName || "User",
@@ -105,5 +107,13 @@ export class ChatRepository implements IChatRepository {
             { conversationId, receiverId: userId, isRead: false },
             { $set: { isRead: true } }
         );
+    }
+
+    async getMessageById(messageId: string): Promise<IMessageDocument | null> {
+        return await MessageModel.findById(messageId);
+    }
+
+    async deleteMessage(messageId: string): Promise<void> {
+        await MessageModel.findByIdAndDelete(messageId);
     }
 }

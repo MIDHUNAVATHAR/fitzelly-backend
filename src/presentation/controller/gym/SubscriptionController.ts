@@ -5,11 +5,9 @@ import { ISubscriptionRepository } from "../../../domain/repositories/ISubscript
 import { ISubscriptionPlanRepository } from "../../../domain/repositories/ISubscriptionPlanRepository";
 import { GymRepository } from "../../../infrastructure/repositories/GymRepository";
 import Stripe from 'stripe';
-import { Subscription } from "../../../domain/entities/Subscription";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-    apiVersion: '2024-04-10' as any
-});
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 export class SubscriptionController {
     constructor(
@@ -30,7 +28,7 @@ export class SubscriptionController {
         }
     }
 
-    async createCheckoutSession(req: AuthRequest, res: Response, next: NextFunction) {
+    async createCheckoutSession(req: AuthRequest, res: Response, _next: NextFunction) {
         try {
             const { planId } = req.body;
             const gymId = req.user!.id;
@@ -82,23 +80,22 @@ export class SubscriptionController {
                 status: ResponseStatus.SUCCESS,
                 data: { sessionId: session.id, url: session.url }
             });
-        } catch (error: any) {
+        } catch (error) {
+            const errMsg = error instanceof Error ? error.message : "Something went wrong with the payment gateway";
             console.error("Stripe Error Details:", error);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 status: ResponseStatus.ERROR,
-                message: error.message || "Something went wrong with the payment gateway"
+                message: errMsg
             });
         }
     }
 
-    async confirmSubscription(req: AuthRequest, res: Response, next: NextFunction) {
+    async confirmSubscription(req: AuthRequest, res: Response, _next: NextFunction) {
         try {
-            const { sessionId, planId } = req.body;
-            const gymId = req.user!.id;
+            const { sessionId } = req.body;
 
             const session = await stripe.checkout.sessions.retrieve(sessionId);
             const paymentStatus = session.payment_status;
-            const paymentIntent = session.payment_intent as string;
 
             if (paymentStatus !== 'paid') {
                 return res.status(HttpStatus.BAD_REQUEST).json({
@@ -111,11 +108,12 @@ export class SubscriptionController {
                 status: ResponseStatus.SUCCESS,
                 message: "Payment verified. Your subscription will be active shortly.",
             });
-        } catch (error: any) {
+        } catch (error) {
+            const errMsg = error instanceof Error ? error.message : "Failed to confirm subscription";
             console.error("Subscription Confirmation Error:", error);
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 status: ResponseStatus.ERROR,
-                message: error.message || "Failed to confirm subscription"
+                message: errMsg
             });
         }
     }

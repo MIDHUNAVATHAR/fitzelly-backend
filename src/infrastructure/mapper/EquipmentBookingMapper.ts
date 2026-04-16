@@ -1,8 +1,9 @@
 import { EquipmentBooking } from "../../domain/entities/EquipmentBooking";
 import { IEquipmentBooking } from "../database/mongoose/types/IEquipmentBooking";
+import { Types } from "mongoose";
 
 export class EquipmentBookingMapper {
-    static toEntity(doc: any): EquipmentBooking {
+    static toEntity(doc: IEquipmentBooking & { _id: Types.ObjectId; createdAt: Date }): EquipmentBooking {
         return new EquipmentBooking(
             doc._id.toString(),
             doc.clientId.toString(),
@@ -17,10 +18,10 @@ export class EquipmentBookingMapper {
     }
 
     static toDocument(entity: EquipmentBooking): Partial<IEquipmentBooking> {
-        const doc: any = {
-            clientId: entity.clientId,
-            gymId: entity.gymId,
-            equipmentId: entity.equipmentId,
+        const doc: Partial<IEquipmentBooking> & { _id?: string } = {
+            clientId: new Types.ObjectId(entity.clientId),
+            gymId: new Types.ObjectId(entity.gymId),
+            equipmentId: new Types.ObjectId(entity.equipmentId),
             date: entity.date,
             startTime: entity.startTime,
             endTime: entity.endTime,

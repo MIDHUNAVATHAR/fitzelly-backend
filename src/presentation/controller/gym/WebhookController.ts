@@ -4,11 +4,15 @@ import { ISubscriptionRepository } from "../../../domain/repositories/ISubscript
 import { ISubscriptionPlanRepository } from "../../../domain/repositories/ISubscriptionPlanRepository";
 import { GymRepository } from "../../../infrastructure/repositories/GymRepository";
 import { Subscription } from "../../../domain/entities/Subscription";
-import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { HttpStatus } from "../../../constants/statusCodes.constants";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-    apiVersion: '2024-04-10' as any
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+
+interface StripeCheckoutSession {
+    metadata: Record<string, string> | null;
+    payment_intent: string | null;
+    id: string;
+}
 
 export class WebhookController {
     constructor(
@@ -17,7 +21,7 @@ export class WebhookController {
         private _gymRepo: GymRepository
     ) { }
 
-    async handleStripeWebhook(req: Request, res: Response, next: NextFunction) {
+    async handleStripeWebhook(req: Request, res: Response, _next: NextFunction) {
         const sig = req.headers['stripe-signature'];
         const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -30,17 +34,19 @@ export class WebhookController {
             }
 
             event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-        } catch (err: any) {
-            console.error(`Webhook Signature verification failed: ${err.message}`);
-            return res.status(HttpStatus.BAD_REQUEST).send(`Webhook Error: ${err.message}`);
+        } catch (err) {
+            const msg = err instanceof Error ? err.message : "Unknown error";
+            console.error(`Webhook Signature verification failed: ${msg}`);
+            return res.status(HttpStatus.BAD_REQUEST).send(`Webhook Error: ${msg}`);
         }
 
         // Handle the event
         switch (event.type) {
-            case 'checkout.session.completed':
-                const session = event.data.object as any;
+            case 'checkout.session.completed': {
+                const session = event.data.object as StripeCheckoutSession;
                 await this.fullfillSubscription(session);
                 break;
+            }
             default:
                 console.log(`Unhandled event type ${event.type}`);
         }
@@ -48,7 +54,7 @@ export class WebhookController {
         res.status(HttpStatus.OK).json({ received: true });
     }
 
-    private async fullfillSubscription(session: any) {
+    private async fullfillSubscription(session: StripeCheckoutSession) {
         try {
             const { gymId, planId } = session.metadata || {};
 

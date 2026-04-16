@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 const NotificationSchema = new Schema({
     gymId: { type: Schema.Types.ObjectId, ref: 'Gym', required: true },
     message: { type: String, required: true },

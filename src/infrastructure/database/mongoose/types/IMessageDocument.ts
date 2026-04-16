@@ -5,7 +5,7 @@ export interface IMessageDocument extends Document {
     senderId: string;
     receiverId: string;
     content: string;
-    type: "text" | "image" | "call";
+    type: "text" | "image" | "video" | "audio" | "file" | "call";
     isRead: boolean;
     createdAt: Date;
     updatedAt: Date;

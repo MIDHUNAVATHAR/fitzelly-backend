@@ -2,6 +2,7 @@
 /* ------------------- controllers (presentation) ---------------- */
 import { InviteController } from "../presentation/controller/auth/InviteController";
 import { ChatController } from "../presentation/controller/chat/ChatController";
+import { CallHistoryController } from "../presentation/controller/chat/CallHistoryController";
 
 import { GymAuthenticationController } from "../presentation/controller/auth/GymAuthenticationController";
 import { SuperAdminAuthenticationController } from "../presentation/controller/auth/SuperAdminAuthenticationController";
@@ -184,11 +185,17 @@ import {
     sendMessageUseCase,
     getOrCreateConversationUseCase,
     markMessagesAsReadUseCase,
+    deleteMessageUseCase,
+    getMessageByIdUseCase,
     addWeightLogUseCase,
-    getWeightLogsUseCase
+    getWeightLogsUseCase,
+    saveCallHistoryUseCase,
+    getUserCallHistoryUseCase
 } from "./usecases.di";
 
 import { trainerRepository, gymRepository, subscriptionRepository, subscriptionPlanRepository } from "./repositories.di";
+import { s3Service } from "./services.di";
+
 
 
 
@@ -412,12 +419,20 @@ export const chatController = new ChatController(
     getMessagesUseCase,
     sendMessageUseCase,
     getOrCreateConversationUseCase,
-    markMessagesAsReadUseCase
+    markMessagesAsReadUseCase,
+    deleteMessageUseCase,
+    getMessageByIdUseCase,
+    s3Service
 );
 
 export const healthTrackingController = new HealthTrackingController(
     addWeightLogUseCase,
     getWeightLogsUseCase
+);
+
+export const callHistoryController = new CallHistoryController(
+    saveCallHistoryUseCase,
+    getUserCallHistoryUseCase
 );
 
 

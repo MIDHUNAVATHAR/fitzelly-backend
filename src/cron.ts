@@ -17,4 +17,4 @@ async function runCronService() {
     }
 }
 
-runCronService(); 
+void runCronService(); 

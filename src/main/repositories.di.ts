@@ -24,6 +24,7 @@ import { SessionRepository } from "../infrastructure/repositories/SessionReposit
 import { SubscriptionPlanRepository } from "../infrastructure/repositories/SubscriptionPlanRepository";
 import { ChatRepository } from "../infrastructure/repositories/ChatRepository";
 import { WeightLogRepository } from "../infrastructure/repositories/WeightLogRepository";
+import { CallHistoryRepository } from "../infrastructure/repositories/CallHistoryRepository";
 
 
 /* ------------------- Instantiate Repositories ---------------- */
@@ -51,4 +52,5 @@ export const trainerPayoutRepository = new TrainerPayoutRepository();
 export const equipmentBookingRepository = new EquipmentBookingRepository();
 export const analyticsRepository = new AnalyticsRepository();
 export const notificationRepository = new NotificationRepository();
-export const weightLogRepository = new WeightLogRepository();
+export const weightLogRepository = new WeightLogRepository();
+export const callHistoryRepository = new CallHistoryRepository();

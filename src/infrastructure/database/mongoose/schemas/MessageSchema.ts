@@ -23,7 +23,7 @@ export const MessageSchema = new Schema<IMessageDocument>({
     },
     type: {
         type: String,
-        enum: ["text", "image", "call"],
+        enum: ["text", "image", "video", "audio", "file", "call"],
         default: "text"
     },
     isRead: {

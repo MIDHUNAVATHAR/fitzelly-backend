@@ -181,8 +181,11 @@ import {
     GetMessagesUseCase, 
     SendMessageUseCase, 
     GetOrCreateConversationUseCase,
-    MarkMessagesAsReadUseCase
+    MarkMessagesAsReadUseCase,
+    DeleteMessageUseCase,
+    GetMessageByIdUseCase
 } from "../application/usecases/chat/ChatUseCases";
+import { SaveCallHistoryUseCase, GetUserCallHistoryUseCase } from "../application/usecases/chat/CallHistoryUseCases";
 
 import { AddWeightLogUseCase } from "../application/usecases/health-tracking/AddWeightLogUseCase";
 import { GetWeightLogsUseCase } from "../application/usecases/health-tracking/GetWeightLogsUseCase";
@@ -192,6 +195,8 @@ export const getMessagesUseCase = new GetMessagesUseCase(chatRepository);
 export const sendMessageUseCase = new SendMessageUseCase(chatRepository);
 export const getOrCreateConversationUseCase = new GetOrCreateConversationUseCase(chatRepository);
 export const markMessagesAsReadUseCase = new MarkMessagesAsReadUseCase(chatRepository);
+export const deleteMessageUseCase = new DeleteMessageUseCase(chatRepository);
+export const getMessageByIdUseCase = new GetMessageByIdUseCase(chatRepository);
 import { weightLogRepository } from "./repositories.di";
 import { superAdminRepository, gymRepository } from "./repositories.di";
 
@@ -208,7 +213,7 @@ import { workoutPlanRepository } from "./repositories.di";
 import { workoutLogRepository } from "./repositories.di";
 import { enquiryRepository } from "./repositories.di";
 import { expenseRepository } from "./repositories.di";
-import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository, subscriptionPlanRepository, chatRepository } from "./repositories.di";
+import { exerciseRepository, workoutTemplateRepository, trainerPayoutRepository, equipmentBookingRepository, analyticsRepository, notificationRepository, sessionRepository, subscriptionPlanRepository, chatRepository, callHistoryRepository } from "./repositories.di";
 
 
 
@@ -412,4 +417,7 @@ export const getActiveSessionsUseCase = new GetActiveSessionsUseCase(sessionRepo
 export const revokeSessionUseCase = new RevokeSessionUseCase(sessionRepository);
 
 export const addWeightLogUseCase = new AddWeightLogUseCase(weightLogRepository);
-export const getWeightLogsUseCase = new GetWeightLogsUseCase(weightLogRepository);
+export const getWeightLogsUseCase = new GetWeightLogsUseCase(weightLogRepository);
+
+export const saveCallHistoryUseCase = new SaveCallHistoryUseCase(callHistoryRepository);
+export const getUserCallHistoryUseCase = new GetUserCallHistoryUseCase(callHistoryRepository);

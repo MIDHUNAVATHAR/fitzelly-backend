@@ -18,7 +18,7 @@ export class EquipmentBooking {
     get date(): Date { return this._date; }
     get startTime(): string { return this._startTime; }
     get endTime(): string { return this._endTime; }
-    get status(): string { return this._status; }
+    get status(): 'BOOKED' | 'CANCELLED' { return this._status; }
     get createdAt(): Date { return this._createdAt; }
 
     cancel() {

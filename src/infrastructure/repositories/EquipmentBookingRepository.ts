@@ -2,7 +2,7 @@ import { EquipmentBooking } from "../../domain/entities/EquipmentBooking";
 import { IEquipmentBookingRepository } from "../../domain/repositories/IEquipmentBookingRepository";
 import { EquipmentBookingModel } from "../database/mongoose/models/EquipmentBookingModel";
 import { EquipmentBookingMapper } from "../mapper/EquipmentBookingMapper";
-import { IEquipmentBooking } from "../database/mongoose/types/IEquipmentBooking";
+
 
 export class EquipmentBookingRepository implements IEquipmentBookingRepository {
     async create(booking: EquipmentBooking): Promise<EquipmentBooking> {

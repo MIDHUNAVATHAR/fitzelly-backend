@@ -5,9 +5,14 @@ import {
     GetMessagesUseCase, 
     SendMessageUseCase, 
     GetOrCreateConversationUseCase,
-    MarkMessagesAsReadUseCase
+    MarkMessagesAsReadUseCase,
+    DeleteMessageUseCase,
+    GetMessageByIdUseCase
 } from "../../../application/usecases/chat/ChatUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { IS3Service } from "../../../domain/services/IS3Service";
+import { BadRequestError } from "../../../application/errors/AppError";
+import { SocketService } from "../../../infrastructure/services/SocketService";
 
 export class ChatController {
     constructor(
@@ -15,7 +20,10 @@ export class ChatController {
         private getMessagesUseCase: GetMessagesUseCase,
         private sendMessageUseCase: SendMessageUseCase,
         private getOrCreateConversationUseCase: GetOrCreateConversationUseCase,
-        private markMessagesAsReadUseCase: MarkMessagesAsReadUseCase
+        private markMessagesAsReadUseCase: MarkMessagesAsReadUseCase,
+        private deleteMessageUseCase: DeleteMessageUseCase,
+        private getMessageByIdUseCase: GetMessageByIdUseCase,
+        private s3Service: IS3Service
     ) { }
 
     async getConversations(req: AuthRequest, res: Response, next: NextFunction) {
@@ -65,6 +73,57 @@ export class ChatController {
             const { conversationId } = req.params;
             const userId = req.user!.id;
             await this.markMessagesAsReadUseCase.execute(conversationId as string, userId);
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async uploadAttachment(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            if (!req.file) {
+                throw new BadRequestError("No file uploaded");
+            }
+
+            const url = await this.s3Service.uploadFile(req.file as Express.Multer.File, "chat-attachments");
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: { url } });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async deleteMessage(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const { messageId } = req.params;
+            const message = await this.getMessageByIdUseCase.execute(messageId as string);
+
+            if (!message) {
+                throw new BadRequestError("Message not found");
+            }
+
+            // Only sender can delete for everyone (per user requirement)
+            if (message.senderId !== req.user!.id) {
+                throw new BadRequestError("Only the sender can delete this message");
+            }
+
+            // If it's an attachment, delete from S3
+            if (message.type !== 'text' && message.type !== 'call') {
+                try {
+                    await this.s3Service.deleteFile(message.content);
+                } catch (s3Error) {
+                    console.error("Failed to delete from S3:", s3Error);
+                    // Continue deleting from DB even if S3 fails
+                }
+            }
+
+            await this.deleteMessageUseCase.execute(messageId as string);
+
+            // Notify via socket - emit to both participants
+            SocketService.io.to(`user_${message.senderId}`).to(`user_${message.receiverId}`).emit('MESSAGE_DELETED', { 
+                messageId, 
+                conversationId: message.conversationId 
+            });
+
             res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS });
         } catch (error) {
             next(error);

@@ -36,7 +36,7 @@ export class AttendanceRepository extends BaseRepository<Attendance, IAttendance
         const startOfDay = new Date(date);
         startOfDay.setHours(0, 0, 0, 0);
 
-        const filter: any = {
+        const filter: Record<string, unknown> = {
             gymId,
             date: startOfDay,
             isDeleted: false,

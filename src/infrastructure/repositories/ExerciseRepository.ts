@@ -29,7 +29,7 @@ export class ExerciseRepository extends BaseRepository<Exercise, IExerciseDocume
             doc._id.toString(),
             doc.gymId,
             doc.name,
-            doc.instructions || (doc as any).description || "",
+            doc.instructions || (doc as IExerciseDocument & { description?: string }).description || "",
             doc.reps,
             doc.sets,
             doc.videoUrl,

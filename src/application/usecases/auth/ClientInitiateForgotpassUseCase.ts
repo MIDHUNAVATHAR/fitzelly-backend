@@ -3,7 +3,7 @@ import { IClientRepository } from "../../../domain/repositories/IClientRepositor
 import { IEmailService } from "../../../domain/services/IEmailService";
 import { IInitiateForgotPasswordUseCase } from "../../IUseCases/auth/IInitiateForgotpassUseCase";
 import { ForgotPasswordRequestDTO } from "../../dtos/auth/ForgotPasswordDTO";
-import { AuthenticationFailedError, NotFoundError, ServiceUnavailableError } from "../../errors/AppError";
+import { AuthenticationFailedError, ServiceUnavailableError } from "../../errors/AppError";
 
 
 export class ClientInitiateForgotpassUseCase implements IInitiateForgotPasswordUseCase {

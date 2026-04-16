@@ -316,7 +316,7 @@ export class AnalyticsRepository implements IAnalyticsRepository {
             const year = d.getFullYear();
             
             // Find existing revenue for this month/year from aggregate
-            const existing = revenueTrendResult.find((item: any) => 
+            const existing = revenueTrendResult.find((item: { _id: { month: number; year: number }; revenue: number }) => 
                 item._id.month === month && item._id.year === year
             );
             
@@ -326,7 +326,7 @@ export class AnalyticsRepository implements IAnalyticsRepository {
             });
         }
 
-        const recentGyms = recentGymsResult.map((gym: any) => ({
+        const recentGyms = recentGymsResult.map((gym: { _id: Types.ObjectId; gymName: string; email: string; createdAt: Date; approvalStatus: string }) => ({
             id: gym._id.toString(),
             name: gym.gymName,
             ownerName: gym.email,

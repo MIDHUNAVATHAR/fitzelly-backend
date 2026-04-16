@@ -2,12 +2,13 @@ import { ISessionRepository } from '../../domain/repositories/ISessionRepository
 import { Session } from '../../domain/entities/Session';
 import { SessionModel } from '../database/mongoose/models/SessionModel';
 import { redisConnection } from '../database/RedisConnection';
+import { Types } from 'mongoose';
 
 const REDIS_SESSION_PREFIX = 'session:';
-const SESSION_TTL = Number(process.env.REFRESH_MAX_AGE) || 604800; // Default 7 days
+
 
 export class SessionRepository implements ISessionRepository {
-    private toEntity(doc: any): Session {
+    private toEntity(doc: { _id: Types.ObjectId; userId: Types.ObjectId; role: string; device: string; browser: string; os: string; ip: string; lastActive: Date; expiredAt: Date; createdAt: Date; isRevoked: boolean; gymId?: Types.ObjectId | null }): Session {
         return new Session(
             doc._id.toString(),
             doc.userId.toString(),

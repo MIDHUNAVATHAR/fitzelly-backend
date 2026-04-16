@@ -35,3 +35,17 @@ export class MarkMessagesAsReadUseCase {
         return await this.chatRepository.markMessagesAsRead(conversationId, userId);
     }
 }
+
+export class DeleteMessageUseCase {
+    constructor(private chatRepository: IChatRepository) { }
+    async execute(messageId: string) {
+        return await this.chatRepository.deleteMessage(messageId);
+    }
+}
+
+export class GetMessageByIdUseCase {
+    constructor(private chatRepository: IChatRepository) { }
+    async execute(messageId: string) {
+        return await this.chatRepository.getMessageById(messageId);
+    }
+}

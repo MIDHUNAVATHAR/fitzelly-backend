@@ -30,12 +30,14 @@ export class S3Service implements IS3Service {
             const client = this.getClient();
 
             const fileName = `${folder}/${Date.now()}-${file.originalname}`;
+            const isAttachment = folder === "chat-attachments";
 
             const command = new PutObjectCommand({
                 Bucket: this.bucketName,
                 Key: fileName,
                 Body: file.buffer,
                 ContentType: file.mimetype,
+                ContentDisposition: isAttachment ? `attachment; filename="${file.originalname}"` : undefined
             });
 
             await client.send(command);

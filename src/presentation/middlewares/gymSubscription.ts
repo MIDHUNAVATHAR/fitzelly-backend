@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "./protect";
-import { GymModel } from "../../infrastructure/database/mongoose/models/GymModel";
+
 import { SubscriptionModel } from "../../infrastructure/database/mongoose/models/SubscriptionModel";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { ROLES } from "../../constants/roles.constants";

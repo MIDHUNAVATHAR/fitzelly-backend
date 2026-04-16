@@ -1,9 +1,10 @@
 import { SubscriptionPlan } from "../../domain/entities/SubscriptionPlan";
 import { ISubscriptionPlanRepository } from "../../domain/repositories/ISubscriptionPlanRepository";
 import { SubscriptionPlanModel } from "../database/mongoose/models/SubscriptionPlanModel";
+import { Types } from "mongoose";
 
 export class SubscriptionPlanRepository implements ISubscriptionPlanRepository {
-    private toEntity(doc: any): SubscriptionPlan {
+    private toEntity(doc: { _id: Types.ObjectId; name: string; price: number; durationMonths: number; description: string; isDeleted: boolean; createdAt: Date; updatedAt: Date }): SubscriptionPlan {
         return new SubscriptionPlan(
             doc._id.toString(),
             doc.name,

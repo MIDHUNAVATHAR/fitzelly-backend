@@ -46,7 +46,7 @@ export const protect = (roles: string[]) => async (req: AuthRequest, res: Respon
         req.user = payload;
         next();
 
-    } catch (error) {
+    } catch {
         return res.status(HttpStatus.UNAUTHORIZED).json({
             status: ResponseStatus.ERROR,
             message: ResponseMessage.ACCESS_TOKEN_INVALID

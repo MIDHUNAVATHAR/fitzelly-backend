@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { IGetAllGymsUseCase } from "../../../application/IUseCases/superAd-gym-listing/IGetAllGymsUseCase";
 import { IGetGymByIdUseCase } from "../../../application/IUseCases/gym-profile/IGetGymByIdUseCase";
-import { IUpdateGymStatusUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymStatusUseCase";
+
 import { IApproveGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IApproveGymUseCase";
 import { IRejectGymUseCase } from "../../../application/IUseCases/superAd-gym-listing/IRejectGymUseCase";
 import { IUpdateGymSubscriptionUseCase } from "../../../application/IUseCases/superAd-gym-listing/IUpdateGymSubscriptionUseCase";

@@ -1,9 +1,10 @@
 import { INotificationRepository } from '../../domain/repositories/INotificationRepository';
 import { Notification } from '../../domain/entities/Notification';
 import { NotificationModel } from '../database/mongoose/models/NotificationModel';
+import { Types } from 'mongoose';
 
 export class NotificationRepository implements INotificationRepository {
-    private toEntity(doc: any): Notification {
+    private toEntity(doc: { _id: Types.ObjectId; gymId: Types.ObjectId; message: string; isRead: boolean; type: string; createdAt: Date; targetRole?: string }): Notification {
         return new Notification(
             doc._id.toString(),
             doc.gymId.toString(),
@@ -46,7 +47,7 @@ export class NotificationRepository implements INotificationRepository {
         return docs.map(d => this.toEntity(d));
     }
     
-    async markAsRead(id: string, targetId: string): Promise<void> {
+    async markAsRead(id: string, _targetId: string): Promise<void> {
       
         await NotificationModel.findByIdAndUpdate(id, { isRead: true });
     }

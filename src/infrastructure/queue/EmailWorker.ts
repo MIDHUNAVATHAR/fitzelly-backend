@@ -13,38 +13,38 @@ export class EmailWorker {
         this.worker = new Worker(
             EMAIL_QUEUE_NAME,
             async (job: Job<EmailJobData>) => {
-                const { type, payload } = job.data;
-                console.log(`[Worker] Processing job ${job.id} of type ${type}`);
+                console.log(`[Worker] Processing job ${job.id} of type ${job.data.type}`);
 
-                switch (type) {
+                switch (job.data.type) {
                     case "OTP":
-                        await mailService.sendOtp(payload.to, payload.otp);
+                        await mailService.sendOtp(job.data.payload.to, job.data.payload.otp);
                         break;
                     case "WELCOME_INVITE":
                         await mailService.sendWelcomeInvite(
-                            payload.email,
-                            payload.inviteLink,
-                            payload.gymName,
-                            payload.userName
+                            job.data.payload.email,
+                            job.data.payload.inviteLink,
+                            job.data.payload.gymName,
+                            job.data.payload.userName
                         );
                         break;
                     case "MEMBERSHIP_REMINDER":
                         await mailService.sendMembershipExpiryReminder(
-                            payload.to,
-                            payload.clientName,
-                            payload.expiryDate,
-                            payload.planName
+                            job.data.payload.to,
+                            job.data.payload.clientName,
+                            job.data.payload.expiryDate,
+                            job.data.payload.planName
                         );
                         break;
                     case "MEMBERSHIP_EXPIRED":
                         await mailService.sendMembershipExpiredNotification(
-                            payload.to,
-                            payload.clientName,
-                            payload.planName
+                            job.data.payload.to,
+                            job.data.payload.clientName,
+                            job.data.payload.planName
                         );
                         break;
                     default:
-                        console.error(`[Worker] Unknown job type: ${type}`)
+                        // @ts-expect-error - type is never here if all cases handled
+                        console.error(`[Worker] Unknown job type: ${job.data.type}`)
                 }
 
             },

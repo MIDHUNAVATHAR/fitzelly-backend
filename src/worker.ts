@@ -15,4 +15,7 @@ async function runWorker() {
     }
 }
 
-runWorker()
+runWorker().catch(err => {
+    console.error("Worker process failed:", err);
+    process.exit(1);
+});

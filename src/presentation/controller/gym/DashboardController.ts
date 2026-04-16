@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { GetGymDashboardUseCase } from "../../../application/usecases/gym-dashboard/GetGymDashboardUseCase";
 

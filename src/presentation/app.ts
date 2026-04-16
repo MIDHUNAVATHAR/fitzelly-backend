@@ -13,8 +13,9 @@ app.post(
     "/api/webhook",
     express.raw({ type: "application/json" }),
     (req, res, next) => {
-        const { webhookController } = require("../main/controllers.di");
-        webhookController.handleStripeWebhook(req, res, next);
+        void import("../main/controllers.di").then(({ webhookController }) => {
+            return webhookController.handleStripeWebhook(req, res, next);
+        }).catch(next);
     }
 );
 
