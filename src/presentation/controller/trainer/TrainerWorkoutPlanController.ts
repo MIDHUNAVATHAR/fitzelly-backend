@@ -15,9 +15,9 @@ interface CustomRequest extends Request {
 
 export class TrainerWorkoutPlanController {
     constructor(
-        private createOrUpdateWorkoutPlanUseCase: ICreateOrUpdateWorkoutPlanUseCase,
-        private getWorkoutPlanByClientIdUseCase: IGetWorkoutPlanByClientIdUseCase,
-        private trainerRepository: ITrainerRepository
+        private _createOrUpdateWorkoutPlanUseCase: ICreateOrUpdateWorkoutPlanUseCase,
+        private _getWorkoutPlanByClientIdUseCase: IGetWorkoutPlanByClientIdUseCase,
+        private _trainerRepository: ITrainerRepository
     ) { }
 
     async createOrUpdatePlan(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -28,12 +28,12 @@ export class TrainerWorkoutPlanController {
             let gymId = authReq.user.gymId;
 
             if (!gymId) {
-                const trainer = await this.trainerRepository.findById(trainerId);
+                const trainer = await this._trainerRepository.findById(trainerId);
                 if (!trainer) throw new NotFoundError("Trainer not found");
                 gymId = trainer.gymId;
             }
 
-            const plan = await this.createOrUpdateWorkoutPlanUseCase.execute({
+            const plan = await this._createOrUpdateWorkoutPlanUseCase.execute({
                 clientId,
                 trainerId,
                 gymId,
@@ -52,7 +52,7 @@ export class TrainerWorkoutPlanController {
             const authReq = req as unknown as CustomRequest;
             const { clientId } = req.params;
             const trainerId = authReq.user.id;
-            const plan = await this.getWorkoutPlanByClientIdUseCase.execute(clientId as string, trainerId);
+            const plan = await this._getWorkoutPlanByClientIdUseCase.execute(clientId as string, trainerId);
             res.status(200).json({ status: "success", data: plan });
         } catch (error) {
             next(error)

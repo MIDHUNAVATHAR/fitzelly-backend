@@ -1,15 +1,16 @@
-import { IGetAvailableSlotsUseCase, SlotInfo } from "./IGetAvailableSlotsUseCase";
+import { IGetAvailableSlotsUseCase } from "./IGetAvailableSlotsUseCase";
+import {SlotInfo} from "../../dtos/gym-equipment/EquipmentDTO";
 import { IEquipmentRepository } from "../../../domain/repositories/IEquipmentRepository";
 import { IEquipmentBookingRepository } from "../../../domain/repositories/IEquipmentBookingRepository";
 
 export class GetAvailableSlotsUseCase implements IGetAvailableSlotsUseCase {
     constructor(
-        private equipmentRepo: IEquipmentRepository,
-        private equipmentBookingRepo: IEquipmentBookingRepository
+        private _equipmentRepo: IEquipmentRepository,
+        private _equipmentBookingRepo: IEquipmentBookingRepository
     ) { }
 
     async execute(equipmentId: string, date: Date): Promise<SlotInfo[]> {
-        const equipment = await this.equipmentRepo.findById(equipmentId);
+        const equipment = await this._equipmentRepo.findById(equipmentId);
         if (!equipment) throw new Error("Equipment not found.");
 
         const bookingDate = new Date(new Date(date).toISOString().split('T')[0]);
@@ -30,7 +31,7 @@ export class GetAvailableSlotsUseCase implements IGetAvailableSlotsUseCase {
         const endTimeMinutes = endH * 60 + endM;
 
         // Fetch all bookings for this date and equipment to check availability
-        const currentBookings = await this.equipmentBookingRepo.findByEquipmentIdAndDate(equipmentId, bookingDate);
+        const currentBookings = await this._equipmentBookingRepo.findByEquipmentIdAndDate(equipmentId, bookingDate);
 
         for (let time = startTimeMinutes; time + equipment.slotIntervalMinutes <= endTimeMinutes; time += equipment.slotIntervalMinutes) {
             const h = Math.floor(time / 60);

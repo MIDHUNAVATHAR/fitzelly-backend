@@ -7,3 +7,12 @@ export interface ClientMembershipDTO {
     expiryDate?: string;
     daysLeft?: number;
 }
+
+export interface AddMembershipDTO {
+    gymId: string;
+    clientId: string;
+    planId: string;
+    startDate: string;
+    assignedTrainerId?: string;
+    daysLeft?: number;
+}

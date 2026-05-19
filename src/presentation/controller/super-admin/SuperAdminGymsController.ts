@@ -11,11 +11,11 @@ import { logger } from "../../../infrastructure/logger/logger";
 
 export class SuperAdminGymsController {
     constructor(
-        private readonly _getAllGymsUseCase: IGetAllGymsUseCase,
-        private readonly _getGymByIdUseCase: IGetGymByIdUseCase,
-        private readonly _approveGymUseCase: IApproveGymUseCase,
-        private readonly _rejectGymUseCase: IRejectGymUseCase,
-        private readonly _updateGymSubscriptionUseCase: IUpdateGymSubscriptionUseCase,
+        private _getAllGymsUseCase: IGetAllGymsUseCase,
+        private _getGymByIdUseCase: IGetGymByIdUseCase,
+        private _approveGymUseCase: IApproveGymUseCase,
+        private _rejectGymUseCase: IRejectGymUseCase,
+        private _updateGymSubscriptionUseCase: IUpdateGymSubscriptionUseCase,
     ) { }
 
     async getAllGyms(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -60,7 +60,7 @@ export class SuperAdminGymsController {
         try {
 
             const gymId = req.params.gymId as string;
-            console.log(gymId)
+            
             const updatedGym = await this._approveGymUseCase.execute(gymId);
             logger.info("updated gym ", updatedGym)
 

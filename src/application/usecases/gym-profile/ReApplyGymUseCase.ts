@@ -7,12 +7,12 @@ import { ROLES } from "../../../constants/roles.constants";
 
 export class ReApplyGymUseCase implements IReApplyGymUseCase {
     constructor(
-        private gymRepository: IGymRepository,
-        private addNotificationUseCase: AddNotificationUseCase
+        private _gymRepository: IGymRepository,
+        private _addNotificationUseCase: AddNotificationUseCase
     ) {}
 
     async execute(gymId: string): Promise<Gym> {
-        const gym = await this.gymRepository.findById(gymId);
+        const gym = await this._gymRepository.findById(gymId);
         if (!gym) {
             throw new AppError("Gym not found", 404);
         }
@@ -39,13 +39,13 @@ export class ReApplyGymUseCase implements IReApplyGymUseCase {
         }
 
         // Update status to Reapplied
-        const updatedGym = await this.gymRepository.updateStatus(gymId, {
+        const updatedGym = await this._gymRepository.updateStatus(gymId, {
             approvalStatus: 'Reapplied',
             rejectionReason: '' // Clear rejection reason
         });
 
         // Add notification for super admin
-        await this.addNotificationUseCase.execute(
+        await this._addNotificationUseCase.execute(
             gymId,
             `Gym "${gym.gymName}" has re-applied for approval.`,
             'GYM_REAPPLIED',

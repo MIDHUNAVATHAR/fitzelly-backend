@@ -1,26 +1,21 @@
 import { IPaymentRepository } from "../../../domain/repositories/IPaymentRepository";
 import { IMembershipRepository } from "../../../domain/repositories/IMembershipRepository";
 import { Payment } from "../../../domain/entities/Payment";
+import { IAddPaymentUseCase } from "../../IUseCases/gym-memberships/IGymMembershipUseCases";
+import { AddPaymentDTO } from "../../dtos/gym-client/ClientProfileWithMembershipDTO";
 
-export interface AddPaymentDTO {
-    gymId: string;
-    membershipId: string;
-    amount: number;
-    paymentDate: string;
-    note?: string;
-}
 
-export class AddPaymentUseCase {
+export class AddPaymentUseCase implements IAddPaymentUseCase {
     constructor(
-        private paymentRepository: IPaymentRepository,
-        private membershipRepository: IMembershipRepository
+        private _paymentRepository: IPaymentRepository,
+        private _membershipRepository: IMembershipRepository
     ) { }
 
     async execute(data: AddPaymentDTO) {
         /**
          * validate if membership belongs to the gym 
          */
-        const membership = await this.membershipRepository.findById(data.membershipId);
+        const membership = await this._membershipRepository.findById(data.membershipId);
         if (!membership || membership.gymId !== data.gymId) {
             throw new Error("Membership not found.");
         }
@@ -34,6 +29,6 @@ export class AddPaymentUseCase {
             false
         );
 
-        return await this.paymentRepository.create(payment);
+        return await this._paymentRepository.create(payment);
     }
 }

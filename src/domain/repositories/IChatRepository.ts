@@ -7,7 +7,7 @@ export interface IOtherUser {
 }
 
 export interface IConversationSummary {
-    id: unknown;
+    id: string;
     participants: string[];
     lastMessage: string | null | undefined;
     updatedAt: Date;

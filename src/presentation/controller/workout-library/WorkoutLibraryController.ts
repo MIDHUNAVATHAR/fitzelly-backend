@@ -7,13 +7,15 @@ import { ITrainerRepository } from "../../../domain/repositories/ITrainerReposit
 
 export class WorkoutLibraryController {
     constructor(
-        private readonly _workoutLibraryUseCase: IWorkoutLibraryUseCase,
-        private readonly _trainerRepository: ITrainerRepository
+        private _workoutLibraryUseCase: IWorkoutLibraryUseCase,
+        private _trainerRepository: ITrainerRepository,
     ) { }
 
     async createExercise(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             let gymId = req.user?.role === ROLES.GYM ? req.user.id : req.user?.gymId;
+               
+
             
             // Fallback for trainers if gymId is missing in token
             if (!gymId && req.user?.role === ROLES.TRAINER) {

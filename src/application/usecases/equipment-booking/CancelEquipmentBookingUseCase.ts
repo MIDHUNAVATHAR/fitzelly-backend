@@ -5,10 +5,10 @@ export interface ICancelEquipmentBookingUseCase {
 }
 
 export class CancelEquipmentBookingUseCase implements ICancelEquipmentBookingUseCase {
-    constructor(private equipmentBookingRepo: IEquipmentBookingRepository) { }
+    constructor(private _equipmentBookingRepo: IEquipmentBookingRepository) { }
 
     async execute(bookingId: string, clientId: string): Promise<void> {
-        const booking = await this.equipmentBookingRepo.findById(bookingId);
+        const booking = await this._equipmentBookingRepo.findById(bookingId);
         if (!booking) {
             throw new Error("Booking not found");
         }
@@ -23,6 +23,6 @@ export class CancelEquipmentBookingUseCase implements ICancelEquipmentBookingUse
 
         // Optional: restriction like "cannot cancel if session already started or too close"
         
-        await this.equipmentBookingRepo.cancel(bookingId);
+        await this._equipmentBookingRepo.cancel(bookingId);
     }
 }

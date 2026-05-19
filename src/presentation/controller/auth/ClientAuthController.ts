@@ -8,7 +8,7 @@ import { ResponseMessage } from "../../../constants/response.constants";
 
 export class ClientAuthController {
     constructor(
-        private clientLoginUseCase: IClientLoginUseCase,
+        private _clientLoginUseCase: IClientLoginUseCase,
         private _clientInitiateForgotPasswordUseCase: IInitiateForgotPasswordUseCase,
         private _clientCompleteForgotPasswordUseCase: ICompleteForgotpassUseCase,
         private _clientResetPasswordUseCase: IResetPasswordUseCase
@@ -17,7 +17,7 @@ export class ClientAuthController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const { email, password, device, browser, os, ip } = req.body;
-            const result = await this.clientLoginUseCase.execute({ email, password, device, browser, os, ip });
+            const result = await this._clientLoginUseCase.execute({ email, password, device, browser, os, ip });
 
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,

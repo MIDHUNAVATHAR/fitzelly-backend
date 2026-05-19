@@ -8,12 +8,12 @@ import { EquipmentMapper } from "../../mapper/EquipmentMapper";
 
 export class UpdateEquipmentUseCase implements IUpdateEquipmentUseCase {
     constructor(
-        private equipmentRepository: IEquipmentRepository,
-        private s3Service: IS3Service
+        private _equipmentRepository: IEquipmentRepository,
+        private _s3Service: IS3Service
     ) { }
 
     async execute(data: UpdateEquipmentDTO, file?: IS3UploadFile): Promise<EquipmentDTO> {
-        const equipment = await this.equipmentRepository.findById(data.id);
+        const equipment = await this._equipmentRepository.findById(data.id);
 
         if (!equipment || equipment.gymId !== data.gymId) {
             throw new Error("Equipment not found or unauthorized");
@@ -21,12 +21,12 @@ export class UpdateEquipmentUseCase implements IUpdateEquipmentUseCase {
 
         let imageUrl = equipment.image;
         if (file) {
-            imageUrl = await this.s3Service.uploadFile(file, `equipments/${data.gymId}`);
+            imageUrl = await this._s3Service.uploadFile(file, `equipments/${data.gymId}`);
             /**
              * delete old image from s3
              */
             if (equipment.image) {
-                await this.s3Service.deleteFile(equipment.image).catch(err => console.error("Error deleting old image:", err));
+                await this._s3Service.deleteFile(equipment.image).catch(err => console.error("Error deleting old image:", err));
             }
         }
 
@@ -43,7 +43,7 @@ export class UpdateEquipmentUseCase implements IUpdateEquipmentUseCase {
             isActive: data.isActive
         });
 
-        const updatedEquipment = await this.equipmentRepository.save(equipment);
+        const updatedEquipment = await this._equipmentRepository.save(equipment);
         return EquipmentMapper.toDTO(updatedEquipment);
     }
 }

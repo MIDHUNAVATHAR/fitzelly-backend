@@ -1,12 +1,12 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../../middlewares/protect';
 import { HttpStatus, ResponseStatus } from '../../../constants/statusCodes.constants';
-import { GetNotificationsUseCase, MarkNotificationUseCase } from '../../../application/usecases/notification/NotificationUseCases';
+import { IGetNotificationsUseCase, IMarkNotificationUseCase } from '../../../application/IUseCases/notification/INotificationUseCases';
 
 export class NotificationController {
     constructor(
-        private getNotifUseCase: GetNotificationsUseCase,
-        private markNotifUseCase: MarkNotificationUseCase
+        private _getNotifUseCase: IGetNotificationsUseCase,
+        private _markNotifUseCase: IMarkNotificationUseCase
     ) { }
 
     /*
@@ -14,7 +14,7 @@ export class NotificationController {
     */
     async getUnread(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const result = await this.getNotifUseCase.getUnread(req.user!.id, req.user!.role);
+            const result = await this._getNotifUseCase.getUnread(req.user!.id, req.user!.role);
             return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error);
@@ -27,7 +27,7 @@ export class NotificationController {
     async getRead(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const page = parseInt(req.query.page as string) || 1;
-            const result = await this.getNotifUseCase.getRead(req.user!.id, page, 10, req.user!.role);
+            const result = await this._getNotifUseCase.getRead(req.user!.id, page, 10, req.user!.role);
             return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error);
@@ -40,7 +40,7 @@ export class NotificationController {
     */
     async markAsRead(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            await this.markNotifUseCase.markAsRead(req.params.id as string, req.user!.id);
+            await this._markNotifUseCase.markAsRead(req.params.id as string, req.user!.id);
             return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, message: "Marked as read" });
         } catch (error) {
             next(error);
@@ -52,7 +52,7 @@ export class NotificationController {
     */
     async markAllAsRead(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            await this.markNotifUseCase.markAllAsRead(req.user!.id);
+            await this._markNotifUseCase.markAllAsRead(req.user!.id);
             return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, message: "All marked as read" });
         } catch (error) {
             next(error);

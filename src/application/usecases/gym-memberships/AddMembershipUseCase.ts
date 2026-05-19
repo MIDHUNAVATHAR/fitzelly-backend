@@ -4,43 +4,37 @@ import { IClientRepository } from "../../../domain/repositories/IClientRepositor
 import { ITrainerRepository } from "../../../domain/repositories/ITrainerRepository";
 import { Membership } from "../../../domain/entities/Membership";
 import { ConflictError } from "../../errors/AppError";
+import { IAddMembershipUseCase } from "../../IUseCases/gym-memberships/IGymMembershipUseCases";
+import { AddMembershipDTO } from "../../dtos/gym-client/MembershipDTO";
 
 
-export interface AddMembershipDTO {
-    gymId: string;
-    clientId: string;
-    planId: string;
-    startDate: string;
-    assignedTrainerId?: string;
-    daysLeft?: number;
-}
 
-export class AddMembershipUseCase {
+export class AddMembershipUseCase implements IAddMembershipUseCase {
     constructor(
-        private membershipRepository: IMembershipRepository,
-        private planRepository: IPlanRepository,
-        private clientRepository: IClientRepository,
-        private trainerRepository: ITrainerRepository
+        private _membershipRepository: IMembershipRepository,
+        private _planRepository: IPlanRepository,
+        private _clientRepository: IClientRepository,
+        private _trainerRepository: ITrainerRepository
     ) { }
 
     async execute(data: AddMembershipDTO) {
-        const client = await this.clientRepository.findById(data.clientId);
+        const client = await this._clientRepository.findById(data.clientId);
         if (!client || client.gymId !== data.gymId) throw new Error("Client not found.");
 
         /**
          * check the client has any active memberships
          */
-        const existingMembership = await this.membershipRepository.findLatestByClientId(data.clientId);
+        const existingMembership = await this._membershipRepository.findLatestByClientId(data.clientId);
         if (existingMembership?.status == "ACTIVE") {
             throw new ConflictError("Unable to add . Old membership still active")
         }
 
-        const plan = await this.planRepository.findById(data.planId);
+        const plan = await this._planRepository.findById(data.planId);
         if (!plan || plan.gymId !== data.gymId) throw new Error("Plan not found.");
 
         let trainerName = null;
         if (data.assignedTrainerId) {
-            const trainer = await this.trainerRepository.findById(data.assignedTrainerId);
+            const trainer = await this._trainerRepository.findById(data.assignedTrainerId);
 
 
             if (trainer && trainer.gymId === data.gymId) {
@@ -83,6 +77,6 @@ export class AddMembershipUseCase {
             false
         );
 
-        return await this.membershipRepository.create(membership);
+        return await this._membershipRepository.create(membership);
     }
 }

@@ -2,6 +2,7 @@ import { ISocketService } from "../../domain/services/ISocketService";
 import { Server as SocketServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import { createAdapter } from "@socket.io/redis-adapter";
+import { logger } from "../logger/logger";
 import Redis from "ioredis";
 
 
@@ -26,22 +27,22 @@ export class SocketService implements ISocketService {
 
         this._io.adapter(createAdapter(pubClient, subClient));
 
-        console.log("Socket.io Redis Adapter initialized");
+        logger.info("Socket.io Redis Adapter initialized");
 
 
         
         this._io.on("connection", (socket) => {
-            console.log("A user connected:", socket.id);
+            logger.info("A user connected:", socket.id);
 
             socket.on("join", async (room: string) => {
                 await socket.join(room);
-                console.log(`[Socket] User ${socket.id} joined room: ${room}`);
+                logger.info(`[Socket] User ${socket.id} joined room: ${room}`);
             });
 
             // Messaging
             socket.on("SEND_MESSAGE", (data) => {
                 const { receiverId } = data;
-                console.log(`[Socket] Sending message to room 'user_${receiverId}'`);
+                logger.info(`[Socket] Sending message to room 'user_${receiverId}'`);
                 // Emit to the specific user's room
                 socket.to(`user_${receiverId}`).emit("RECEIVE_MESSAGE", data);
             });
@@ -97,7 +98,7 @@ export class SocketService implements ISocketService {
             });
 
             socket.on("disconnect", () => {
-                console.log(`User ${socket.id} disconnected`);
+                logger.info(`User ${socket.id} disconnected`);
             });
         });
 
@@ -113,14 +114,14 @@ export class SocketService implements ISocketService {
 
     public emitToGym(gymId: string, event: string, data: unknown): void {
         if (SocketService._io) {
-            console.log(`Emitting event "${event}" to room "gym_${gymId}"`);
+            logger.info(`Emitting event "${event}" to room "gym_${gymId}"`);
             SocketService._io.to(`gym_${gymId}`).emit(event, data);
         }
     }
 
     public emitToRole(role: string, event: string, data: unknown): void {
         if (SocketService._io) {
-            console.log(`Emitting event "${event}" to rooms "role_${role}" and "${role}"`);
+            logger.info(`Emitting event "${event}" to rooms "role_${role}" and "${role}"`);
             SocketService._io.to(`role_${role}`).to(role).emit(event, data);
         }
     }

@@ -7,10 +7,10 @@ import { ConflictError } from "../../errors/AppError";
 
 
 export class UpdatePlanUseCase implements IUpdatePlanUseCase {
-    constructor(private planRepository: IPlanRepository) { }
+    constructor(private _planRepository: IPlanRepository) { }
 
     async execute(planId: string, gymId: string, data: UpdatePlanDTO): Promise<PlanDTO> {
-        const existingPlan = await this.planRepository.findById(planId);
+        const existingPlan = await this._planRepository.findById(planId);
 
         if (!existingPlan) {
             throw new Error("Plan not found");
@@ -25,7 +25,7 @@ export class UpdatePlanUseCase implements IUpdatePlanUseCase {
          * and if plan type is category_based, then reset window period to 0
          */
 
-        const planWithSameNameAndType = await this.planRepository.findByNameAndPlan(data.planName.trim(), data.planType)
+        const planWithSameNameAndType = await this._planRepository.findByNameAndPlan(data.planName.trim(), data.planType)
         if (planWithSameNameAndType) {
             if (planWithSameNameAndType.id !== existingPlan.id) {
                 throw new ConflictError("Plan already exists")
@@ -48,7 +48,7 @@ export class UpdatePlanUseCase implements IUpdatePlanUseCase {
 
 
 
-        const updatedPlan = await this.planRepository.save(existingPlan);
+        const updatedPlan = await this._planRepository.save(existingPlan);
         return PlanMapper.toDTO(updatedPlan);
     }
 }

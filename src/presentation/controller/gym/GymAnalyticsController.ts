@@ -1,20 +1,26 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { GetGymAnalyticsUseCase } from "../../../application/usecases/gym-analytics/GetGymAnalyticsUseCase";
+import { IGetGymAnalyticsUseCase } from "../../../application/IUseCases/gym-analytics/IGymAnalyticsUseCases";
+import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 
 export class GymAnalyticsController {
-    constructor(private getGymAnalyticsUseCase: GetGymAnalyticsUseCase) { }
+    constructor(
+        private _getGymAnalyticsUseCase: IGetGymAnalyticsUseCase
+    ) { }
 
     async getAnalytics(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gymId = req.user?.id;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
 
-            const analytics = await this.getGymAnalyticsUseCase.execute(gymId);
-            res.status(200).json({ success: true, data: analytics });
+            const analytics = await this._getGymAnalyticsUseCase.execute(gymId);
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: analytics });
         } catch (error) {
-            console.error("GymAnalyticsController Error: ", error);
             next(error);
         }
     }
 }
+

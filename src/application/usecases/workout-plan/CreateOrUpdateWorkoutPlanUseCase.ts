@@ -4,7 +4,7 @@ import { IWorkoutPlanRepository } from "../../../domain/repositories/IWorkoutPla
 import { WorkoutPlan } from "../../../domain/entities/WorkoutPlan";
 
 export class CreateOrUpdateWorkoutPlanUseCase implements ICreateOrUpdateWorkoutPlanUseCase {
-    constructor(private workoutPlanRepository: IWorkoutPlanRepository) { }
+    constructor(private _workoutPlanRepository: IWorkoutPlanRepository) { }
 
     async execute(data: WorkoutPlanDTO): Promise<WorkoutPlanDTO> {
         const getWeekStart = () => {
@@ -17,7 +17,7 @@ export class CreateOrUpdateWorkoutPlanUseCase implements ICreateOrUpdateWorkoutP
         };
 
         const currentWeekSunday = getWeekStart();
-        const existingPlan = await this.workoutPlanRepository.findByClientId(data.clientId);
+        const existingPlan = await this._workoutPlanRepository.findByClientId(data.clientId);
 
         let shouldCreateNew = true;
         if (existingPlan) {
@@ -42,7 +42,7 @@ export class CreateOrUpdateWorkoutPlanUseCase implements ICreateOrUpdateWorkoutP
                 existingPlan.weekStartDate, // Keep the same week start date
                 data.notes || ""
             );
-            const saved = await this.workoutPlanRepository.update(updatedPlan);
+            const saved = await this._workoutPlanRepository.update(updatedPlan);
             return this.toDTO(saved);
         } else {
             const newPlan = new WorkoutPlan(
@@ -54,7 +54,7 @@ export class CreateOrUpdateWorkoutPlanUseCase implements ICreateOrUpdateWorkoutP
                 currentWeekSunday,
                 data.notes || ""
             );
-            const saved = await this.workoutPlanRepository.save(newPlan);
+            const saved = await this._workoutPlanRepository.save(newPlan);
             return this.toDTO(saved);
         }
     }

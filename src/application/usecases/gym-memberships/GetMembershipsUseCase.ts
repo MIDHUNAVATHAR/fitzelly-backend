@@ -1,26 +1,27 @@
 import { IMembershipRepository } from "../../../domain/repositories/IMembershipRepository";
 import { IPaymentRepository } from "../../../domain/repositories/IPaymentRepository";
 import { IPlanRepository } from "../../../domain/repositories/IPlanRepository";
+import { IGetMembershipsUseCase } from "../../IUseCases/gym-memberships/IGymMembershipUseCases";
 
-export class GetMembershipsUseCase {
+export class GetMembershipsUseCase implements IGetMembershipsUseCase {
     constructor(
-        private membershipRepository: IMembershipRepository,
-        private paymentRepository: IPaymentRepository,
-        private planRepository: IPlanRepository
+        private _membershipRepository: IMembershipRepository,
+        private _paymentRepository: IPaymentRepository,
+        private _planRepository: IPlanRepository
     ) { }
 
     async execute(gymId: string, page: number = 1, limit: number = 10, search: string = '', status?: string) {
-        const result = await this.membershipRepository.findByGymId(gymId, page, limit, search, status);
+        const result = await this._membershipRepository.findByGymId(gymId, page, limit, search, status);
         const memberships = result.memberships;
 
         // Fetch a large limit for plans to map correctly within this context
-        const plansData = await this.planRepository.findAllByGym(gymId, 1, 1000);
+        const plansData = await this._planRepository.findAllByGym(gymId, 1, 1000);
         const plans = plansData.plans;
         const planMap = new Map(plans.map(p => [p.id, p]));
 
         const results = [];
         for (const membership of memberships) {
-            const payments = await this.paymentRepository.getPaymentsByMembershipId(membership.id);
+            const payments = await this._paymentRepository.getPaymentsByMembershipId(membership.id);
             const totalPaid = payments.reduce((acc, curr) => acc + curr.amount, 0);
 
             const plan = planMap.get(membership.planId);

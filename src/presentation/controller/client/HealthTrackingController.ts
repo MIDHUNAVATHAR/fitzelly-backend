@@ -1,40 +1,39 @@
-import { Response } from "express";
+import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { AddWeightLogUseCase } from "../../../application/usecases/health-tracking/AddWeightLogUseCase";
-import { GetWeightLogsUseCase } from "../../../application/usecases/health-tracking/GetWeightLogsUseCase";
+import { IAddWeightLogUseCase, IGetWeightLogsUseCase } from "../../../application/IUseCases/health-tracking/IWeightLogUseCases";
+import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 
 export class HealthTrackingController {
     constructor(
-        private addWeightLogUseCase: AddWeightLogUseCase,
-        private getWeightLogsUseCase: GetWeightLogsUseCase
+        private _addWeightLogUseCase: IAddWeightLogUseCase,
+        private _getWeightLogsUseCase: IGetWeightLogsUseCase
     ) {}
 
-    async addWeightLog(req: AuthRequest, res: Response): Promise<void> {
+    async addWeightLog(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const clientId = req.user!.id;
             const { weight, height, bmi, date } = req.body;
-            const log = await this.addWeightLogUseCase.execute({
+            const log = await this._addWeightLogUseCase.execute({
                 clientId,
                 weight,
                 height,
                 bmi,
                 date: new Date(date)
             });
-            res.status(201).json(log);
+            res.status(HttpStatus.CREATED).json({ status: ResponseStatus.SUCCESS, data: log });
         } catch (error) {
-            const message = error instanceof Error ? error.message : "An error occurred";
-            res.status(400).json({ message });
+            next(error);
         }
     }
 
-    async getWeightLogs(req: AuthRequest, res: Response): Promise<void> {
+    async getWeightLogs(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const clientId = req.user!.id;
-            const logs = await this.getWeightLogsUseCase.execute(clientId);
-            res.status(200).json(logs);
+            const logs = await this._getWeightLogsUseCase.execute(clientId);
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: logs });
         } catch (error) {
-            const message = error instanceof Error ? error.message : "An error occurred";
-            res.status(400).json({ message });
+            next(error);
         }
     }
 }
+

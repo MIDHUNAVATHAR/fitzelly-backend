@@ -5,12 +5,6 @@ import { GymsListResponseDTO } from "../../dtos/superAd-gym-listing/GetAllGymsDT
 import { ISubscriptionRepository } from "../../../domain/repositories/ISubscriptionRepository";
 
 
-
-interface SearchQuery {
-    gymName?: { $regex: string; $options: string };
-    approvalStatus?: string;
-}
-
 export class GetAllGymsUseCase implements IGetAllGymsUseCase {
     constructor(
         private _gymRepository: IGymRepository,
@@ -62,4 +56,10 @@ export class GetAllGymsUseCase implements IGetAllGymsUseCase {
             totalGyms
         }
     }
+}
+
+
+interface SearchQuery {
+    gymName?: { $regex: string; $options: string };
+    approvalStatus?: string;
 }

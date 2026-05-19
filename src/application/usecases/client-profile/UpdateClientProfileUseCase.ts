@@ -7,10 +7,10 @@ import { validateAge } from "../../utils/validation.util";
 import { BadRequestError } from "../../errors/AppError";
 
 export class UpdateClientProfileUseCase implements IUpdateClientProfileUseCase {
-    constructor(private clientRepository: IClientRepository) { }
+    constructor(private _clientRepository: IClientRepository) { }
 
     async execute(clientId: string, data: UpdateClientProfileRequestDTO): Promise<ClientProfileDTO> {
-        const client = await this.clientRepository.findById(clientId);
+        const client = await this._clientRepository.findById(clientId);
         if (!client) {
             throw new NotFoundError("Client");
         }
@@ -30,7 +30,7 @@ export class UpdateClientProfileUseCase implements IUpdateClientProfileUseCase {
             dateOfBirth: data.dateOfBirth ?? (client.dateOfBirth ? client.dateOfBirth.toISOString() : ''),
         };
 
-        const updatedClient = await this.clientRepository.updateClientByGym(clientId, clientDataUpdate);
+        const updatedClient = await this._clientRepository.updateClientByGym(clientId, clientDataUpdate);
         return ClientProfileMapper.toDTO(updatedClient);
     }
 }

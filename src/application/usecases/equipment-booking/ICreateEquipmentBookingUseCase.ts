@@ -1,12 +1,7 @@
 import { EquipmentBooking } from "../../../domain/entities/EquipmentBooking";
+import {CreateBookingRequest} from "../../dtos/gym-equipment/EquipmentDTO";
 
-export interface CreateBookingRequest {
-    clientId: string;
-    gymId: string;
-    equipmentId: string;
-    date: Date;
-    startTime: string;
-}
+
 
 export interface ICreateEquipmentBookingUseCase {
     execute(request: CreateBookingRequest): Promise<EquipmentBooking>;

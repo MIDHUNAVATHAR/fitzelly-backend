@@ -1,12 +1,12 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { SaveCallHistoryUseCase, GetUserCallHistoryUseCase } from "../../../application/usecases/chat/CallHistoryUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ISaveCallHistoryUseCase,IGetUserCallHistoryUseCase } from "../../../application/IUseCases/chat/ICallHistoryUseCases";
 
 export class CallHistoryController {
     constructor(
-        private saveCallHistoryUseCase: SaveCallHistoryUseCase,
-        private getUserCallHistoryUseCase: GetUserCallHistoryUseCase
+        private _saveCallHistoryUseCase: ISaveCallHistoryUseCase,
+        private _getUserCallHistoryUseCase: IGetUserCallHistoryUseCase
     ) { }
 
     async saveHistory(req: AuthRequest, res: Response, next: NextFunction) {
@@ -16,7 +16,7 @@ export class CallHistoryController {
             if (historyData.startTime) historyData.startTime = new Date(historyData.startTime);
             if (historyData.endTime) historyData.endTime = new Date(historyData.endTime);
             
-            const history = await this.saveCallHistoryUseCase.execute(historyData);
+            const history = await this._saveCallHistoryUseCase.execute(historyData);
             res.status(HttpStatus.CREATED).json({ status: ResponseStatus.SUCCESS, data: history });
         } catch (error) {
             next(error);
@@ -26,7 +26,7 @@ export class CallHistoryController {
     async getUserHistory(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const userId = req.user!.id;
-            const history = await this.getUserCallHistoryUseCase.execute(userId);
+            const history = await this._getUserCallHistoryUseCase.execute(userId);
             res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: history });
         } catch (error) {
             next(error);

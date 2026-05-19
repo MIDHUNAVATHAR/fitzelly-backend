@@ -183,12 +183,18 @@ import {
     GetOrCreateConversationUseCase,
     MarkMessagesAsReadUseCase,
     DeleteMessageUseCase,
-    GetMessageByIdUseCase
+    GetMessageByIdUseCase,
+    UploadChatAttachmentUseCase
 } from "../application/usecases/chat/ChatUseCases";
 import { SaveCallHistoryUseCase, GetUserCallHistoryUseCase } from "../application/usecases/chat/CallHistoryUseCases";
 
 import { AddWeightLogUseCase } from "../application/usecases/health-tracking/AddWeightLogUseCase";
 import { GetWeightLogsUseCase } from "../application/usecases/health-tracking/GetWeightLogsUseCase";
+
+import { GetAvailablePlansUseCase } from "../application/usecases/subscription/GetAvailablePlansUseCase";
+import { CreateCheckoutSessionUseCase } from "../application/usecases/subscription/CreateCheckoutSessionUseCase";
+import { ConfirmSubscriptionUseCase } from "../application/usecases/subscription/ConfirmSubscriptionUseCase";
+import { FulfillSubscriptionUseCase } from "../application/usecases/subscription/FulfillSubscriptionUseCase";
 
 import { weightLogRepository } from "./repositories.di";
 import { superAdminRepository, gymRepository } from "./repositories.di";
@@ -216,6 +222,7 @@ import { passwordHasher } from "./services.di";
 import { emailService } from "./services.di";
 import { s3Service } from "./services.di";
 import { socketService } from "./services.di";
+import { stripeService } from "./services.di";
 
 
 
@@ -420,5 +427,11 @@ export const getMessagesUseCase = new GetMessagesUseCase(chatRepository);
 export const sendMessageUseCase = new SendMessageUseCase(chatRepository);
 export const getOrCreateConversationUseCase = new GetOrCreateConversationUseCase(chatRepository);
 export const markMessagesAsReadUseCase = new MarkMessagesAsReadUseCase(chatRepository);
-export const deleteMessageUseCase = new DeleteMessageUseCase(chatRepository);
+export const deleteMessageUseCase = new DeleteMessageUseCase(chatRepository, s3Service);
+export const uploadChatAttachmentUseCase = new UploadChatAttachmentUseCase(s3Service);
 export const getMessageByIdUseCase = new GetMessageByIdUseCase(chatRepository);
+
+export const getAvailablePlansUseCase = new GetAvailablePlansUseCase(subscriptionPlanRepository);
+export const createCheckoutSessionUseCase = new CreateCheckoutSessionUseCase(subscriptionRepository, subscriptionPlanRepository, stripeService);
+export const confirmSubscriptionUseCase = new ConfirmSubscriptionUseCase(stripeService);
+export const fulfillSubscriptionUseCase = new FulfillSubscriptionUseCase(subscriptionRepository, subscriptionPlanRepository, gymRepository);

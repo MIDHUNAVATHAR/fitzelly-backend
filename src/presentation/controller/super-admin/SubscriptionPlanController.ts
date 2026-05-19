@@ -1,18 +1,23 @@
 import { Request, Response, NextFunction } from "express";
-import { AddSubscriptionPlanUseCase, GetAllSubscriptionPlansUseCase, UpdateSubscriptionPlanUseCase, DeleteSubscriptionPlanUseCase } from "../../../application/usecases/superAdmin-plans/SubscriptionPlanUseCases";
+import { 
+    IAddSubscriptionPlanUseCase, 
+    IGetAllSubscriptionPlansUseCase, 
+    IUpdateSubscriptionPlanUseCase, 
+    IDeleteSubscriptionPlanUseCase 
+} from "../../../application/IUseCases/superAdmin-plans/ISubscriptionPlanUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 
 export class SubscriptionPlanController {
     constructor(
-        private addUseCase: AddSubscriptionPlanUseCase,
-        private getAllUseCase: GetAllSubscriptionPlansUseCase,
-        private updateUseCase: UpdateSubscriptionPlanUseCase,
-        private deleteUseCase: DeleteSubscriptionPlanUseCase
+        private _addUseCase: IAddSubscriptionPlanUseCase,
+        private _getAllUseCase: IGetAllSubscriptionPlansUseCase,
+        private _updateUseCase: IUpdateSubscriptionPlanUseCase,
+        private _deleteUseCase: IDeleteSubscriptionPlanUseCase
     ) {}
 
     async create(req: Request, res: Response, next: NextFunction) {
         try {
-            const result = await this.addUseCase.execute(req.body);
+            const result = await this._addUseCase.execute(req.body);
             res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
                 message: "Subscription plan created successfully",
@@ -25,7 +30,7 @@ export class SubscriptionPlanController {
 
     async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const result = await this.getAllUseCase.execute();
+            const result = await this._getAllUseCase.execute();
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 data: result
@@ -38,7 +43,7 @@ export class SubscriptionPlanController {
     async update(req: Request, res: Response, next: NextFunction) {
         try {
             const id = req.params.id as string;
-            const result = await this.updateUseCase.execute(id, req.body);
+            const result = await this._updateUseCase.execute(id, req.body);
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: "Subscription plan updated successfully",
@@ -52,7 +57,7 @@ export class SubscriptionPlanController {
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
             const id = req.params.id as string;
-            await this.deleteUseCase.execute(id);
+            await this._deleteUseCase.execute(id);
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: "Subscription plan deleted successfully"

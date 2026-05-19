@@ -6,15 +6,15 @@ import { logger } from "../../../infrastructure/logger/logger";
 
 export class GoogleAuthController {
     constructor(
-        private googleAuthUseCase: IGoogleAuthUseCase,
-        private initiateGoogleAuthUseCase: IInitiateGoogleAuthUseCase
+        private _googleAuthUseCase: IGoogleAuthUseCase,
+        private _initiateGoogleAuthUseCase: IInitiateGoogleAuthUseCase
     ) { }
 
     async initiateGoogleLogin(req: Request, res: Response, next: NextFunction) {
         try {
             const { role, mode } = req.query;
 
-            const autherizedUrl = this.initiateGoogleAuthUseCase.execute(role as string, mode as string);
+            const autherizedUrl = this._initiateGoogleAuthUseCase.execute(role as string, mode as string);
             logger.debug(autherizedUrl);
 
             res.redirect(autherizedUrl);
@@ -31,7 +31,7 @@ export class GoogleAuthController {
             const { code, state } = req.query;
             const { role, mode } = JSON.parse(state as string);
             const { refreshToken } =
-                await this.googleAuthUseCase.execute(code as string, role as string, mode as "login" | "signup");
+                await this._googleAuthUseCase.execute(code as string, role as string, mode as "login" | "signup");
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true,
@@ -45,7 +45,7 @@ export class GoogleAuthController {
             res.redirect(`${process.env.FRONTEND_URL}/${role}/dashboard`)
         } catch (error) {
 
-            console.log(error)
+            logger.error("google auth error ",{error})
             if (error instanceof Error) {
                 return res.redirect(`${process.env.FRONTEND_URL}/?error=${error.message}`);
             }

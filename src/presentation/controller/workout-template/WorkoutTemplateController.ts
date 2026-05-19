@@ -5,7 +5,7 @@ import { AuthRequest } from "../../middlewares/protect";
 import { ROLES } from "../../../constants/roles.constants";
 
 export class WorkoutTemplateController {
-    constructor(private readonly _workoutTemplateUseCase: IWorkoutTemplateUseCase) { }
+    constructor(private _workoutTemplateUseCase: IWorkoutTemplateUseCase) { }
 
     async createTemplate(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -14,6 +14,7 @@ export class WorkoutTemplateController {
             const gymId = isGym ? req.user?.id : req.user?.gymId;
             const data = { ...req.body, trainerId, gymId };
             const result = await this._workoutTemplateUseCase.createTemplate(data);
+
             res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
                 message: "Workout template created successfully",

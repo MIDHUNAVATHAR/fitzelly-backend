@@ -144,3 +144,35 @@ export const GOOGLE_ROUTE = {
     GOOGLE_CALLBACK: "/api/auth/google/callback"
 }
 
+export const ATTENDANCE_ROUTES = {
+    MARK: "/api/attendance/mark",
+    MARK_MANUAL: "/api/attendance/mark-manual",
+    REPORT: "/api/attendance/report",
+    TODAY: "/api/attendance/today",
+    YEARLY_COUNT: "/api/attendance/yearly-count"
+}
+
+export const CHAT_ROUTES = {
+    CONVERSATIONS: "/api/chat/conversations",
+    CONVERSATION_BY_OTHER_ID: "/api/chat/conversation/:otherId",
+    MESSAGES_BY_CONVERSATION_ID: "/api/chat/messages/:conversationId",
+    SEND_MESSAGE: "/api/chat/messages",
+    MARK_AS_READ: "/api/chat/messages/:conversationId/read",
+    DELETE_MESSAGE: "/api/chat/messages/:messageId",
+    CALL_HISTORY: "/api/chat/call-history",
+    UPLOAD_ATTACHMENT: "/api/chat/attachment"
+}
+
+
+export const EQUIPMENT_BOOKING_ROUTES = {
+    BOOK: "/api/equipment-booking/book",
+    SLOTS: "/api/equipment-booking/slots",
+    MY_BOOKINGS: "/api/equipment-booking/my-bookings",
+    CANCEL_BOOKING: "/api/equipment-booking/cancel/:bookingId"
+}
+
+
+export const SECURITY_ROUTES = {
+    ACTIVE_SESSIONS: "/api/security/active-sessions",
+    REVOKE_SESSION: "/api/security/session/:id"
+}

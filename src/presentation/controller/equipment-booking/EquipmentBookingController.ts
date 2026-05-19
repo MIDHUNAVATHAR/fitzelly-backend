@@ -9,10 +9,10 @@ import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.const
 
 export class EquipmentBookingController {
     constructor(
-        private createBookingUseCase: ICreateEquipmentBookingUseCase,
-        private getAvailableSlotsUseCase: IGetAvailableSlotsUseCase,
-        private getClientBookingsUseCase: IGetClientBookingsUseCase,
-        private cancelBookingUseCase: ICancelEquipmentBookingUseCase
+        private _createBookingUseCase: ICreateEquipmentBookingUseCase,
+        private _getAvailableSlotsUseCase: IGetAvailableSlotsUseCase,
+        private _getClientBookingsUseCase: IGetClientBookingsUseCase,
+        private _cancelBookingUseCase: ICancelEquipmentBookingUseCase
     ) { }
 
     async createBooking(req: AuthRequest, res: Response, next: NextFunction) {
@@ -20,7 +20,7 @@ export class EquipmentBookingController {
             const user = req.user!;
             const { gymId, equipmentId, date, startTime } = req.body;
 
-            const result = await this.createBookingUseCase.execute({
+            const result = await this._createBookingUseCase.execute({
                 clientId: user.id,
                 gymId,
                 equipmentId,
@@ -41,7 +41,7 @@ export class EquipmentBookingController {
     async getAvailableSlots(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const { equipmentId, date } = req.query;
-            const result = await this.getAvailableSlotsUseCase.execute(
+            const result = await this._getAvailableSlotsUseCase.execute(
                 equipmentId as string,
                 new Date(date as string)
             );
@@ -59,7 +59,7 @@ export class EquipmentBookingController {
     async getClientBookings(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const user = req.user!;
-            const result = await this.getClientBookingsUseCase.execute(user.id);
+            const result = await this._getClientBookingsUseCase.execute(user.id);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
@@ -76,7 +76,7 @@ export class EquipmentBookingController {
             const user = req.user!;
             const { bookingId } = req.params;
 
-            await this.cancelBookingUseCase.execute(bookingId as string, user.id);
+            await this._cancelBookingUseCase.execute(bookingId as string, user.id);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,

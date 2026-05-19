@@ -16,8 +16,6 @@ import { dashboardController } from "../../main/controllers.di";
 import { notificationController } from "../../main/controllers.di";
 
 
-
-
 import { validateRequest } from "../validator/validateRequest";
 import { allFieldsMin3Schema } from "../validator/minLength.schema";
 import { protect } from "../middlewares/protect";

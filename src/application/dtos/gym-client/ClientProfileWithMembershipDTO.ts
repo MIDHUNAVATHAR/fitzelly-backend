@@ -15,3 +15,18 @@ export interface ClientProfileWithMembershipResponseDTO {
         payments?: { date: string, amount: number }[];
     } | null;
 }
+
+export interface AddPaymentDTO {
+    gymId: string;
+    membershipId: string;
+    amount: number;
+    paymentDate: string;
+    note?: string;
+}
+
+export interface UpdatePaymentDTO {
+    paymentId: string;
+    amount?: number;
+    paymentDate?: string;
+    note?: string;
+}

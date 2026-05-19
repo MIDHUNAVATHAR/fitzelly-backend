@@ -23,10 +23,10 @@ rootRouter.use("/",trainerRouter);
 rootRouter.use("/", superAdminRouter);
 rootRouter.use("/", inviteRouter)
 
-rootRouter.use("/api/attendance", attendanceRouter);
-rootRouter.use("/api/equipment-booking", equipmentBookingRouter);
-rootRouter.use("/api/security", securityRouter);
-rootRouter.use("/api/chat", chatRouter);
+rootRouter.use("/", attendanceRouter);
+rootRouter.use("/", equipmentBookingRouter);
+rootRouter.use("/", securityRouter);
+rootRouter.use("/", chatRouter);
 rootRouter.use("/", subscriptionRouter);
 
 export default rootRouter; 

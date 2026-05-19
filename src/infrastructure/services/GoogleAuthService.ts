@@ -4,17 +4,17 @@ import { ExternalAuthFailedError } from "../../domain/errors/ExternalAuthFailedE
 
 
 export class GoogleAuthService implements IGoogleAuthService {
-    private client: OAuth2Client | null = null;
+    private _client: OAuth2Client | null = null;
 
     private getClient(): OAuth2Client {
-        if (!this.client) {
-            this.client = new OAuth2Client(
+        if (!this._client) {
+            this._client = new OAuth2Client(
                 process.env.GOOGLE_CLIENT_ID,
                 process.env.GOOGLE_CLIENT_SECRET,
                 process.env.GOOGLE_CALLBACK_URL
             )
         }
-        return this.client;
+        return this._client;
     }
 
     generateAuthUrl(role: string, mode: string): string {

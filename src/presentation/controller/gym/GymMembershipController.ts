@@ -1,37 +1,44 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { AddMembershipUseCase } from "../../../application/usecases/gym-memberships/AddMembershipUseCase";
-import { GetMembershipsUseCase } from "../../../application/usecases/gym-memberships/GetMembershipsUseCase";
-
-import { GetMembershipByIdUseCase } from "../../../application/usecases/gym-memberships/GetMembershipByIdUseCase";
-import { UpdateMembershipUseCase } from "../../../application/usecases/gym-memberships/UpdateMembershipUseCase";
-import { DeleteMembershipUseCase } from "../../../application/usecases/gym-memberships/DeleteMembershipUseCase";
-import { AddPaymentUseCase } from "../../../application/usecases/gym-memberships/AddPaymentUseCase";
-import { UpdatePaymentUseCase } from "../../../application/usecases/gym-memberships/UpdatePaymentUseCase";
-import { DeletePaymentUseCase } from "../../../application/usecases/gym-memberships/DeletePaymentUseCase";
-import { GetPaymentCollectionUseCase } from "../../../application/usecases/gym-memberships/GetPaymentCollectionUseCase";
-
-
+import { 
+    IAddMembershipUseCase, 
+    IGetMembershipsUseCase, 
+    IGetMembershipByIdUseCase, 
+    IUpdateMembershipUseCase, 
+    IDeleteMembershipUseCase, 
+    IAddPaymentUseCase, 
+    IUpdatePaymentUseCase, 
+    IDeletePaymentUseCase, 
+    IGetPaymentCollectionUseCase 
+} from "../../../application/IUseCases/gym-memberships/IGymMembershipUseCases";
+import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 
 export class GymMembershipController {
     constructor(
-        private addMembershipUseCase: AddMembershipUseCase,
-        private getMembershipsUseCase: GetMembershipsUseCase,
-        private getMembershipByIdUseCase: GetMembershipByIdUseCase,
-        private updateMembershipUseCase: UpdateMembershipUseCase,
-        private deleteMembershipUseCase: DeleteMembershipUseCase,
-        private addPaymentUseCase: AddPaymentUseCase,
-        private updatePaymentUseCase: UpdatePaymentUseCase,
-        private deletePaymentUseCase: DeletePaymentUseCase,
-        private getPaymentCollectionUseCase: GetPaymentCollectionUseCase
+        private _addMembershipUseCase: IAddMembershipUseCase,
+        private _getMembershipsUseCase: IGetMembershipsUseCase,
+        private _getMembershipByIdUseCase: IGetMembershipByIdUseCase,
+        private _updateMembershipUseCase: IUpdateMembershipUseCase,
+        private _deleteMembershipUseCase: IDeleteMembershipUseCase,
+        private _addPaymentUseCase: IAddPaymentUseCase,
+        private _updatePaymentUseCase: IUpdatePaymentUseCase,
+        private _deletePaymentUseCase: IDeletePaymentUseCase,
+        private _getPaymentCollectionUseCase: IGetPaymentCollectionUseCase
     ) { }
 
     async addMembership(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gymId = req.user?.id;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
-            const membership = await this.addMembershipUseCase.execute({ ...req.body, gymId });
-            res.status(201).json({ success: true, message: "Membership created successfully", data: membership });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
+            const membership = await this._addMembershipUseCase.execute({ ...req.body, gymId });
+            res.status(HttpStatus.CREATED).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: "Membership created successfully", 
+                data: membership 
+            });
         } catch (error) {
             next(error)
         }
@@ -40,15 +47,18 @@ export class GymMembershipController {
     async getMemberships(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gymId = req.user?.id;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
 
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const search = req.query.search as string || '';
             const status = req.query.status as string || '';
 
-            const result = await this.getMembershipsUseCase.execute(gymId, page, limit, search, status);
-            res.status(200).json({ success: true, data: result });
+            const result = await this._getMembershipsUseCase.execute(gymId, page, limit, search, status);
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error)
         }
@@ -58,9 +68,12 @@ export class GymMembershipController {
         try {
             const gymId = req.user?.id;
             const id = req.params.id as string;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
-            const result = await this.getMembershipByIdUseCase.execute(id, gymId);
-            res.status(200).json({ success: true, data: result });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
+            const result = await this._getMembershipByIdUseCase.execute(id, gymId);
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error)
         }
@@ -70,9 +83,16 @@ export class GymMembershipController {
         try {
             const gymId = req.user?.id;
             const id = req.params.id as string;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
-            const membership = await this.updateMembershipUseCase.execute({ ...req.body, membershipId: id, gymId });
-            res.status(200).json({ success: true, message: "Membership updated successfully", data: membership });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
+            const membership = await this._updateMembershipUseCase.execute({ ...req.body, membershipId: id, gymId });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: "Membership updated successfully", 
+                data: membership 
+            });
         } catch (error) {
             next(error)
         }
@@ -82,9 +102,15 @@ export class GymMembershipController {
         try {
             const gymId = req.user?.id;
             const id = req.params.id as string;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
-            await this.deleteMembershipUseCase.execute(id, gymId);
-            res.status(200).json({ success: true, message: "Membership deleted successfully" });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
+            await this._deleteMembershipUseCase.execute(id, gymId);
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: "Membership deleted successfully" 
+            });
         } catch (error) {
             next(error)
         }
@@ -94,10 +120,16 @@ export class GymMembershipController {
         try {
             const gymId = req.user?.id;
             const membershipId = req.params.membershipId as string;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
-            const payment = await this.addPaymentUseCase.execute({ ...req.body, membershipId, gymId });
-            res.status(201).json({ success: true, message: "Payment added successfully", data: payment });
-
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
+            const payment = await this._addPaymentUseCase.execute({ ...req.body, membershipId, gymId });
+            res.status(HttpStatus.CREATED).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: "Payment added successfully", 
+                data: payment 
+            });
         } catch (error) {
             next(error)
         }
@@ -106,8 +138,12 @@ export class GymMembershipController {
     async updatePayment(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const paymentId = req.params.paymentId as string;
-            const payment = await this.updatePaymentUseCase.execute({ ...req.body, paymentId });
-            res.status(200).json({ success: true, message: "Payment updated successfully", data: payment });
+            const payment = await this._updatePaymentUseCase.execute({ ...req.body, paymentId });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: "Payment updated successfully", 
+                data: payment 
+            });
         } catch (error) {
             next(error)
         }
@@ -116,8 +152,11 @@ export class GymMembershipController {
     async deletePayment(req: Request, res: Response, next: NextFunction) {
         try {
             const paymentId = req.params.paymentId as string;
-            await this.deletePaymentUseCase.execute(paymentId);
-            res.status(200).json({ success: true, message: "Payment deleted successfully" });
+            await this._deletePaymentUseCase.execute(paymentId);
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: "Payment deleted successfully" 
+            });
         } catch (error) {
             next(error)
         }
@@ -126,7 +165,10 @@ export class GymMembershipController {
     async getPayments(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const gymId = req.user?.id;
-            if (!gymId) return res.status(401).json({ success: false, message: "Unauthorized" });
+            if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
+                status: ResponseStatus.ERROR, 
+                message: "Unauthorized" 
+            });
 
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
@@ -138,11 +180,12 @@ export class GymMembershipController {
             const endDate = req.query.endDate ? new Date(req.query.endDate as string) : new Date();
             endDate.setHours(23, 59, 59, 999);
 
-            const result = await this.getPaymentCollectionUseCase.execute(gymId, page, limit, startDate, endDate);
+            const result = await this._getPaymentCollectionUseCase.execute(gymId, page, limit, startDate, endDate);
             
-            res.status(200).json({ success: true, data: result });
+            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
         } catch (error) {
             next(error);
         }
     }
 }
+

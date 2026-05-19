@@ -187,14 +187,19 @@ import {
     markMessagesAsReadUseCase,
     deleteMessageUseCase,
     getMessageByIdUseCase,
+    uploadChatAttachmentUseCase,
     addWeightLogUseCase,
     getWeightLogsUseCase,
     saveCallHistoryUseCase,
-    getUserCallHistoryUseCase
+    getUserCallHistoryUseCase,
+    getAvailablePlansUseCase,
+    createCheckoutSessionUseCase,
+    confirmSubscriptionUseCase,
+    fulfillSubscriptionUseCase
 } from "./usecases.di";
 
-import { trainerRepository, gymRepository, subscriptionRepository, subscriptionPlanRepository } from "./repositories.di";
-import { s3Service } from "./services.di";
+import { trainerRepository } from "./repositories.di";
+import {  stripeService } from "./services.di";
 
 
 
@@ -320,15 +325,14 @@ export const gymAnalyticsController = new GymAnalyticsController(getGymAnalytics
 export const dashboardController = new DashboardController(getGymDashboardUseCase);
 
 export const subscriptionController = new SubscriptionController(
-    subscriptionRepository,
-    subscriptionPlanRepository,
-    gymRepository
+    getAvailablePlansUseCase,
+    createCheckoutSessionUseCase,
+    confirmSubscriptionUseCase
 );
 
 export const webhookController = new WebhookController(
-    subscriptionRepository,
-    subscriptionPlanRepository,
-    gymRepository
+    stripeService,
+    fulfillSubscriptionUseCase
 );
 
 //client
@@ -422,7 +426,7 @@ export const chatController = new ChatController(
     markMessagesAsReadUseCase,
     deleteMessageUseCase,
     getMessageByIdUseCase,
-    s3Service
+    uploadChatAttachmentUseCase
 );
 
 export const healthTrackingController = new HealthTrackingController(
@@ -434,5 +438,4 @@ export const callHistoryController = new CallHistoryController(
     saveCallHistoryUseCase,
     getUserCallHistoryUseCase
 );
-
 

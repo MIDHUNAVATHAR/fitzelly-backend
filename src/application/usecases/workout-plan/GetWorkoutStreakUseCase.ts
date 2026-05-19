@@ -2,10 +2,10 @@ import { IGetWorkoutStreakUseCase } from "../../IUseCases/workout-plan/IGetWorko
 import { IWorkoutLogRepository } from "../../../domain/repositories/IWorkoutLogRepository";
 
 export class GetWorkoutStreakUseCase implements IGetWorkoutStreakUseCase {
-    constructor(private workoutLogRepository: IWorkoutLogRepository) { }
+    constructor(private _workoutLogRepository: IWorkoutLogRepository) { }
 
     async execute(clientId: string): Promise<number> {
-        const logs = await this.workoutLogRepository.findByClientId(clientId);
+        const logs = await this._workoutLogRepository.findByClientId(clientId);
         if (logs.length === 0) return 0;
 
         const validLogs = logs.filter(log => log.completedExercises.length > 0);

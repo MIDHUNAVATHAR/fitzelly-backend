@@ -1,24 +1,20 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
-import { ISubscriptionRepository } from "../../../domain/repositories/ISubscriptionRepository";
-import { ISubscriptionPlanRepository } from "../../../domain/repositories/ISubscriptionPlanRepository";
-import { GymRepository } from "../../../infrastructure/repositories/GymRepository";
-import Stripe from 'stripe';
-
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { IGetAvailablePlansUseCase } from "../../../application/IUseCases/subscription/IGetAvailablePlansUseCase";
+import { ICreateCheckoutSessionUseCase } from "../../../application/IUseCases/subscription/ICreateCheckoutSessionUseCase";
+import { IConfirmSubscriptionUseCase } from "../../../application/IUseCases/subscription/IConfirmSubscriptionUseCase";
 
 export class SubscriptionController {
     constructor(
-        private _subscriptionRepo: ISubscriptionRepository,
-        private _planRepo: ISubscriptionPlanRepository,
-        private _gymRepo: GymRepository
+        private _getAvailablePlansUseCase: IGetAvailablePlansUseCase,
+        private _createCheckoutSessionUseCase: ICreateCheckoutSessionUseCase,
+        private _confirmSubscriptionUseCase: IConfirmSubscriptionUseCase,
     ) { }
 
     async getAvailablePlans(_req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const plans = await this._planRepo.findAllNotDeleted();
+            const plans = await this._getAvailablePlansUseCase.execute();
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 data: plans
@@ -28,93 +24,39 @@ export class SubscriptionController {
         }
     }
 
-    async createCheckoutSession(req: AuthRequest, res: Response, _next: NextFunction) {
+    async createCheckoutSession(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const { planId } = req.body;
             const gymId = req.user!.id;
             const gymEmail = req.user!.email;
 
-            // Check if user already has an active subscription
-            const latestSub = await this._subscriptionRepo.findLatestSubscriptionByGymId(gymId);
-            if (latestSub && latestSub.status == "active") {
-                return res.status(HttpStatus.BAD_REQUEST).json({
-                    status: ResponseStatus.FAIL,
-                    message: "Your current subscription is not expired yet."
-                });
-            }
-
-            const plan = await this._planRepo.findById(planId);
-            if (!plan) {
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    status: ResponseStatus.FAIL,
-                    message: "Plan not found"
-                });
-            }
-
-            const session = await stripe.checkout.sessions.create({
-                payment_method_types: ['card'],
-                line_items: [{
-                    price_data: {
-                        currency: 'inr',
-                        product_data: {
-                            name: `Fitzelly ${plan.name} Plan`,
-                            description: plan.description || `${plan.durationMonths} months subscription`,
-                        },
-                        unit_amount: plan.price * 100, // Stripe expects amounts in cents/paise
-                    },
-                    quantity: 1,
-                }],
-                mode: 'payment',
-                success_url: `${process.env.FRONTEND_URL}/gym/settings/subscription?success=true&session_id={CHECKOUT_SESSION_ID}&plan_id=${planId}`,
-                cancel_url: `${process.env.FRONTEND_URL}/gym/settings/subscription?canceled=true`,
-                customer_email: gymEmail,
-                metadata: {
-                    gymId,
-                    planId,
-                    planName: plan.name,
-                    durationMonths: plan.durationMonths
-                }
+            const result = await this._createCheckoutSessionUseCase.execute({
+                planId,
+                gymId,
+                gymEmail
             });
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                data: { sessionId: session.id, url: session.url }
+                data: result
             });
         } catch (error) {
-            const errMsg = error instanceof Error ? error.message : "Something went wrong with the payment gateway";
-            console.error("Stripe Error Details:", error);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                status: ResponseStatus.ERROR,
-                message: errMsg
-            });
+            next(error);
         }
     }
 
-    async confirmSubscription(req: AuthRequest, res: Response, _next: NextFunction) {
+    async confirmSubscription(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const { sessionId } = req.body;
 
-            const session = await stripe.checkout.sessions.retrieve(sessionId);
-            const paymentStatus = session.payment_status;
-
-            if (paymentStatus !== 'paid') {
-                return res.status(HttpStatus.BAD_REQUEST).json({
-                    status: ResponseStatus.FAIL,
-                    message: "Payment not completed"
-                });
-            }
+            await this._confirmSubscriptionUseCase.execute(sessionId);
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: "Payment verified. Your subscription will be active shortly.",
             });
         } catch (error) {
-            const errMsg = error instanceof Error ? error.message : "Failed to confirm subscription";
-            console.error("Subscription Confirmation Error:", error);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                status: ResponseStatus.ERROR,
-                message: errMsg
-            });
+            next(error);
         }
     }
 }

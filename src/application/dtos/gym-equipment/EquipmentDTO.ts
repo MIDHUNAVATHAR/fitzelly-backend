@@ -29,3 +29,20 @@ export interface CreateEquipmentDTO {
 export interface UpdateEquipmentDTO extends Partial<CreateEquipmentDTO> {
     id: string;
 }
+
+
+export interface CreateBookingRequest {
+    clientId: string;
+    gymId: string;
+    equipmentId: string;
+    date: Date;
+    startTime: string;
+}
+
+export interface SlotInfo {
+    startTime: string;
+    endTime: string;
+    capacity: number;
+    bookedCount: number;
+    isAvailable: boolean;
+}

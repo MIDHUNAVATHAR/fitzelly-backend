@@ -1,19 +1,19 @@
 import { SubscriptionPlan } from "../../../domain/entities/SubscriptionPlan";
 import { ISubscriptionPlanRepository } from "../../../domain/repositories/ISubscriptionPlanRepository";
 import { AppError } from "../../errors/AppError";
+import { 
+    IAddSubscriptionPlanUseCase, 
+    IGetAllSubscriptionPlansUseCase, 
+    IUpdateSubscriptionPlanUseCase, 
+    IDeleteSubscriptionPlanUseCase,
+    ICreatePlanDTO
+} from "../../IUseCases/superAdmin-plans/ISubscriptionPlanUseCases";
 
-interface CreatePlanDTO {
-    name: string;
-    price: number;
-    durationMonths: number;
-    description?: string;
-}
+export class AddSubscriptionPlanUseCase implements IAddSubscriptionPlanUseCase {
+    constructor(private _repository: ISubscriptionPlanRepository) {}
 
-export class AddSubscriptionPlanUseCase {
-    constructor(private repository: ISubscriptionPlanRepository) {}
-
-    async execute(data: CreatePlanDTO): Promise<SubscriptionPlan> {
-        const existing = await this.repository.findByName(data.name);
+    async execute(data: ICreatePlanDTO): Promise<SubscriptionPlan> {
+        const existing = await this._repository.findByName(data.name);
         if (existing) {
             throw new AppError("Plan with this name already exists", 400);
         }
@@ -25,30 +25,30 @@ export class AddSubscriptionPlanUseCase {
             data.durationMonths,
             data.description
         );
-        return this.repository.create(plan);
+        return this._repository.create(plan);
     }
 }
 
-export class GetAllSubscriptionPlansUseCase {
-    constructor(private repository: ISubscriptionPlanRepository) {}
+export class GetAllSubscriptionPlansUseCase implements IGetAllSubscriptionPlansUseCase {
+    constructor(private _repository: ISubscriptionPlanRepository) {}
 
     async execute(): Promise<SubscriptionPlan[]> {
-        return this.repository.findAllNotDeleted();
+        return this._repository.findAllNotDeleted();
     }
 }
 
-export class UpdateSubscriptionPlanUseCase {
-    constructor(private repository: ISubscriptionPlanRepository) {}
+export class UpdateSubscriptionPlanUseCase implements IUpdateSubscriptionPlanUseCase {
+    constructor(private _repository: ISubscriptionPlanRepository) {}
 
-    async execute(id: string, data: Partial<CreatePlanDTO>): Promise<SubscriptionPlan> {
-        return this.repository.updateById(id, data);
+    async execute(id: string, data: Partial<ICreatePlanDTO>): Promise<SubscriptionPlan> {
+        return this._repository.updateById(id, data);
     }
 }
 
-export class DeleteSubscriptionPlanUseCase {
-    constructor(private repository: ISubscriptionPlanRepository) {}
+export class DeleteSubscriptionPlanUseCase implements IDeleteSubscriptionPlanUseCase {
+    constructor(private _repository: ISubscriptionPlanRepository) {}
 
     async execute(id: string): Promise<boolean> {
-        return this.repository.delete(id);
+        return this._repository.delete(id);
     }
 }

@@ -1,17 +1,18 @@
 import { EquipmentBooking } from "../../../domain/entities/EquipmentBooking";
 import { IEquipmentBookingRepository } from "../../../domain/repositories/IEquipmentBookingRepository";
 import { IEquipmentRepository } from "../../../domain/repositories/IEquipmentRepository";
-import { ICreateEquipmentBookingUseCase, CreateBookingRequest } from "./ICreateEquipmentBookingUseCase";
+import { ICreateEquipmentBookingUseCase,  } from "./ICreateEquipmentBookingUseCase";
+import {CreateBookingRequest} from "../../dtos/gym-equipment/EquipmentDTO";
 import { BadRequestError, NotFoundError } from "../../errors/AppError";
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { AddNotificationUseCase } from "../notification/NotificationUseCases";
 
 export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUseCase {
     constructor(
-        private equipmentBookingRepo: IEquipmentBookingRepository,
-        private equipmentRepo: IEquipmentRepository,
-        private clientRepo: IClientRepository,
-        private addNotificationUseCase: AddNotificationUseCase
+        private _equipmentBookingRepo: IEquipmentBookingRepository,
+        private _equipmentRepo: IEquipmentRepository,
+        private _clientRepo: IClientRepository,
+        private _addNotificationUseCase: AddNotificationUseCase
     ) { }
 
     async execute(request: CreateBookingRequest): Promise<EquipmentBooking> {
@@ -33,13 +34,13 @@ export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUse
         normalizedDate.setUTCHours(0, 0, 0, 0);
 
         //  Check if client already booked for this day (Limit to 3)
-        const clientBookingCount = await this.equipmentBookingRepo.countByClientAndDate(clientId, normalizedDate);
+        const clientBookingCount = await this._equipmentBookingRepo.countByClientAndDate(clientId, normalizedDate);
         if (clientBookingCount >= 3) {
             throw new BadRequestError("Exceed limit booking per equipment (Max 3)");
         }
 
         // Fetch Equipment
-        const equipment = await this.equipmentRepo.findById(equipmentId);
+        const equipment = await this._equipmentRepo.findById(equipmentId);
         if (!equipment) throw new NotFoundError("Equipment");
 
         // Check available days
@@ -64,7 +65,7 @@ export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUse
         }
 
         // Check Capacity
-        const bookedCount = await this.equipmentBookingRepo.countBySlot(equipmentId, normalizedDate, startTime);
+        const bookedCount = await this._equipmentBookingRepo.countBySlot(equipmentId, normalizedDate, startTime);
         if (bookedCount >= equipment.capacity) {
             throw new BadRequestError("This slot is already full.");
         }
@@ -85,12 +86,12 @@ export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUse
             endTime
         );
 
-        const createdBooking = await this.equipmentBookingRepo.create(booking);
+        const createdBooking = await this._equipmentBookingRepo.create(booking);
 
-        const client = await this.clientRepo.findById(clientId);
+        const client = await this._clientRepo.findById(clientId);
         const clientName = client?.fullName || "A client";
 
-        await this.addNotificationUseCase.execute(
+        await this._addNotificationUseCase.execute(
             gymId,
             `${clientName} booked ${equipment.name} (${startTime} - ${endTime})`,
             "EQUIPMENT_BOOKING"

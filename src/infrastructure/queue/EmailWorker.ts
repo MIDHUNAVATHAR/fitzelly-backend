@@ -2,6 +2,7 @@ import { Worker, Job } from "bullmq";
 import { EMAIL_QUEUE_NAME, EmailJobData } from "./EmailQueue";
 import { redisConnection } from "../database/RedisConnection";
 import { MailService } from "../services/MailService";
+import { logger } from "../logger/logger";
 
 
 const mailService = new MailService();
@@ -13,7 +14,7 @@ export class EmailWorker {
         this.worker = new Worker(
             EMAIL_QUEUE_NAME,
             async (job: Job<EmailJobData>) => {
-                console.log(`[Worker] Processing job ${job.id} of type ${job.data.type}`);
+                logger.info(`[Worker] Processing job ${job.id} of type ${job.data.type}`);
 
                 switch (job.data.type) {
                     case "OTP":
@@ -44,7 +45,7 @@ export class EmailWorker {
                         break;
                     default:
                         // @ts-expect-error - type is never here if all cases handled
-                        console.error(`[Worker] Unknown job type: ${job.data.type}`)
+                        logger.error(`[Worker] Unknown job type: ${job.data.type}`)
                 }
 
             },
@@ -55,14 +56,14 @@ export class EmailWorker {
         );
 
         this.worker.on("completed", (job) => {
-            console.log(`[Worker] Job ${job.id} completed!`);
+            logger.info(`[Worker] Job ${job.id} completed!`);
         })
 
         this.worker.on('failed', (job, err) => {
-            console.error(`[Worker] Job ${job?.id} failed with error: ${err.message}`);
+            logger.info(`[Worker] Job ${job?.id} failed with error: ${err.message}`);
         });
 
-        console.log(`[Worker] Email worker started and listening on ${EMAIL_QUEUE_NAME}`);
+        logger.info(`[Worker] Email worker started and listening on ${EMAIL_QUEUE_NAME}`);
 
     }
 

@@ -8,7 +8,7 @@ import { ResponseMessage } from "../../../constants/response.constants";
 
 export class TrainerAuthController {
     constructor(
-        private trainerLoginUseCase: ITrainerLoginUseCase,
+        private _trainerLoginUseCase: ITrainerLoginUseCase,
         private _trainerInitiateForgotPasswordUseCase: IInitiateForgotPasswordUseCase,
         private _trainerCompleteForgotPasswordUseCase: ICompleteForgotpassUseCase,
         private _trainerResetPasswordUseCase: IResetPasswordUseCase
@@ -17,7 +17,7 @@ export class TrainerAuthController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const { email, password, device, browser, os, ip } = req.body;
-            const result = await this.trainerLoginUseCase.execute({ email, password, device, browser, os, ip });
+            const result = await this._trainerLoginUseCase.execute({ email, password, device, browser, os, ip });
 
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,

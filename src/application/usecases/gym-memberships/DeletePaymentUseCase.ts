@@ -1,9 +1,10 @@
 import { IPaymentRepository } from "../../../domain/repositories/IPaymentRepository";
+import { IDeletePaymentUseCase } from "../../IUseCases/gym-memberships/IGymMembershipUseCases";
 
-export class DeletePaymentUseCase {
-    constructor(private paymentRepository: IPaymentRepository) { }
+export class DeletePaymentUseCase implements IDeletePaymentUseCase {
+    constructor(private _paymentRepository: IPaymentRepository) { }
 
     async execute(paymentId: string) {
-        return await this.paymentRepository.delete(paymentId);
+        return await this._paymentRepository.delete(paymentId);
     }
 }

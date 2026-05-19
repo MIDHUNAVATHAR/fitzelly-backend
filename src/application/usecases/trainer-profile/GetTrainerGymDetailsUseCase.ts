@@ -7,12 +7,12 @@ import { GymProfileMapper } from "../../mapper/GymProfileMapper";
 
 export class GetTrainerGymDetailsUseCase implements IGetTrainerGymDetailsUseCase {
     constructor(
-        private trainerRepository: ITrainerRepository,
-        private gymRepository: IGymRepository
+        private _trainerRepository: ITrainerRepository,
+        private _gymRepository: IGymRepository
     ) { }
 
     async execute(trainerId: string): Promise<GymProfileDTO> {
-        const trainer = await this.trainerRepository.findById(trainerId);
+        const trainer = await this._trainerRepository.findById(trainerId);
         if (!trainer) {
             throw new NotFoundError("Trainer");
         }
@@ -21,7 +21,7 @@ export class GetTrainerGymDetailsUseCase implements IGetTrainerGymDetailsUseCase
             throw new NotFoundError("Trainer Gym Mapping");
         }
 
-        const gym = await this.gymRepository.findById(trainer.gymId);
+        const gym = await this._gymRepository.findById(trainer.gymId);
         if (!gym) {
             throw new NotFoundError("Gym");
         }

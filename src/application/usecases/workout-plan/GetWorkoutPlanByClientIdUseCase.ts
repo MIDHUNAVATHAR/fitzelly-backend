@@ -6,8 +6,8 @@ import { WorkoutPlan } from "../../../domain/entities/WorkoutPlan";
 
 export class GetWorkoutPlanByClientIdUseCase implements IGetWorkoutPlanByClientIdUseCase {
     constructor(
-        private workoutPlanRepository: IWorkoutPlanRepository,
-        private trainerRepository: ITrainerRepository
+        private _workoutPlanRepository: IWorkoutPlanRepository,
+        private _trainerRepository: ITrainerRepository
     ) { }
 
     async execute(clientId: string, trainerId?: string): Promise<WorkoutPlanDTO | null> {
@@ -25,13 +25,13 @@ export class GetWorkoutPlanByClientIdUseCase implements IGetWorkoutPlanByClientI
         /**
          * find existing plan for this week
          */
-        let plan = await this.workoutPlanRepository.findByClientIdAndWeekStart(clientId, currentWeekSunday);
+        let plan = await this._workoutPlanRepository.findByClientIdAndWeekStart(clientId, currentWeekSunday);
 
         /**
          * if not found, create a new empty template
          */
         if (!plan && trainerId) {
-            const trainer = await this.trainerRepository.findById(trainerId);
+            const trainer = await this._trainerRepository.findById(trainerId);
             if (!trainer) throw new Error("Trainer not found");
 
             const newPlan = new WorkoutPlan(
@@ -43,7 +43,7 @@ export class GetWorkoutPlanByClientIdUseCase implements IGetWorkoutPlanByClientI
                 currentWeekSunday,
                 ""
             );
-            plan = await this.workoutPlanRepository.save(newPlan);
+            plan = await this._workoutPlanRepository.save(newPlan);
         }
 
         if (!plan) return null;

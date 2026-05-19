@@ -8,12 +8,12 @@ import { BadRequestError } from "../../errors/AppError";
 
 export class AddEquipmentUseCase implements IAddEquipmentUseCase {
     constructor(
-        private equipmentRepository: IEquipmentRepository,
-        private s3Service: IS3Service
+        private _equipmentRepository: IEquipmentRepository,
+        private _s3Service: IS3Service
     ) { }
 
     async execute(data: CreateEquipmentDTO, file?: IS3UploadFile): Promise<EquipmentDTO> {
-        const existingEquipment = await this.equipmentRepository.findByName(data.gymId, data.name);
+        const existingEquipment = await this._equipmentRepository.findByName(data.gymId, data.name);
 
         if (existingEquipment) {
             throw new BadRequestError("Equipment with this name already exists in your gym");
@@ -22,7 +22,7 @@ export class AddEquipmentUseCase implements IAddEquipmentUseCase {
         let imageUrl = "";
 
         if (file) {
-            imageUrl = await this.s3Service.uploadFile(file, `equipments/${data.gymId}`);
+            imageUrl = await this._s3Service.uploadFile(file, `equipments/${data.gymId}`);
         }
 
         const equipment = new Equipment(
@@ -41,7 +41,7 @@ export class AddEquipmentUseCase implements IAddEquipmentUseCase {
             false
         );
 
-        const createdEquipment = await this.equipmentRepository.save(equipment);
+        const createdEquipment = await this._equipmentRepository.save(equipment);
         return EquipmentMapper.toDTO(createdEquipment);
     }
 }

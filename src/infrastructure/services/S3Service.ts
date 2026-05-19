@@ -5,24 +5,24 @@ import { ServiceUnavailableError } from "../../domain/errors/ServiceUnavailableE
 
 
 export class S3Service implements IS3Service {
-    private s3: S3Client | null = null;
-    private bucketName: string = '';
-    private region: string = '';
+    private _s3: S3Client | null = null;
+    private _bucketName: string = '';
+    private _region: string = '';
 
     private getClient(): S3Client {
-        if (!this.s3) {
-            this.region = process.env.AWS_REGION!;
-            this.bucketName = process.env.AWS_BUCKET_NAME!;
+        if (!this._s3) {
+            this._region = process.env.AWS_REGION!;
+            this._bucketName = process.env.AWS_BUCKET_NAME!;
 
-            this.s3 = new S3Client({
-                region: this.region,
+            this._s3 = new S3Client({
+                region: this._region,
                 credentials: {
                     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
                     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
                 }
             });
         }
-        return this.s3;
+        return this._s3;
     }
 
     async uploadFile(file: IS3UploadFile, folder = "gym-logos"): Promise<string> {
@@ -33,7 +33,7 @@ export class S3Service implements IS3Service {
             const isAttachment = folder === "chat-attachments";
 
             const command = new PutObjectCommand({
-                Bucket: this.bucketName,
+                Bucket: this._bucketName,
                 Key: fileName,
                 Body: file.buffer,
                 ContentType: file.mimetype,
@@ -42,7 +42,7 @@ export class S3Service implements IS3Service {
 
             await client.send(command);
 
-            return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${fileName}`;
+            return `https://${this._bucketName}.s3.${this._region}.amazonaws.com/${fileName}`;
         } catch (error) {
             logger.error("S3 UPLOAD ERROR:", error);
             throw new ServiceUnavailableError("File Storage");
@@ -56,7 +56,7 @@ export class S3Service implements IS3Service {
         const key = fileUrl.split(".amazonaws.com/")[1];
 
         const command = new DeleteObjectCommand({
-            Bucket: this.bucketName,
+            Bucket: this._bucketName,
             Key: key,
         });
 

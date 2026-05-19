@@ -6,14 +6,14 @@ import { PlanMapper } from "../../mapper/GymPlanMapper";
 import { ConflictError } from "../../errors/AppError";
 
 export class AddPlanUseCase implements IAddPlanUseCase {
-    constructor(private planRepository: IPlanRepository) { }
+    constructor(private _planRepository: IPlanRepository) { }
 
     async execute(data: CreatePlanDTO): Promise<PlanDTO> {
 
         /**
          * check any plan with same name and type exists. 
          */
-        const isExistingPlan = await this.planRepository.findByNameAndPlan(data.planName, data.planType);
+        const isExistingPlan = await this._planRepository.findByNameAndPlan(data.planName, data.planType);
         if (isExistingPlan) {
             throw new ConflictError("Plan already exists")
         }
@@ -30,7 +30,7 @@ export class AddPlanUseCase implements IAddPlanUseCase {
             false
         );
 
-        const createdPlan = await this.planRepository.save(plan);
+        const createdPlan = await this._planRepository.save(plan);
         return PlanMapper.toDTO(createdPlan);
     }
 }

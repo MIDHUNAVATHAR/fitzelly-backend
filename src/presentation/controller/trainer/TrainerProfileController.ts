@@ -56,8 +56,10 @@ export class TrainerProfileController {
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 message: ResponseMessage.DATA_UPDATE_SUCCESS,
-                data: updatedProfile
-            });
+                data: updatedProfile,
+                 
+
+            }); 
         } catch (error) {
             next(error);
         }

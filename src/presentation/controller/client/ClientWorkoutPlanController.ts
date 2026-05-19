@@ -4,21 +4,22 @@ import { ITrackWorkoutProgressUseCase } from "../../../application/IUseCases/wor
 import { IGetWorkoutProgressUseCase } from "../../../application/IUseCases/workout-plan/IGetWorkoutProgressUseCase";
 import { IGetWorkoutStreakUseCase } from "../../../application/IUseCases/workout-plan/IGetWorkoutStreakUseCase";
 import { AuthRequest } from "../../middlewares/protect";
+import { HttpStatus } from "../../../constants/statusCodes.constants";
 
 export class ClientWorkoutPlanController {
     constructor(
-        private getWorkoutPlanByClientIdUseCase: IGetWorkoutPlanByClientIdUseCase,
-        private trackWorkoutProgressUseCase: ITrackWorkoutProgressUseCase,
-        private getWorkoutProgressUseCase: IGetWorkoutProgressUseCase,
-        private getWorkoutStreakUseCase: IGetWorkoutStreakUseCase
+        private _getWorkoutPlanByClientIdUseCase: IGetWorkoutPlanByClientIdUseCase,
+        private _trackWorkoutProgressUseCase: ITrackWorkoutProgressUseCase,
+        private _getWorkoutProgressUseCase: IGetWorkoutProgressUseCase,
+        private _getWorkoutStreakUseCase: IGetWorkoutStreakUseCase
     ) { }
 
    
     async getMyPlan(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const clientId = req.user!.id;
-            const plan = await this.getWorkoutPlanByClientIdUseCase.execute(clientId);
-            res.status(200).json({ status: "success", data: plan });
+            const plan = await this._getWorkoutPlanByClientIdUseCase.execute(clientId);
+            res.status(HttpStatus.OK).json({ status: "success", data: plan });
         } catch (error) {
             next(error)
         }
@@ -29,12 +30,12 @@ export class ClientWorkoutPlanController {
             const clientId = req.user!.id;
             const { date, completedExercises } = req.body;
 
-            const progress = await this.trackWorkoutProgressUseCase.execute(clientId, {
+            const progress = await this._trackWorkoutProgressUseCase.execute(clientId, {
                 date,
                 completedExercises
             });
 
-            res.status(200).json({ status: "success", data: progress });
+            res.status(HttpStatus.OK).json({ status: "success", data: progress });
         } catch (error) {
             next(error)
         }
@@ -45,8 +46,8 @@ export class ClientWorkoutPlanController {
             const clientId = req.user!.id;
             const { date } = req.query; // e.g. ?date=2024-03-20
 
-            const progress = await this.getWorkoutProgressUseCase.execute(clientId, date as string);
-            res.status(200).json({ status: "success", data: progress });
+            const progress = await this._getWorkoutProgressUseCase.execute(clientId, date as string);
+            res.status(HttpStatus.OK).json({ status: "success", data: progress });
         } catch (error) {
             next(error)
         }
@@ -55,8 +56,8 @@ export class ClientWorkoutPlanController {
     async getStreak(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const clientId = req.user!.id;
-            const streak = await this.getWorkoutStreakUseCase.execute(clientId);
-            res.status(200).json({ status: "success", data: streak });
+            const streak = await this._getWorkoutStreakUseCase.execute(clientId);
+            res.status(HttpStatus.OK).json({ status: "success", data: streak });
         } catch (error) {
             next(error)
         }

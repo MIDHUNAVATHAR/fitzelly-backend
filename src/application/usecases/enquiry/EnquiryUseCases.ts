@@ -5,10 +5,12 @@ import { IAddEnquiryUseCase, IDeleteEnquiryUseCase, IGetEnquiriesUseCase, IUpdat
 import { NotFoundError } from "../../../domain/errors/NotFoundError";
 
 export class AddEnquiryUseCase implements IAddEnquiryUseCase {
-    constructor(private enquiryRepository: IEnquiryRepository) { }
+
+    constructor(private _enquiryRepository: IEnquiryRepository) { }
+
     async execute(gymId: string, data: CreateEnquiryRequestDTO): Promise<EnquiryResponseDTO> {
         const newEnquiry = new Enquiry("", gymId, data.fullName, data.phoneNumber, data.email || null);
-        const created = await this.enquiryRepository.create(newEnquiry);
+        const created = await this._enquiryRepository.create(newEnquiry);
         return this.mapToDTO(created);
     }
     private mapToDTO(enquiry: Enquiry): EnquiryResponseDTO {
@@ -25,7 +27,7 @@ export class AddEnquiryUseCase implements IAddEnquiryUseCase {
 }
 
 export class GetEnquiriesUseCase implements IGetEnquiriesUseCase {
-    constructor(private enquiryRepository: IEnquiryRepository) { }
+    constructor(private _enquiryRepository: IEnquiryRepository) { }
     async execute(
         gymId: string,
         page: number,
@@ -35,7 +37,7 @@ export class GetEnquiriesUseCase implements IGetEnquiriesUseCase {
         endDate?: Date
     ): Promise<{ enquiries: EnquiryResponseDTO[]; total: number }> {
         const skip = (page - 1) * limit;
-        const { enquiries, totalCount } = await this.enquiryRepository.getEnquiriesByGymId(gymId, skip, limit, search, startDate, endDate);
+        const { enquiries, totalCount } = await this._enquiryRepository.getEnquiriesByGymId(gymId, skip, limit, search, startDate, endDate);
         return {
             enquiries: enquiries.map(e => ({
                 id: e.id,
@@ -52,9 +54,9 @@ export class GetEnquiriesUseCase implements IGetEnquiriesUseCase {
 }
 
 export class UpdateEnquiryUseCase implements IUpdateEnquiryUseCase {
-    constructor(private enquiryRepository: IEnquiryRepository) { }
+    constructor(private _enquiryRepository: IEnquiryRepository) { }
     async execute(id: string, data: UpdateEnquiryRequestDTO): Promise<EnquiryResponseDTO> {
-        const existing = await this.enquiryRepository.findById(id);
+        const existing = await this._enquiryRepository.findById(id);
         if (!existing) throw new NotFoundError("Enquiry");
 
         const updated = new Enquiry(
@@ -68,7 +70,7 @@ export class UpdateEnquiryUseCase implements IUpdateEnquiryUseCase {
             existing.isDeleted
         );
 
-        const saved = await this.enquiryRepository.update(updated);
+        const saved = await this._enquiryRepository.update(updated);
         return {
             id: saved.id,
             gymId: saved.gymId,
@@ -82,8 +84,8 @@ export class UpdateEnquiryUseCase implements IUpdateEnquiryUseCase {
 }
 
 export class DeleteEnquiryUseCase implements IDeleteEnquiryUseCase {
-    constructor(private enquiryRepository: IEnquiryRepository) { }
+    constructor(private _enquiryRepository: IEnquiryRepository) { }
     async execute(id: string): Promise<boolean> {
-        return await this.enquiryRepository.deleteEnquiry(id);
+        return await this._enquiryRepository.deleteEnquiry(id);
     }
 }

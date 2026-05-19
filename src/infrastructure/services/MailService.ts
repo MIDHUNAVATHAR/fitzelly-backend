@@ -5,20 +5,20 @@ import { ServiceUnavailableError } from "../../domain/errors/ServiceUnavailableE
 
 
 export class MailService implements IEmailService {
-    private transporter: nodemailer.Transporter | null = null;
+    private _transporter: nodemailer.Transporter | null = null;
 
     private getTransporter(): nodemailer.Transporter | null {
-        if (this.transporter) return this.transporter;
+        if (this._transporter) return this._transporter;
 
         const user = process.env.MAIL_USER;
         const pass = process.env.MAIL_PASS;
 
         if (user && pass) {
-            this.transporter = nodemailer.createTransport({
+            this._transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: { user, pass }
             })
-            return this.transporter;
+            return this._transporter;
         }
 
         return null;

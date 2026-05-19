@@ -10,6 +10,7 @@ import { TrainerModel } from "../database/mongoose/models/TrainerModel";
 type UserLookup = { gymName?: string; fullName?: string; logoUrl?: string; profileUrl?: string } | null;
 
 export class ChatRepository implements IChatRepository {
+    
     async getConversations(userId: string): Promise<IConversationSummary[]> {
         const sortedUserId = userId.toString();
         const conversations = await ConversationModel.find({
@@ -32,7 +33,7 @@ export class ChatRepository implements IChatRepository {
             }
 
             return {
-                id: conv._id,
+                id: conv._id.toString(),
                 participants: conv.participants,
                 lastMessage: conv.lastMessage,
                 updatedAt: conv.updatedAt,
@@ -90,7 +91,7 @@ export class ChatRepository implements IChatRepository {
         }
 
         return {
-            id: conversation._id,
+            id: conversation._id.toString(),
             participants: conversation.participants,
             lastMessage: conversation.lastMessage,
             updatedAt: conversation.updatedAt,

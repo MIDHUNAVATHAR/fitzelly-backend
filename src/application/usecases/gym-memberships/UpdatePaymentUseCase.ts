@@ -1,14 +1,11 @@
 import { IPaymentRepository } from "../../../domain/repositories/IPaymentRepository";
+import { IUpdatePaymentUseCase } from "../../IUseCases/gym-memberships/IGymMembershipUseCases";
+import { UpdatePaymentDTO } from "../../dtos/gym-client/ClientProfileWithMembershipDTO";
 
-export interface UpdatePaymentDTO {
-    paymentId: string;
-    amount?: number;
-    paymentDate?: string;
-    note?: string;
-}
 
-export class UpdatePaymentUseCase {
-    constructor(private paymentRepository: IPaymentRepository) { }
+
+export class UpdatePaymentUseCase implements IUpdatePaymentUseCase {
+    constructor(private _paymentRepository: IPaymentRepository) { }
 
     async execute(data: UpdatePaymentDTO) {
         const updates: Record<string, unknown> = {};
@@ -16,6 +13,7 @@ export class UpdatePaymentUseCase {
         if (data.paymentDate !== undefined) updates.paymentDate = new Date(data.paymentDate);
         if (data.note !== undefined) updates.note = data.note;
 
-        return await this.paymentRepository.update(data.paymentId, updates);
+        return await this._paymentRepository.update(data.paymentId, updates);
     }
 }
+

@@ -3,9 +3,9 @@ import { IEquipmentBookingRepository } from "../../../domain/repositories/IEquip
 import { IGetClientBookingsUseCase } from "./IGetClientBookingsUseCase";
 
 export class GetClientBookingsUseCase implements IGetClientBookingsUseCase {
-    constructor(private equipmentBookingRepo: IEquipmentBookingRepository) { }
+    constructor(private _equipmentBookingRepo: IEquipmentBookingRepository) { }
 
     async execute(clientId: string): Promise<EquipmentBooking[]> {
-        return await this.equipmentBookingRepo.findByClientId(clientId);
+        return await this._equipmentBookingRepo.findByClientId(clientId);
     }
 }

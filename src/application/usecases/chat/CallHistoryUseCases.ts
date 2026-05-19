@@ -1,16 +1,17 @@
 import { ICallHistoryRepository } from "../../../domain/repositories/ICallHistoryRepository";
 import { ICallHistoryDocument } from "../../../infrastructure/database/mongoose/types/ICallHistoryDocument";
+import { ISaveCallHistoryUseCase } from "../../IUseCases/chat/ICallHistoryUseCases";
 
-export class SaveCallHistoryUseCase {
-    constructor(private callHistoryRepository: ICallHistoryRepository) { }
+export class SaveCallHistoryUseCase implements ISaveCallHistoryUseCase {
+    constructor(private _callHistoryRepository: ICallHistoryRepository) { }
     async execute(data: Partial<ICallHistoryDocument>) {
-        return await this.callHistoryRepository.saveCallHistory(data);
+        return await this._callHistoryRepository.saveCallHistory(data);
     }
 }
 
 export class GetUserCallHistoryUseCase {
-    constructor(private callHistoryRepository: ICallHistoryRepository) { }
+    constructor(private _callHistoryRepository: ICallHistoryRepository) { }
     async execute(userId: string) {
-        return await this.callHistoryRepository.getCallHistoryByUserId(userId);
+        return await this._callHistoryRepository.getCallHistoryByUserId(userId);
     }
 }

@@ -3,6 +3,8 @@ import { MembershipModel } from '../database/mongoose/models/MembershipModel';
 import { GymModel } from '../database/mongoose/models/GymModel';
 import { clientModel } from '../database/mongoose/models/ClientModel';
 import { QueuedMailService } from './QueuedMailService';
+import { logger } from '../logger/logger';
+
 
 export class AutomatedExpiryCronService {
     private _mailService: QueuedMailService;
@@ -11,13 +13,13 @@ export class AutomatedExpiryCronService {
     }
 
     init() {
-        console.log("Initializing Automated Expiry Cron Job...");
+        logger.info("Initializing Automated Expiry Cron Job...");
 
         /**
          *  Run daily at 12:00 AM
          */
         cron.schedule('0 0 * * *', async () => {
-            console.log("Running Daily Automated Expiry Check...");
+            logger.info("Running Daily Automated Expiry Check...");
             await this.processExpirations();
         });
 
@@ -26,7 +28,7 @@ export class AutomatedExpiryCronService {
          */
 
         setTimeout(async () => {
-            console.log("Running Startup Automated Expiry Check...");
+            logger.info("Running Startup Automated Expiry Check...");
             await this.processExpirations();
         }, 15000);
     }
@@ -91,7 +93,7 @@ export class AutomatedExpiryCronService {
                     }
 
                 }
-                console.log(`[ExpiryJob] Expired ${membershipsToExpire.length} client memberships`);
+                logger.info(`[ExpiryJob] Expired ${membershipsToExpire.length} client memberships`);
             }
 
             /**
@@ -106,11 +108,11 @@ export class AutomatedExpiryCronService {
             );
 
             if (expiredGyms.modifiedCount > 0) {
-                console.log(`[ExpiryJob] Expired ${expiredGyms.modifiedCount} gym subscriptions`);
+                logger.info(`[ExpiryJob] Expired ${expiredGyms.modifiedCount} gym subscriptions`);
             }
 
         } catch (error) {
-            console.error("Critical error in AutomatedExpiryCronService:", error);
+            logger.error("Critical error in AutomatedExpiryCronService:", {error});
         }
     }
 }

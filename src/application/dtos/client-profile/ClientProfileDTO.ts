@@ -49,3 +49,12 @@ export interface ClientProfileWithMembershipResponseDTO {
         payments?: { date: string, amount: number }[];
     } | null;
 }
+
+
+export interface UpdateMembershipDTO {
+    gymId: string;
+    membershipId: string;
+    startDate?: string;
+    assignedTrainerId?: string;
+    daysLeft?: number;
+}

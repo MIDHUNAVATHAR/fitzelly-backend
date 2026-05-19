@@ -1,20 +1,19 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { GetSuperAdminDashboardUseCase } from "../../../application/usecases/superAdmin-dashboard/GetSuperAdminDashboardUseCase";
+import { IGetSuperAdminDashboardUseCase } from "../../../application/IUseCases/superAdmin-dashboard/ISuperAdminDashboardUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 
 export class SuperAdminDashboardController {
-    constructor(private getSuperAdminDashboardUseCase: GetSuperAdminDashboardUseCase) { }
+    constructor(private _getSuperAdminDashboardUseCase: IGetSuperAdminDashboardUseCase) { }
 
     async getDashboard(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const data = await this.getSuperAdminDashboardUseCase.execute();
+            const data = await this._getSuperAdminDashboardUseCase.execute();
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
                 data
             });
         } catch (error) {
-            console.error("SuperAdminDashboardController Error:", error);
             next(error);
         }
     }
