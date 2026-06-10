@@ -21,7 +21,6 @@ app.use(express.json());
 
 const allowedOrigins = process.env.CLIENT_URLS?.split(",") || []; 
 
-console.log("allowed origins : ",allowedOrigins)
 
 app.use(cors({
     origin: allowedOrigins,
