@@ -6,6 +6,7 @@ import { IMarkManualAttendanceUseCase } from "../../../application/IUseCases/att
 import { IGetYearlyAttendanceCountUseCase } from "../../../application/IUseCases/attendance/IGetYearlyAttendanceCountUseCase";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../../constants/response.constants";
 
 
 export class AttendanceController {
@@ -38,7 +39,7 @@ export class AttendanceController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: `Attendance ${action === "CHECK_IN" ? "check-in" : "check-out"} successfull`,
+                message: action === "CHECK_IN" ? ResponseMessage.ATTENDANCE_CHECK_IN_SUCCESS : ResponseMessage.ATTENDANCE_CHECK_OUT_SUCCESS,
                 data: result
             })
 
@@ -54,7 +55,7 @@ export class AttendanceController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Attendance fetched successfully",
+                message: ResponseMessage.ATTENDANCE_FETCH_SUCCESS,
                 data: result
             })
 
@@ -78,7 +79,7 @@ export class AttendanceController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Daily report fetched successfully",
+                message: ResponseMessage.DAILY_REPORT_FETCH_SUCCESS,
                 data: {
                     report: result,
                     gymId: gym.id
@@ -102,7 +103,7 @@ export class AttendanceController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Attendance marked successfully",
+                message: ResponseMessage.ATTENDANCE_MARKED_SUCCESS,
                 data: result
             })
         } catch (error) {
@@ -122,7 +123,7 @@ export class AttendanceController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Yearly attendance count fetched successfully",
+                message: ResponseMessage.YEARLY_ATTENDANCE_COUNT_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {

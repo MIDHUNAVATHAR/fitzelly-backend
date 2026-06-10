@@ -7,7 +7,6 @@ import {
     IGetOrCreateConversationUseCase,
     IMarkMessagesAsReadUseCase,
     IDeleteMessageUseCase,
-    IGetMessageByIdUseCase,
     IUploadChatAttachmentUseCase
 } from "../../../application/IUseCases/chat/IChatUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
@@ -22,7 +21,6 @@ export class ChatController {
         private _getOrCreateConversationUseCase: IGetOrCreateConversationUseCase,
         private _markMessagesAsReadUseCase: IMarkMessagesAsReadUseCase,
         private _deleteMessageUseCase: IDeleteMessageUseCase,
-        private _getMessageByIdUseCase: IGetMessageByIdUseCase,
         private _uploadChatAttachmentUseCase: IUploadChatAttachmentUseCase
     ) { }
 

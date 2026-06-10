@@ -176,3 +176,5 @@ export const SECURITY_ROUTES = {
     ACTIVE_SESSIONS: "/api/security/active-sessions",
     REVOKE_SESSION: "/api/security/session/:id"
 }
+
+export const WEBHOOK_ROUTE = "/api/webhook";

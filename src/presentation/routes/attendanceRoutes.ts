@@ -12,8 +12,8 @@ const router = Router();
 router.post(ATTENDANCE_ROUTES.MARK, protect([ROLES.TRAINER, ROLES.CLIENT]), isSubscriptionActive, attendanceController.markAttendance.bind(attendanceController));
 router.post(ATTENDANCE_ROUTES.MARK_MANUAL, protect([ROLES.GYM]), isGymApproved, isSubscriptionActive, attendanceController.markManualAttendance.bind(attendanceController));
 router.get(ATTENDANCE_ROUTES.REPORT, protect([ROLES.GYM]), isSubscriptionActive, attendanceController.getDailyReport.bind(attendanceController));
-router.get(ATTENDANCE_ROUTES.TODAY, protect([]), isSubscriptionActive, attendanceController.getTodayAttendance.bind(attendanceController));
-router.get(ATTENDANCE_ROUTES.YEARLY_COUNT, protect([]), isSubscriptionActive, attendanceController.getYearlyAttendanceCount.bind(attendanceController));
+router.get(ATTENDANCE_ROUTES.TODAY, protect([ROLES.CLIENT,ROLES.TRAINER]), isSubscriptionActive, attendanceController.getTodayAttendance.bind(attendanceController));
+router.get(ATTENDANCE_ROUTES.YEARLY_COUNT, protect([ROLES.TRAINER]), isSubscriptionActive, attendanceController.getYearlyAttendanceCount.bind(attendanceController));
 
 
 export default router;

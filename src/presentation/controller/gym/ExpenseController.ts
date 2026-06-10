@@ -2,6 +2,8 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { IAddExpenseUseCase, IGetExpensesUseCase, IUpdateExpenseUseCase, IDeleteExpenseUseCase } from "../../../application/IUseCases/expense/IExpenseUseCases";
+import { ResponseMessage } from "../../../constants/response.constants";
+
 
 export class ExpenseController {
     constructor(
@@ -17,7 +19,7 @@ export class ExpenseController {
             const result = await this._addExpenseUseCase.execute(gymId, req.body);
             return res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Expense added successfully",
+                message: ResponseMessage.EXPENSE_ADD_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -41,7 +43,7 @@ export class ExpenseController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Expenses fetched successfully",
+                message: ResponseMessage.EXPENSES_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -55,7 +57,7 @@ export class ExpenseController {
             const result = await this._updateExpenseUseCase.execute(id, req.body);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Expense updated successfully",
+                message: ResponseMessage.EXPENSE_UPDATE_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -69,7 +71,7 @@ export class ExpenseController {
             await this._deleteExpenseUseCase.execute(id);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Expense deleted successfully"
+                message: ResponseMessage.EXPENSE_DELETE_SUCCESS
             });
         } catch (error) {
             next(error);

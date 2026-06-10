@@ -3,6 +3,8 @@ import { AuthRequest } from "../../middlewares/protect";
 import { IGetSuperAdminDashboardUseCase } from "../../../application/IUseCases/superAdmin-dashboard/ISuperAdminDashboardUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 
+
+
 export class SuperAdminDashboardController {
     constructor(private _getSuperAdminDashboardUseCase: IGetSuperAdminDashboardUseCase) { }
 

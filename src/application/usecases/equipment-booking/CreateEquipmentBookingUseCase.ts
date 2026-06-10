@@ -1,11 +1,12 @@
 import { EquipmentBooking } from "../../../domain/entities/EquipmentBooking";
 import { IEquipmentBookingRepository } from "../../../domain/repositories/IEquipmentBookingRepository";
 import { IEquipmentRepository } from "../../../domain/repositories/IEquipmentRepository";
-import { ICreateEquipmentBookingUseCase,  } from "./ICreateEquipmentBookingUseCase";
+import { ICreateEquipmentBookingUseCase,  } from "../../IUseCases/equipment-booking/ICreateEquipmentBookingUseCase";
 import {CreateBookingRequest} from "../../dtos/gym-equipment/EquipmentDTO";
 import { BadRequestError, NotFoundError } from "../../errors/AppError";
 import { IClientRepository } from "../../../domain/repositories/IClientRepository";
 import { AddNotificationUseCase } from "../notification/NotificationUseCases";
+import { EquipmentBookingDTO, EquipmentBookingMapper } from "../../mapper/EquipmentBookingMapper";
 
 export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUseCase {
     constructor(
@@ -15,7 +16,7 @@ export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUse
         private _addNotificationUseCase: AddNotificationUseCase
     ) { }
 
-    async execute(request: CreateBookingRequest): Promise<EquipmentBooking> {
+    async execute(request: CreateBookingRequest): Promise<EquipmentBookingDTO> {
         const { clientId, gymId, equipmentId, date, startTime } = request;
 
         //Check if date is tomorrow
@@ -97,6 +98,6 @@ export class CreateEquipmentBookingUseCase implements ICreateEquipmentBookingUse
             "EQUIPMENT_BOOKING"
         );
 
-        return createdBooking;
+        return EquipmentBookingMapper.toDTO(createdBooking);
     }
 }

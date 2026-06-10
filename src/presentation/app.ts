@@ -3,43 +3,50 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import indexRouter from "./routes/indexroute";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import webhookRouter from "../presentation/routes/webhook.route"
 import { httpLogger } from "../infrastructure/logger/httpLogger";
 
 export const app = express();
 
 
 /* GLOBAL MIDDLEWARES */
-app.post(
-    "/api/webhook",
-    express.raw({ type: "application/json" }),
-    (req, res, next) => {
-        void import("../main/controllers.di").then(({ webhookController }) => {
-            return webhookController.handleStripeWebhook(req, res, next);
-        }).catch(next);
-    }
-);
+
+/*
+  keep webhook route before json() middleware , require raw req data 
+*/
+
+app.use(webhookRouter); 
 
 app.use(express.json());
 
+const allowedOrigins = process.env.CLIENT_URLS?.split(",") || []; 
+
+console.log("allowed origins : ",allowedOrigins)
+
 app.use(cors({
-    origin: ["http://localhost:5174", "http://localhost:5173", "http://192.168.1.56:5173"],
+    origin: allowedOrigins,
     credentials: true
 }));
 
 app.use(cookieParser());
 
-app.use(httpLogger)
+app.use(httpLogger); 
 
 
 
 /* ROUTES */
-app.use("/", indexRouter);
 
 //health check
 app.get("/", (req, res) => {
     res.json({ status: "ok" })
 })
 
+app.use("/", indexRouter);
+
 
 /* GLOBAL ERROR HANDLER */
-app.use(globalErrorHandler)
+app.use(globalErrorHandler); 
+
+
+
+

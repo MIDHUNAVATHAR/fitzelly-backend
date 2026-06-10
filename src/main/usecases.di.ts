@@ -196,6 +196,9 @@ import { CreateCheckoutSessionUseCase } from "../application/usecases/subscripti
 import { ConfirmSubscriptionUseCase } from "../application/usecases/subscription/ConfirmSubscriptionUseCase";
 import { FulfillSubscriptionUseCase } from "../application/usecases/subscription/FulfillSubscriptionUseCase";
 
+import { HandleStripeWebhookUseCase } from "../application/usecases/subscription/HandleStripeWebhookUseCase";
+
+
 import { weightLogRepository } from "./repositories.di";
 import { superAdminRepository, gymRepository } from "./repositories.di";
 
@@ -435,3 +438,4 @@ export const getAvailablePlansUseCase = new GetAvailablePlansUseCase(subscriptio
 export const createCheckoutSessionUseCase = new CreateCheckoutSessionUseCase(subscriptionRepository, subscriptionPlanRepository, stripeService);
 export const confirmSubscriptionUseCase = new ConfirmSubscriptionUseCase(stripeService);
 export const fulfillSubscriptionUseCase = new FulfillSubscriptionUseCase(subscriptionRepository, subscriptionPlanRepository, gymRepository);
+export const handleStripeWebhookUseCase = new HandleStripeWebhookUseCase(stripeService,fulfillSubscriptionUseCase)

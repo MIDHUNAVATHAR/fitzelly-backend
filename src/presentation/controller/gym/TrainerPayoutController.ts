@@ -8,6 +8,8 @@ import {
     IDeleteTrainerPayoutUseCase,
     IGetTrainerEarningsUseCase
 } from "../../../application/IUseCases/trainer-payout/ITrainerPayoutUseCases";
+import { ResponseMessage } from "../../../constants/response.constants";
+
 
 export class TrainerPayoutController {
     constructor(
@@ -24,7 +26,7 @@ export class TrainerPayoutController {
             const result = await this._addPayoutUseCase.execute(gymId, req.body);
             return res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Trainer payout added successfully",
+                message: ResponseMessage.TRAINER_PAYOUT_ADD_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -48,7 +50,7 @@ export class TrainerPayoutController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Trainer payouts fetched successfully",
+                message: ResponseMessage.TRAINER_PAYOUTS_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -62,7 +64,7 @@ export class TrainerPayoutController {
             const result = await this._updatePayoutUseCase.execute(id, req.body);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Trainer payout updated successfully",
+                message: ResponseMessage.TRAINER_PAYOUT_UPDATE_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -76,7 +78,7 @@ export class TrainerPayoutController {
             await this._deletePayoutUseCase.execute(id);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Trainer payout deleted successfully"
+                message: ResponseMessage.TRAINER_PAYOUT_DELETE_SUCCESS
             });
         } catch (error) {
             next(error);
@@ -96,7 +98,7 @@ export class TrainerPayoutController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Trainer earnings fetched successfully",
+                message: ResponseMessage.TRAINER_EARNINGS_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {

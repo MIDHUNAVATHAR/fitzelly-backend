@@ -7,7 +7,7 @@ import { EmailWorker } from "./infrastructure/queue/EmailWorker";
 async function runWorker() {
     try {
         await connectDB();
-        console.log("Background Worker Service connected to database");
+        logger.info("Background Worker Service connected to database");
         new EmailWorker();
         logger.info("Background Worker Service is running.");
   

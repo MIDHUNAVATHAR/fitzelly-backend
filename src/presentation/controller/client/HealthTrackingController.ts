@@ -20,7 +20,7 @@ export class HealthTrackingController {
                 bmi,
                 date: new Date(date)
             });
-            res.status(HttpStatus.CREATED).json({ status: ResponseStatus.SUCCESS, data: log });
+            res.status(HttpStatus.CREATED).json({ status: ResponseStatus.SUCCESS, data: log }); 
         } catch (error) {
             next(error);
         }
@@ -30,7 +30,7 @@ export class HealthTrackingController {
         try {
             const clientId = req.user!.id;
             const logs = await this._getWeightLogsUseCase.execute(clientId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: logs });
+            res.status(HttpStatus.OK).json(logs );
         } catch (error) {
             next(error);
         }

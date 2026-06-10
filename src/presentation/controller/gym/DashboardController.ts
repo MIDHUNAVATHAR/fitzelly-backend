@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { IGetGymDashboardUseCase } from "../../../application/IUseCases/gym-dashboard/IGymDashboardUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../../constants/response.constants";
 
 export class DashboardController {
     constructor(private _getGymDashboardUseCase: IGetGymDashboardUseCase) { }
@@ -11,7 +12,7 @@ export class DashboardController {
             const gymId = req.user?.id;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED
             });
 
             const data = await this._getGymDashboardUseCase.execute(gymId);

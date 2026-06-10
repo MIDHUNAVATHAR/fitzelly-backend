@@ -78,7 +78,7 @@ export class TrainerProfileController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Profile image updated successfully",
+                message: ResponseMessage.PROFILE_IMAGE_UPDATE_SUCCESS,
                 data: updatedProfile
             });
 

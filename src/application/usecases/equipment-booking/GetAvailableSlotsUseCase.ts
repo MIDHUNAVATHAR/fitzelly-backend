@@ -1,4 +1,4 @@
-import { IGetAvailableSlotsUseCase } from "./IGetAvailableSlotsUseCase";
+import { IGetAvailableSlotsUseCase } from "../../IUseCases/equipment-booking/IGetAvailableSlotsUseCase";
 import {SlotInfo} from "../../dtos/gym-equipment/EquipmentDTO";
 import { IEquipmentRepository } from "../../../domain/repositories/IEquipmentRepository";
 import { IEquipmentBookingRepository } from "../../../domain/repositories/IEquipmentBookingRepository";

@@ -1,11 +1,12 @@
 import { Response, NextFunction } from "express";
-import { ICreateEquipmentBookingUseCase } from "../../../application/usecases/equipment-booking/ICreateEquipmentBookingUseCase";
-import { IGetAvailableSlotsUseCase } from "../../../application/usecases/equipment-booking/IGetAvailableSlotsUseCase";
-import { IGetClientBookingsUseCase } from "../../../application/usecases/equipment-booking/IGetClientBookingsUseCase";
+import { ICreateEquipmentBookingUseCase } from "../../../application/IUseCases/equipment-booking/ICreateEquipmentBookingUseCase";
+import { IGetAvailableSlotsUseCase } from "../../../application/IUseCases/equipment-booking/IGetAvailableSlotsUseCase";
+import { IGetClientBookingsUseCase } from "../../../application/IUseCases/equipment-booking/IGetClientBookingsUseCase";
 import { ICancelEquipmentBookingUseCase } from "../../../application/usecases/equipment-booking/CancelEquipmentBookingUseCase";
-import { EquipmentBookingMapper } from "../../../application/mapper/EquipmentBookingMapper";
+
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../../constants/response.constants";
 
 export class EquipmentBookingController {
     constructor(
@@ -30,8 +31,8 @@ export class EquipmentBookingController {
 
             return res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Equipment booked successfully",
-                data: EquipmentBookingMapper.toDTO(result)
+                message: ResponseMessage.EQUIPMENT_BOOKED_SUCCESS,
+                data: result
             });
         } catch (error) {
             next(error);
@@ -48,7 +49,7 @@ export class EquipmentBookingController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Available slots fetched successfully",
+                message: ResponseMessage.AVAILABLE_SLOTS_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -63,8 +64,8 @@ export class EquipmentBookingController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Client bookings fetched successfully",
-                data: EquipmentBookingMapper.toDTOs(result)
+                message: ResponseMessage.CLIENT_BOOKINGS_FETCH_SUCCESS,
+                data: result
             });
         } catch (error) {
             next(error);
@@ -80,7 +81,7 @@ export class EquipmentBookingController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Booking cancelled successfully"
+                message: ResponseMessage.BOOKING_CANCELLED_SUCCESS
             });
         } catch (error) {
             next(error);

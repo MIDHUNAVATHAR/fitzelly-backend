@@ -3,6 +3,7 @@ import { AuthRequest } from '../../middlewares/protect';
 import { HttpStatus, ResponseStatus } from '../../../constants/statusCodes.constants';
 import { IGetActiveSessionsUseCase, IRevokeSessionUseCase } from '../../../application/IUseCases/security/ISessionUseCases';
 import { Session } from '../../../domain/entities/Session';
+import { ResponseMessage } from '../../../constants/response.constants';
 
 export class SecurityController {
     constructor(
@@ -38,7 +39,7 @@ export class SecurityController {
     async revokeSession(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             await this._revokeSessionUseCase.execute(req.params.id as string);
-            return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, message: "Session revoked successfully" });
+            return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, message: ResponseMessage.SESSION_REVOKE_SUCCESS });
         } catch (error) {
             next(error);
         }

@@ -82,7 +82,7 @@ export class SuperAdminGymsController {
             if (!rejectionReason) {
                 res.status(HttpStatus.BAD_REQUEST).json({
                     success: ResponseStatus.ERROR,
-                    message: "Rejection reason is required"
+                    message: ResponseMessage.REJECTION_REASON_REQUIRED
                 });
                 return;
             }

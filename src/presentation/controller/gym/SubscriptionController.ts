@@ -4,6 +4,8 @@ import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.const
 import { IGetAvailablePlansUseCase } from "../../../application/IUseCases/subscription/IGetAvailablePlansUseCase";
 import { ICreateCheckoutSessionUseCase } from "../../../application/IUseCases/subscription/ICreateCheckoutSessionUseCase";
 import { IConfirmSubscriptionUseCase } from "../../../application/IUseCases/subscription/IConfirmSubscriptionUseCase";
+import { ResponseMessage } from "../../../constants/response.constants";
+
 
 export class SubscriptionController {
     constructor(
@@ -53,7 +55,7 @@ export class SubscriptionController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Payment verified. Your subscription will be active shortly.",
+                message: ResponseMessage.PAYMENT_VERIFIED_SUCCESS,
             });
         } catch (error) {
             next(error);

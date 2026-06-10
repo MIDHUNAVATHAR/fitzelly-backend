@@ -12,3 +12,4 @@ export interface IAttendanceDocument extends Document {
     userType: "CLIENT" | "TRAINER";
     isDeleted: boolean
 }
+

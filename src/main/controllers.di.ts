@@ -20,7 +20,7 @@ import { ExpenseController } from "../presentation/controller/gym/ExpenseControl
 import { TrainerPayoutController } from "../presentation/controller/gym/TrainerPayoutController";
 import { DashboardController } from "../presentation/controller/gym/DashboardController";
 import { SubscriptionController } from "../presentation/controller/gym/SubscriptionController";
-import { WebhookController } from "../presentation/controller/gym/WebhookController";
+import { WebhookController } from "../presentation/controller/webhook/WebhookController";
 
 
 import { ClientAuthController } from "../presentation/controller/auth/ClientAuthController";
@@ -186,7 +186,6 @@ import {
     getOrCreateConversationUseCase,
     markMessagesAsReadUseCase,
     deleteMessageUseCase,
-    getMessageByIdUseCase,
     uploadChatAttachmentUseCase,
     addWeightLogUseCase,
     getWeightLogsUseCase,
@@ -195,15 +194,8 @@ import {
     getAvailablePlansUseCase,
     createCheckoutSessionUseCase,
     confirmSubscriptionUseCase,
-    fulfillSubscriptionUseCase
+    handleStripeWebhookUseCase
 } from "./usecases.di";
-
-import { trainerRepository } from "./repositories.di";
-import {  stripeService } from "./services.di";
-
-
-
-
 
 
 
@@ -330,9 +322,9 @@ export const subscriptionController = new SubscriptionController(
     confirmSubscriptionUseCase
 );
 
+//webhook controller
 export const webhookController = new WebhookController(
-    stripeService,
-    fulfillSubscriptionUseCase
+    handleStripeWebhookUseCase
 );
 
 //client
@@ -366,7 +358,6 @@ export const attendanceController = new AttendanceController(
 export const trainerWorkoutPlanController = new TrainerWorkoutPlanController(
     createOrUpdateWorkoutPlanUseCase,
     getWorkoutPlanByClientIdUseCase,
-    trainerRepository
 )
 
 export const clientWorkoutPlanController = new ClientWorkoutPlanController(
@@ -399,7 +390,7 @@ export const trainerPayoutController = new TrainerPayoutController(
     getTrainerEarningsUseCase
 );
 
-export const workoutLibraryController = new WorkoutLibraryController(workoutLibraryUseCase, trainerRepository);
+export const workoutLibraryController = new WorkoutLibraryController(workoutLibraryUseCase);
 export const workoutTemplateController = new WorkoutTemplateController(workoutTemplateUseCase);
 export const equipmentBookingController = new EquipmentBookingController(
     createEquipmentBookingUseCase,
@@ -425,7 +416,6 @@ export const chatController = new ChatController(
     getOrCreateConversationUseCase,
     markMessagesAsReadUseCase,
     deleteMessageUseCase,
-    getMessageByIdUseCase,
     uploadChatAttachmentUseCase
 );
 

@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { IAddEnquiryUseCase, IGetEnquiriesUseCase, IUpdateEnquiryUseCase, IDeleteEnquiryUseCase } from "../../../application/IUseCases/enquiry/IEnquiryUseCases";
+import { ResponseMessage } from "../../../constants/response.constants";
 
 export class EnquiryController {
     constructor(
@@ -17,7 +18,7 @@ export class EnquiryController {
             const result = await this._addEnquiryUseCase.execute(gymId, req.body);
             return res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Enquiry added successfully",
+                message: ResponseMessage.ENQUIRY_ADD_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -41,7 +42,7 @@ export class EnquiryController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Enquiries fetched successfully",
+                message: ResponseMessage.ENQUIRIES_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -55,7 +56,7 @@ export class EnquiryController {
             const result = await this._updateEnquiryUseCase.execute(id, req.body);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Enquiry updated successfully",
+                message: ResponseMessage.ENQUIRY_UPDATE_SUCCESS,
                 data: result
             });
         } catch (error) {
@@ -69,7 +70,7 @@ export class EnquiryController {
             await this._deleteEnquiryUseCase.execute(id);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Enquiry deleted successfully"
+                message: ResponseMessage.ENQUIRY_DELETE_SUCCESS
             });
         } catch (error) {
             next(error);

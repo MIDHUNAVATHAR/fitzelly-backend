@@ -8,10 +8,6 @@ export interface IExercise {
     sets: string;
 }
 
-// export interface IDayPlan {
-//     day: string;
-//     exercises: IExercise[];
-// }
 
 export interface IWorkoutPlanDocument extends Document {
     clientId: string;

@@ -8,6 +8,7 @@ import { IUploadGymCertificateUseCase } from "../../../application/IUseCases/gym
 import { IDeleteGymCertificateUseCase } from "../../../application/IUseCases/gym-profile/IDeleteGymCertificateUseCase";
 import { IReApplyGymUseCase } from "../../../application/IUseCases/gym-profile/IReApplyGymUseCase";
 import { ResponseMessage } from "../../../constants/response.constants";
+import { BadRequestError } from "../../../application/errors/AppError";
 
 export class GymProfileController {
     constructor(
@@ -51,7 +52,7 @@ export class GymProfileController {
         try {
             const userId = req.user!.id;
             if (!req.file) {
-                throw Error("File required");
+                throw new BadRequestError("File required");
             }
 
             const updatedProfile = await this._updateGymLogoUseCase.execute(userId, req.file);
@@ -70,16 +71,16 @@ export class GymProfileController {
             const gymId = req.user!.id;
             const certificateName = req.body.name;
             if (!req.file) {
-                throw new Error("File required");
+                throw new BadRequestError("File required");
             }
             if (!certificateName) {
-                throw new Error("Certificate name required");
+                throw new BadRequestError("Certificate name required");
             }
 
             const updatedGym = await this._uploadGymCertificateUseCase.execute(gymId, req.file, certificateName);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Certificate uploaded successfully",
+                message: ResponseMessage.CERTIFICATE_UPLOAD_SUCCESS,
                 data: updatedGym
             });
         } catch (error) {
@@ -95,7 +96,7 @@ export class GymProfileController {
             const updatedGym = await this._deleteGymCertificateUseCase.execute(gymId, certificateKey);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Certificate deleted successfully",
+                message: ResponseMessage.CERTIFICATE_DELETE_SUCCESS,
                 data: updatedGym
             });
         } catch (error) {
@@ -109,7 +110,7 @@ export class GymProfileController {
             const updatedGym = await this._reApplyGymUseCase.execute(gymId);
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Re-application submitted successfully",
+                message: ResponseMessage.RE_APPLICATION_SUCCESS,
                 data: updatedGym
             });
         } catch (error) {

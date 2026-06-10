@@ -40,7 +40,7 @@ export class GymEquipmentController {
 
             return res.status(HttpStatus.CREATED).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Equipment added successfully",
+                message: ResponseMessage.EQUIPMENT_ADD_SUCCESS,
                 data: newEquipment
             });
         } catch (error) {
@@ -106,7 +106,7 @@ export class GymEquipmentController {
 
             return res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
-                message: "Equipment deleted successfully",
+                message: ResponseMessage.EQUIPMENT_DELETE_SUCCESS,
                 data: null
             });
         } catch (error) {

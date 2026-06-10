@@ -12,6 +12,8 @@ import {
     IGetPaymentCollectionUseCase 
 } from "../../../application/IUseCases/gym-memberships/IGymMembershipUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../../constants/response.constants";
+
 
 export class GymMembershipController {
     constructor(
@@ -31,12 +33,12 @@ export class GymMembershipController {
             const gymId = req.user?.id;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
             const membership = await this._addMembershipUseCase.execute({ ...req.body, gymId });
             res.status(HttpStatus.CREATED).json({ 
                 status: ResponseStatus.SUCCESS, 
-                message: "Membership created successfully", 
+                message: ResponseMessage.MEMBERSHIP_CREATE_SUCCESS, 
                 data: membership 
             });
         } catch (error) {
@@ -49,7 +51,7 @@ export class GymMembershipController {
             const gymId = req.user?.id;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
 
             const page = parseInt(req.query.page as string) || 1;
@@ -70,7 +72,7 @@ export class GymMembershipController {
             const id = req.params.id as string;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
             const result = await this._getMembershipByIdUseCase.execute(id, gymId);
             res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
@@ -85,12 +87,12 @@ export class GymMembershipController {
             const id = req.params.id as string;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
             const membership = await this._updateMembershipUseCase.execute({ ...req.body, membershipId: id, gymId });
             res.status(HttpStatus.OK).json({ 
                 status: ResponseStatus.SUCCESS, 
-                message: "Membership updated successfully", 
+                message: ResponseMessage.MEMBERSHIP_UPDATE_SUCCESS, 
                 data: membership 
             });
         } catch (error) {
@@ -104,12 +106,12 @@ export class GymMembershipController {
             const id = req.params.id as string;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
             await this._deleteMembershipUseCase.execute(id, gymId);
             res.status(HttpStatus.OK).json({ 
                 status: ResponseStatus.SUCCESS, 
-                message: "Membership deleted successfully" 
+                message: ResponseMessage.MEMBERSHIP_DELETE_SUCCESS 
             });
         } catch (error) {
             next(error)
@@ -122,12 +124,12 @@ export class GymMembershipController {
             const membershipId = req.params.membershipId as string;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
             const payment = await this._addPaymentUseCase.execute({ ...req.body, membershipId, gymId });
             res.status(HttpStatus.CREATED).json({ 
                 status: ResponseStatus.SUCCESS, 
-                message: "Payment added successfully", 
+                message: ResponseMessage.PAYMENT_ADD_SUCCESS, 
                 data: payment 
             });
         } catch (error) {
@@ -141,7 +143,7 @@ export class GymMembershipController {
             const payment = await this._updatePaymentUseCase.execute({ ...req.body, paymentId });
             res.status(HttpStatus.OK).json({ 
                 status: ResponseStatus.SUCCESS, 
-                message: "Payment updated successfully", 
+                message: ResponseMessage.PAYMENT_UPDATE_SUCCESS, 
                 data: payment 
             });
         } catch (error) {
@@ -155,7 +157,7 @@ export class GymMembershipController {
             await this._deletePaymentUseCase.execute(paymentId);
             res.status(HttpStatus.OK).json({ 
                 status: ResponseStatus.SUCCESS, 
-                message: "Payment deleted successfully" 
+                message: ResponseMessage.PAYMENT_DELETE_SUCCESS 
             });
         } catch (error) {
             next(error)
@@ -167,7 +169,7 @@ export class GymMembershipController {
             const gymId = req.user?.id;
             if (!gymId) return res.status(HttpStatus.UNAUTHORIZED).json({ 
                 status: ResponseStatus.ERROR, 
-                message: "Unauthorized" 
+                message: ResponseMessage.UNAUTHORIZED 
             });
 
             const page = parseInt(req.query.page as string) || 1;
