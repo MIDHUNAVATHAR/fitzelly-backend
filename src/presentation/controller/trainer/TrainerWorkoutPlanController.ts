@@ -1,16 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction,  Response } from "express";
 import { ICreateOrUpdateWorkoutPlanUseCase } from "../../../application/IUseCases/workout-plan/ICreateOrUpdateWorkoutPlanUseCase";
 import { IGetWorkoutPlanByClientIdUseCase } from "../../../application/IUseCases/workout-plan/IGetWorkoutPlanByClientIdUseCase";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { AuthRequest } from "../../middlewares/protect";
+import { ResponseMessage } from "../../../constants/response.constants";
 
-interface CustomRequest extends Request {
-    user: {
-        id: string;
-        gymId?: string;
-        role: string;
-        email: string;
-    };
-}
+
 
 export class TrainerWorkoutPlanController {
     constructor(
@@ -18,12 +13,11 @@ export class TrainerWorkoutPlanController {
         private _getWorkoutPlanByClientIdUseCase: IGetWorkoutPlanByClientIdUseCase,
     ) { }
 
-    async createOrUpdatePlan(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async createOrUpdatePlan(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const authReq = req as unknown as CustomRequest;
-            const trainerId = authReq.user.id;
+            const trainerId = req.user?.id!;
             const { clientId, weeklyPlan, notes } = req.body;
-            const gymId = authReq.user.gymId!;          
+            const gymId = req.user?.gymId!;          
 
             const plan = await this._createOrUpdateWorkoutPlanUseCase.execute({
                 clientId,
@@ -33,19 +27,24 @@ export class TrainerWorkoutPlanController {
                 notes
             });
 
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: plan });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.WORKOUT_PLAN_CREATE_UPDATE_SUCCESS,
+                data: plan });
         } catch (error) {
             next(error)
         }
     }
 
-    async getClientPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getClientPlan(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const authReq = req as unknown as CustomRequest;
             const { clientId } = req.params;
-            const trainerId = authReq.user.id;
+            const trainerId = req.user?.id;
             const plan = await this._getWorkoutPlanByClientIdUseCase.execute(clientId as string, trainerId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: plan });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.TRAINER_CLIENT_WORKOUT_PLAN_FETCH_SUCCESS,
+                data: plan });
         } catch (error) {
             next(error)
         }

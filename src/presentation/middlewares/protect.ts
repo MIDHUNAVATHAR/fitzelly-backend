@@ -5,6 +5,7 @@ import { ResponseMessage } from "../../constants/response.constants";
 import { SessionRepository } from "../../infrastructure/repositories/SessionRepository";
 import { JwtPayload } from "../../domain/services/ITokenService";
 
+
 const jwtService = new JwtService();
 const sessionRepository = new SessionRepository();
 
@@ -31,7 +32,7 @@ export const protect = (roles: string[]) => async (req: AuthRequest, res: Respon
             if (!isActive) {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     status: ResponseStatus.FAIL,
-                    message: "Session expired or revoked"
+                    message: ResponseMessage.SESSION_EXPIRED_OR_REVOKED
                 })
             }
         }

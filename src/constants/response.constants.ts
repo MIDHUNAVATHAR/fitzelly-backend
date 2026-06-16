@@ -5,6 +5,8 @@ export const ResponseMessage = {
     OTP_SEND_SUCCESS: "An otp send to email",
     OTP_VERIFY_SUCCESS: "Otp verified",
     PASSWORD_RESET_SUCCESS: "Password reset successfull",
+    LOGOUT_SUCCESS: "Logged out successfully",
+
     DATA_RETRIVE_SUCCESS: "Data successfully retrived",
     DATA_UPDATE_SUCCESS: "Data update successfull",
     LOGO_UPDATE_SUCCESS: "Logo update successfull",
@@ -20,6 +22,10 @@ export const ResponseMessage = {
     GYM_FETCH_SUCCESS: "Gym fetched successfully",
     GYM_UPDATE_SUCCESS: "Gym update successfull",
     REJECTION_REASON_REQUIRED: "Rejection reason is required",
+
+    GYM_NOT_FOUND: "Gym not found",
+    GYM_NOT_APPROVED: "Currently you are not approved. You are unable to access this feature.",
+    GYM_SUBSCRIPTION_EXPIRED: "Gym subscription has expired",
 
 
     CLIENT_ADD_SUCCESS: "Client added successfully",
@@ -66,6 +72,9 @@ export const ResponseMessage = {
     MEMBERSHIP_CREATE_SUCCESS: "Membership created successfully",
     MEMBERSHIP_UPDATE_SUCCESS: "Membership updated successfully",
     MEMBERSHIP_DELETE_SUCCESS: "Membership deleted successfully",
+    GET_MEMBERSHIPS_SUCCESS: "Memberships fetched successfully",
+    GET_MEMBERSHIP_SUCCESS: "Membership fetched successfully",
+    GET_PAYMENTS_SUCCESS: "Payments fetched successfully",
 
     PAYMENT_ADD_SUCCESS: "Payment added successfully",
     PAYMENT_UPDATE_SUCCESS: "Payment updated successfully",
@@ -82,9 +91,13 @@ export const ResponseMessage = {
     TRAINER_PAYOUT_UPDATE_SUCCESS: "Trainer payout updated successfully",
     TRAINER_PAYOUT_DELETE_SUCCESS: "Trainer payout deleted successfully",
     TRAINER_EARNINGS_FETCH_SUCCESS: "Trainer earnings fetched successfully",
+    WORKOUT_PLAN_CREATE_UPDATE_SUCCESS: "Workout plan saved successfully",
+    TRAINER_CLIENT_WORKOUT_PLAN_FETCH_SUCCESS: "Client workout plan fetched successfully",
 
     NOTIFICATION_MARKED_READ_SUCCESS: "Marked as read",
     NOTIFICATION_MARK_ALL_READ_SUCCESS: "All marked as read",
+    NOTIFICATIONS_UNREAD_FETCH_SUCCESS: "Unread notifications fetched successfully",
+    NOTIFICATIONS_READ_FETCH_SUCCESS: "Read notifications fetched successfully",
 
     SUBSCRIPTION_PLAN_CREATE_SUCCESS: "Subscription plan created successfully",
     SUBSCRIPTION_PLAN_UPDATE_SUCCESS: "Subscription plan updated successfully",
@@ -100,10 +113,51 @@ export const ResponseMessage = {
     WORKOUT_TEMPLATE_CREATE_SUCCESS: "Workout template created successfully",
     WORKOUT_TEMPLATE_DELETE_SUCCESS: "Workout template deleted successfully",
     WORKOUT_TEMPLATE_ASSIGN_SUCCESS: "Workout plan assigned from template successfully",
-    
+    WORKOUT_TEMPLATES_FETCH_SUCCESS: "Workout templates fetched successfully",
 
+    WEIGHT_LOG_ADD_SUCCESS: "Weight log added successfully",
+    WEIGHT_LOGS_FETCH_SUCCESS: "Weight logs fetch successfully",
+
+    CALL_HISTORY_SAVE_SUCCESS:"call history saved successfully",
+    CALL_HISTORY_FETCH_SUCCESS: "Call history fetch successfully",
+
+    CHAT_CONVERSATIONS_FETCH_SUCCESS: "Conversations fetched successfully",
+    CHAT_MESSAGES_FETCH_SUCCESS: "Messages fetched successfully",
+    CHAT_MESSAGE_SEND_SUCCESS: "Message sent successfully",
+    CHAT_CONVERSATION_FETCH_SUCCESS: "Conversation fetched successfully",
+    CHAT_MESSAGES_MARKED_READ_SUCCESS: "Messages marked as read",
+    CHAT_ATTACHMENT_UPLOAD_SUCCESS: "Attachment uploaded successfully",
+    CHAT_MESSAGE_DELETE_SUCCESS: "Message deleted successfully",
+
+    WORKOUT_PLAN_FETCH_SUCCESS: "Workout plan fetched successfully",
+    WORKOUT_PROGRESS_TRACK_SUCCESS: "Workout progress tracked successfully",
+    WORKOUT_PROGRESS_FETCH_SUCCESS: "Workout progress fetched successfully",
+    WORKOUT_STREAK_FETCH_SUCCESS: "Workout streak fetched successfully",
+
+    GYM_DASHBOARD_FETCH_SUCCESS: "Dashboard data fetched successfully",
+    GYM_ANALYTICS_FETCH_SUCCESS: "Analytics data fetched successfully",
+
+    SUPER_ADMIN_DASHBOARD_FETCH_SUCCESS: "Super admin dashboard data fetched successfully",
+    
     SESSION_REVOKE_SUCCESS: "Session revoked successfully",
+    ACTIVE_SESSIONS_FETCH_SUCCESS: "Active sessions fetched successfully",
+    SESSION_EXPIRED_OR_REVOKED: "Session expired or revoked",
 
     UNAUTHORIZED: "Unauthorized",
 
 }
+
+
+export const APPROVAL_STATUS = {
+    PENDING: "Pending",
+    APPROVED: "Approved",
+    REJECTED: "Rejected",
+} ; 
+
+
+export const SUBSCRIPTION_STATUS = {
+    ACTIVE: "active",
+    EXPIRED: "expired",
+    CANCELLED: "cancelled",
+    PENDING: "pending",
+} 

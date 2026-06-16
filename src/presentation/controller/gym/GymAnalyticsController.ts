@@ -18,7 +18,10 @@ export class GymAnalyticsController {
             });
 
             const analytics = await this._getGymAnalyticsUseCase.execute(gymId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: analytics });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.GYM_ANALYTICS_FETCH_SUCCESS,
+                data: analytics });
         } catch (error) {
             next(error);
         }

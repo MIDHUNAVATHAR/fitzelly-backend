@@ -75,7 +75,6 @@ export class SuperAdminAuthenticationController {
     async resetPassword(req: Request, res: Response, next: NextFunction) {
         try {
             const { email, otp, password } = req.body;
-            logger.debug(password)
             await this._superAdminResetPasswordUseCase.execute({ email, otp, password });
 
             res.status(HttpStatus.OK).json({

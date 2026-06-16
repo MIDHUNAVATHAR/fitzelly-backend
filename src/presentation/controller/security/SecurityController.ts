@@ -30,7 +30,10 @@ export class SecurityController {
             // Sort to put current session at the top
             enrichedSessions.sort((a, b) => (a.isCurrent ? -1 : (b.isCurrent ? 1 : 0)));
 
-            return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: enrichedSessions });
+            return res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.ACTIVE_SESSIONS_FETCH_SUCCESS,
+                data: enrichedSessions });
         } catch (error) {
             next(error);
         }
@@ -39,7 +42,9 @@ export class SecurityController {
     async revokeSession(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             await this._revokeSessionUseCase.execute(req.params.id as string);
-            return res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, message: ResponseMessage.SESSION_REVOKE_SUCCESS });
+            return res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.SESSION_REVOKE_SUCCESS });
         } catch (error) {
             next(error);
         }

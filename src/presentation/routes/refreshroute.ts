@@ -3,7 +3,8 @@ import { REFRESH_ROUTE, LOGOUT_ROUTE } from "../../constants/routes.constants";
 import { tokenRefreshController } from "../../main/controllers.di";
 import { sessionRepository } from "../../main/repositories.di";
 import { jwtService } from "../../main/services.di";
-
+import { logger } from "../../infrastructure/logger/logger";
+import { ResponseMessage } from "../../constants/response.constants";
 
 
 const router = Router();
@@ -20,7 +21,7 @@ router.post(LOGOUT_ROUTE.LOGOUT, async (req, res) => {
             }
         }
     } catch (error) {
-        console.error("Error revoking session during logout:", error);
+        logger.error("Error revoking session during logout:", error);
     }
 
     res.clearCookie("refreshToken", {
@@ -32,7 +33,7 @@ router.post(LOGOUT_ROUTE.LOGOUT, async (req, res) => {
 
     return res.status(200).json({
         status: "success",
-        message: "Logged out successfully",
+        message: ResponseMessage.LOGOUT_SUCCESS,
     });
 })
 

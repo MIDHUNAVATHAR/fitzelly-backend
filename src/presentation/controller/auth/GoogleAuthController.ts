@@ -30,8 +30,7 @@ export class GoogleAuthController {
         try {
             const { code, state } = req.query;
             const { role, mode } = JSON.parse(state as string);
-            const { refreshToken } =
-                await this._googleAuthUseCase.execute(code as string, role as string, mode as "login" | "signup");
+            const { refreshToken } = await this._googleAuthUseCase.execute(code as string, role as string, mode as "login" | "signup");
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true,

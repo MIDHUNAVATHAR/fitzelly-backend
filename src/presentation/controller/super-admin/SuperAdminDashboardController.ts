@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { IGetSuperAdminDashboardUseCase } from "../../../application/IUseCases/superAdmin-dashboard/ISuperAdminDashboardUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
-
+import { ResponseMessage } from "../../../constants/response.constants";
 
 
 export class SuperAdminDashboardController {
@@ -13,6 +13,7 @@ export class SuperAdminDashboardController {
             const data = await this._getSuperAdminDashboardUseCase.execute();
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
+                message:ResponseMessage.SUPER_ADMIN_DASHBOARD_FETCH_SUCCESS,
                 data
             });
         } catch (error) {

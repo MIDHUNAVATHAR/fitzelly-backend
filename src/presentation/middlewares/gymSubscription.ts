@@ -1,9 +1,9 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "./protect";
-
 import { SubscriptionModel } from "../../infrastructure/database/mongoose/models/SubscriptionModel";
 import { HttpStatus, ResponseStatus } from "../../constants/statusCodes.constants";
 import { ROLES } from "../../constants/roles.constants";
+import { ResponseMessage,SUBSCRIPTION_STATUS } from "../../constants/response.constants";
 
 /**
  * Middleware to check if the gym's subscription is active.
@@ -38,19 +38,19 @@ export const isSubscriptionActive = async (req: AuthRequest, res: Response, next
         if (!subscription) {
             return res.status(HttpStatus.FORBIDDEN).json({
                 status: ResponseStatus.FAIL,
-                message: "GYM_SUBSCRIPTION_EXPIRED"
+                message:ResponseMessage.GYM_SUBSCRIPTION_EXPIRED
             });
         }
 
         // Check subscription status and expiry date
         const now = new Date();
-        const isStatusExpired = subscription.status === "expired";
+        const isStatusExpired = subscription.status === SUBSCRIPTION_STATUS.EXPIRED; 
         const isDateExpired = subscription.endDate && new Date(subscription.endDate) < now;
 
         if (isStatusExpired || isDateExpired) {
             return res.status(HttpStatus.FORBIDDEN).json({
                 status: ResponseStatus.FAIL,
-                message: "GYM_SUBSCRIPTION_EXPIRED"
+                message: ResponseMessage.GYM_SUBSCRIPTION_EXPIRED
             });
         }
 

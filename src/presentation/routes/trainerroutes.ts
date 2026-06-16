@@ -8,14 +8,7 @@ import { isSubscriptionActive } from "../middlewares/gymSubscription";
 import { ROLES } from "../../constants/roles.constants";
 import multer from "multer";
 
-import { 
-    trainerProfileController, 
-    trainerWorkoutPlanController, 
-    workoutLibraryController, 
-    workoutTemplateController,
-    trainerPayoutController
-} from "../../main/controllers.di";
-
+import { trainerProfileController, trainerWorkoutPlanController, workoutLibraryController, workoutTemplateController,trainerPayoutController} from "../../main/controllers.di";
 
 const upload = multer();
 

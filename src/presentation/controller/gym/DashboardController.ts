@@ -16,7 +16,10 @@ export class DashboardController {
             });
 
             const data = await this._getGymDashboardUseCase.execute(gymId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.GYM_DASHBOARD_FETCH_SUCCESS,
+                data });
         } catch (error) {
             next(error);
         }

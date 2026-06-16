@@ -1,17 +1,12 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { 
-    IGetConversationsUseCase, 
-    IGetMessagesUseCase, 
-    ISendMessageUseCase, 
-    IGetOrCreateConversationUseCase,
-    IMarkMessagesAsReadUseCase,
-    IDeleteMessageUseCase,
-    IUploadChatAttachmentUseCase
-} from "../../../application/IUseCases/chat/IChatUseCases";
+import { IGetConversationsUseCase, IGetMessagesUseCase, ISendMessageUseCase, IGetOrCreateConversationUseCase,
+    IMarkMessagesAsReadUseCase,IDeleteMessageUseCase,IUploadChatAttachmentUseCase} from "../../../application/IUseCases/chat/IChatUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { BadRequestError } from "../../../application/errors/AppError";
 import { SocketService } from "../../../infrastructure/services/SocketService";
+import { ResponseMessage } from "../../../constants/response.constants";
+
 
 export class ChatController {
     constructor(
@@ -28,7 +23,11 @@ export class ChatController {
         try {
             const userId = req.user!.id;
             const conversations = await this._getConversationsUseCase.execute(userId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: conversations });
+            res.status(HttpStatus.OK).json({
+                              status: ResponseStatus.SUCCESS,
+                              message: ResponseMessage.CHAT_CONVERSATIONS_FETCH_SUCCESS,
+                              data: conversations
+            });        
         } catch (error) {
             next(error);
         }
@@ -38,7 +37,10 @@ export class ChatController {
         try {
             const { conversationId } = req.params;
             const messages = await this._getMessagesUseCase.execute(conversationId as string);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: messages });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.CHAT_MESSAGES_FETCH_SUCCESS,
+                data: messages });
         } catch (error) {
             next(error);
         }
@@ -49,7 +51,10 @@ export class ChatController {
             const messageData = req.body;
             messageData.senderId = req.user!.id; // Force senderId from auth
             const message = await this._sendMessageUseCase.execute(messageData);
-            res.status(HttpStatus.CREATED).json({ status: ResponseStatus.SUCCESS, data: message });
+            res.status(HttpStatus.CREATED).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.CHAT_MESSAGE_SEND_SUCCESS,
+                data: message });
         } catch (error) {
             next(error);
         }
@@ -60,7 +65,10 @@ export class ChatController {
             const { otherId } = req.params;
             const participants = [req.user!.id, otherId as string];
             const conversation = await this._getOrCreateConversationUseCase.execute(participants);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: conversation });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.CHAT_CONVERSATION_FETCH_SUCCESS,
+                data: conversation });
         } catch (error) {
             next(error);
         }
@@ -71,7 +79,10 @@ export class ChatController {
             const { conversationId } = req.params;
             const userId = req.user!.id;
             await this._markMessagesAsReadUseCase.execute(conversationId as string, userId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS ,
+                message: ResponseMessage.CHAT_MESSAGES_MARKED_READ_SUCCESS
+            });
         } catch (error) {
             next(error);
         }
@@ -84,7 +95,11 @@ export class ChatController {
             }
 
             const url = await this._uploadChatAttachmentUseCase.execute(req.file);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: { url } });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.CHAT_ATTACHMENT_UPLOAD_SUCCESS,
+                data: { url } 
+            });
         } catch (error) {
             next(error);
         }
@@ -103,7 +118,10 @@ export class ChatController {
                 conversationId: message.conversationId 
             });
 
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.CHAT_MESSAGE_DELETE_SUCCESS
+            });
         } catch (error) {
             next(error);
         }

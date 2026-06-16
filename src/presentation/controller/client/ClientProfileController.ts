@@ -4,7 +4,6 @@ import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.const
 import { ResponseMessage } from "../../../constants/response.constants";
 import { BadRequestError } from "../../../application/errors/AppError";
 
-
 import { IGetClientProfileWithMembershipUseCase } from "../../../application/IUseCases/client-profile/IGetClientProfileWithMembershipUseCase";
 import { IUpdateClientProfileUseCase } from "../../../application/IUseCases/client-profile/IUpdateClientProfileUseCase";
 import { IUpdateClientProfileImageUseCase } from "../../../application/IUseCases/client-profile/IUploadClientProfileImageUseCase";

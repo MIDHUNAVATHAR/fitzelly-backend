@@ -1,15 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthRequest } from "../../middlewares/protect";
-import { 
-    IAddMembershipUseCase, 
-    IGetMembershipsUseCase, 
-    IGetMembershipByIdUseCase, 
-    IUpdateMembershipUseCase, 
-    IDeleteMembershipUseCase, 
-    IAddPaymentUseCase, 
-    IUpdatePaymentUseCase, 
-    IDeletePaymentUseCase, 
-    IGetPaymentCollectionUseCase 
+import { IAddMembershipUseCase, IGetMembershipsUseCase, IGetMembershipByIdUseCase, IUpdateMembershipUseCase, 
+    IDeleteMembershipUseCase, IAddPaymentUseCase, IUpdatePaymentUseCase, IDeletePaymentUseCase, IGetPaymentCollectionUseCase 
 } from "../../../application/IUseCases/gym-memberships/IGymMembershipUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
 import { ResponseMessage } from "../../../constants/response.constants";
@@ -60,7 +52,10 @@ export class GymMembershipController {
             const status = req.query.status as string || '';
 
             const result = await this._getMembershipsUseCase.execute(gymId, page, limit, search, status);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.GET_MEMBERSHIPS_SUCCESS,
+                data: result });
         } catch (error) {
             next(error)
         }
@@ -75,7 +70,10 @@ export class GymMembershipController {
                 message: ResponseMessage.UNAUTHORIZED 
             });
             const result = await this._getMembershipByIdUseCase.execute(id, gymId);
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message : ResponseMessage.GET_MEMBERSHIP_SUCCESS,
+                data: result });
         } catch (error) {
             next(error)
         }
@@ -184,7 +182,10 @@ export class GymMembershipController {
 
             const result = await this._getPaymentCollectionUseCase.execute(gymId, page, limit, startDate, endDate);
             
-            res.status(HttpStatus.OK).json({ status: ResponseStatus.SUCCESS, data: result });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.GET_PAYMENTS_SUCCESS,
+                data: result });
         } catch (error) {
             next(error);
         }

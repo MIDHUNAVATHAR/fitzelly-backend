@@ -28,7 +28,7 @@ export class CallHistoryRepository implements ICallHistoryRepository {
             }
 
             return {
-                ...item.toObject(),
+                ...item.toObject(),  //convert mongodb document to plan js obect
                 otherUser: otherUser ? {
                     name: otherUser.gymName || otherUser.fullName || "User",
                     avatar: otherUser.logoUrl || otherUser.profileUrl || ""

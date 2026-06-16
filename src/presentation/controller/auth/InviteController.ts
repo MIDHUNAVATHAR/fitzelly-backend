@@ -17,7 +17,6 @@ export class InviteController {
                 userId,
                 otp,
                 password
-
             })
 
             res.status(HttpStatus.OK).json({

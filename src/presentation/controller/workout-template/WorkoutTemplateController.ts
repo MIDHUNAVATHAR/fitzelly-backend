@@ -34,6 +34,7 @@ export class WorkoutTemplateController {
 
             res.status(HttpStatus.OK).json({
                 status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.WORKOUT_TEMPLATES_FETCH_SUCCESS,
                 data: result
             });
         } catch (error) {

@@ -5,6 +5,9 @@ import { IGetWorkoutProgressUseCase } from "../../../application/IUseCases/worko
 import { IGetWorkoutStreakUseCase } from "../../../application/IUseCases/workout-plan/IGetWorkoutStreakUseCase";
 import { AuthRequest } from "../../middlewares/protect";
 import { HttpStatus } from "../../../constants/statusCodes.constants";
+import { ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../../constants/response.constants";
+
 
 export class ClientWorkoutPlanController {
     constructor(
@@ -19,7 +22,10 @@ export class ClientWorkoutPlanController {
         try {
             const clientId = req.user!.id;
             const plan = await this._getWorkoutPlanByClientIdUseCase.execute(clientId);
-            res.status(HttpStatus.OK).json({ status: "success", data: plan });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.WORKOUT_PLAN_FETCH_SUCCESS,
+                data: plan });
         } catch (error) {
             next(error)
         }
@@ -35,7 +41,10 @@ export class ClientWorkoutPlanController {
                 completedExercises
             });
 
-            res.status(HttpStatus.OK).json({ status: "success", data: progress });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.WORKOUT_PROGRESS_TRACK_SUCCESS,
+                data: progress });
         } catch (error) {
             next(error)
         }
@@ -47,7 +56,10 @@ export class ClientWorkoutPlanController {
             const { date } = req.query; // e.g. ?date=2024-03-20
 
             const progress = await this._getWorkoutProgressUseCase.execute(clientId, date as string);
-            res.status(HttpStatus.OK).json({ status: "success", data: progress });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.WORKOUT_PROGRESS_FETCH_SUCCESS,
+                data: progress });
         } catch (error) {
             next(error)
         }
@@ -57,7 +69,10 @@ export class ClientWorkoutPlanController {
         try {
             const clientId = req.user!.id;
             const streak = await this._getWorkoutStreakUseCase.execute(clientId);
-            res.status(HttpStatus.OK).json({ status: "success", data: streak });
+            res.status(HttpStatus.OK).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message: ResponseMessage.WORKOUT_STREAK_FETCH_SUCCESS,
+                data: streak });
         } catch (error) {
             next(error)
         }

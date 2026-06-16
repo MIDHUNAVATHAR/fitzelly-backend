@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import  SessionSchema  from '../schemas/SessionSchema';
 import { ISession } from '../types/ISessionDocument';
 

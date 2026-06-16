@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../../middlewares/protect";
 import { IAddWeightLogUseCase, IGetWeightLogsUseCase } from "../../../application/IUseCases/health-tracking/IWeightLogUseCases";
 import { HttpStatus, ResponseStatus } from "../../../constants/statusCodes.constants";
+import { ResponseMessage } from "../../../constants/response.constants";
 
 export class HealthTrackingController {
     constructor(
@@ -13,14 +14,12 @@ export class HealthTrackingController {
         try {
             const clientId = req.user!.id;
             const { weight, height, bmi, date } = req.body;
-            const log = await this._addWeightLogUseCase.execute({
-                clientId,
-                weight,
-                height,
-                bmi,
-                date: new Date(date)
-            });
-            res.status(HttpStatus.CREATED).json({ status: ResponseStatus.SUCCESS, data: log }); 
+            const log = await this._addWeightLogUseCase.execute({clientId,weight,height,bmi,date: new Date(date)});
+
+            res.status(HttpStatus.CREATED).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.WEIGHT_LOG_ADD_SUCCESS,
+                data: log }); 
         } catch (error) {
             next(error);
         }
@@ -29,8 +28,12 @@ export class HealthTrackingController {
     async getWeightLogs(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const clientId = req.user!.id;
-            const logs = await this._getWeightLogsUseCase.execute(clientId);
-            res.status(HttpStatus.OK).json(logs );
+            const logs = await this._getWeightLogsUseCase.execute(clientId); 
+            res.status(HttpStatus.OK).json({
+            status: ResponseStatus.SUCCESS,
+            message: ResponseMessage.WEIGHT_LOGS_FETCH_SUCCESS,
+            data: logs
+        });
         } catch (error) {
             next(error);
         }
