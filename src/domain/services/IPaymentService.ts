@@ -14,7 +14,6 @@ export interface IPaymentSessionResult {
 }
 
 export interface IPaymentWebhookEvent {
-    data: unknown;
     type: string;
     sessionId: string;
     paymentIntentId: string | null;
