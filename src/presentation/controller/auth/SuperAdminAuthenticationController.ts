@@ -4,7 +4,6 @@ import { ILoginUseCase } from "../../../application/IUseCases/auth/ILoginUseCase
 import { IInitiateForgotPasswordUseCase } from "../../../application/IUseCases/auth/IInitiateForgotpassUseCase";
 import { ICompleteForgotpassUseCase } from "../../../application/IUseCases/auth/ICompleteForgotpassUseCase";
 import { IResetPasswordUseCase } from "../../../application/IUseCases/auth/IResetPasswordUseCase";
-import { logger } from "../../../infrastructure/logger/logger";
 import { ResponseMessage } from "../../../constants/response.constants";
 
 

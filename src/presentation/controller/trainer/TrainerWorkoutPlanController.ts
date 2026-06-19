@@ -15,9 +15,20 @@ export class TrainerWorkoutPlanController {
 
     async createOrUpdatePlan(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const trainerId = req.user?.id!;
+
+               if (!req.user) {
+                res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.ERROR,
+                    message: "Unauthorized"
+                });
+                return;
+            }
+
+            const trainerId = req.user?.id;
             const { clientId, weeklyPlan, notes } = req.body;
-            const gymId = req.user?.gymId!;          
+            const gymId = req.user?.gymId;
+            
+            if(!gymId) return ;
 
             const plan = await this._createOrUpdateWorkoutPlanUseCase.execute({
                 clientId,
@@ -38,6 +49,15 @@ export class TrainerWorkoutPlanController {
 
     async getClientPlan(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
+
+               if (!req.user) {
+                res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.ERROR,
+                    message: "Unauthorized"
+                });
+                return;
+            }
+
             const { clientId } = req.params;
             const trainerId = req.user?.id;
             const plan = await this._getWorkoutPlanByClientIdUseCase.execute(clientId as string, trainerId);
