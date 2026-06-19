@@ -12,6 +12,8 @@ export class WebhookController {
         const sig = req.headers['stripe-signature'];
         const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+       
+
         try {
             if (!sig || !endpointSecret) {
                 console.error("Missing Stripe signature or webhook secret");
@@ -24,6 +26,8 @@ export class WebhookController {
                 signature: sig as string,
                 secret: endpointSecret
             });
+           
+
 
             return res.status(HttpStatus.OK).json({ received: true });
         } catch (err) {

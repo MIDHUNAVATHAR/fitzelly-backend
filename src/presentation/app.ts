@@ -15,6 +15,7 @@ export const app = express();
   keep webhook route before json() middleware , require raw req data 
 */
 
+app.use(httpLogger); 
 app.use(webhookRouter); 
 
 app.use(express.json());
@@ -28,8 +29,6 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
-
-app.use(httpLogger); 
 
 
 
