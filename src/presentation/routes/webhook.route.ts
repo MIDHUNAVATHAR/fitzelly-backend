@@ -4,6 +4,6 @@ import { webhookController } from "../../main/controllers.di";
 
 const router = express.Router();
 
-router.post(WEBHOOK_ROUTE,express.raw({type:"application/json"}),webhookController.handleStripeWebhook);
+router.post(WEBHOOK_ROUTE,express.raw({type:"application/json"}), webhookController.handleStripeWebhook.bind(webhookController));
 
 export default router; 
