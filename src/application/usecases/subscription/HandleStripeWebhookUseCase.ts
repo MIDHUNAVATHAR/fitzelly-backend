@@ -26,18 +26,12 @@ export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
         // Handle the event
         switch (event.type) {
             case 'checkout.session.completed': {
-                // const { gymId, planId } = event.metadata || {};
+                const { gymId, planId } = event.metadata || {};
 
-                // if (!gymId || !planId) {
-                //     logger.error("Missing gymId or planId in session metadata");
-                //     throw new AppError("Missing gymId or planId in session metadata", HttpStatus.BAD_REQUEST);
-                // }
-
-                  const session = event.data.object;
-
-                  console.log(session);
-                  const gymId = session.metadata?.gymId;
-                  const planId = session.metadata?.planId;
+                if (!gymId || !planId) {
+                    logger.error("Missing gymId or planId in session metadata");
+                    throw new AppError("Missing gymId or planId in session metadata", HttpStatus.BAD_REQUEST);
+                }
 
                 
 
