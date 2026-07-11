@@ -57,12 +57,6 @@ export const GymSchema = new Schema<IGymDocument>({
         default: 'Pending'
     },
 
-    subscriptionStatus: {
-        type: String,
-        enum: ['Active', 'Trial', 'Expired', 'Pending'],
-        default: 'Pending'
-    },
-
     expiryDate: {
         type: Date
     },

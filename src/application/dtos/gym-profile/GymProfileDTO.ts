@@ -16,7 +16,6 @@ export interface GymProfileDTO {
     description: string;
     location: { longitude: number, latitude: number }
     approvalStatus: string;
-    subscriptionStatus: string;
     startDate?: Date;
     expiryDate: Date | "";
     paymentMethod?: string;
