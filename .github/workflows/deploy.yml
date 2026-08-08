@@ -31,18 +31,24 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "dist,package.json,package-lock.json"
+          source: "dist/,package.json,package-lock.json,ecosystem.config.js"
           target: "~/fitzelly-backend"
+          strip_components: 0
 
-      - name: Restart PM2
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Deploy on EC2 with PM2
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/fitzelly-backend
+            
+            # Install only production dependencies
             npm ci --omit=dev
-            pm2 restart backend
-            pm2 restart cron
-            pm2 restart worker
+            
+            # Reload (zero-downtime) or start if first deploy
+            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            
+            # Save process list so it restarts on server reboot
+            pm2 save
