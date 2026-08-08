@@ -31,24 +31,27 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "dist/,package.json,package-lock.json,ecosystem.config.js"
+          source: "dist/,package.json,package-lock.json"
           target: "~/fitzelly-backend"
           strip_components: 0
 
-      - name: Deploy on EC2 with PM2
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # Start Redis if not running
+            if ! docker ps --format '{{.Names}}' | grep -q '^redis$'; then
+              docker start redis 2>/dev/null || docker run -d --name redis -p 6379:6379 redis:7-alpine
+            fi
+
             cd ~/fitzelly-backend
-            
-            # Install only production dependencies
             npm ci --omit=dev
-            
-            # Reload (zero-downtime) or start if first deploy
-            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
-            
-            # Save process list so it restarts on server reboot
+
+            pm2 reload backend || pm2 start dist/main.js --name backend
+            pm2 reload cron   || pm2 start dist/cron.js --name cron
+            pm2 reload worker || pm2 start dist/worker.js --name worker
+
             pm2 save
