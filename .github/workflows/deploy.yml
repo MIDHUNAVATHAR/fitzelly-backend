@@ -50,7 +50,7 @@ jobs:
             cd ~/fitzelly-backend
             npm ci --omit=dev
 
-            pm2 reload backend || pm2 start dist/main.js --name backend
+            pm2 reload backend || pm2 start dist/index.js --name backend
             pm2 reload cron   || pm2 start dist/cron.js --name cron
             pm2 reload worker || pm2 start dist/worker.js --name worker
 
