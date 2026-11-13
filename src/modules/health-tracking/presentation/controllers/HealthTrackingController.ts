@@ -1,0 +1,42 @@
+import { Response, NextFunction } from "express";
+import { AuthRequest } from "../../../../shared/middleware/protect";
+import { IAddWeightLogUseCase, IGetWeightLogsUseCase } from "../../application/interfaces/IWeightLogUseCases";
+import { HttpStatus, ResponseStatus } from "../../../../shared/constants/statusCodes.constants";
+import { ResponseMessage } from "../../../../shared/constants/response.constants";
+
+export class HealthTrackingController {
+    constructor(
+        private _addWeightLogUseCase: IAddWeightLogUseCase,
+        private _getWeightLogsUseCase: IGetWeightLogsUseCase
+    ) {}
+
+    async addWeightLog(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const clientId = req.user!.id;
+            const { weight, height, bmi, date } = req.body;
+            const log = await this._addWeightLogUseCase.execute({clientId,weight,height,bmi,date: new Date(date)});
+
+            res.status(HttpStatus.CREATED).json({ 
+                status: ResponseStatus.SUCCESS, 
+                message:ResponseMessage.WEIGHT_LOG_ADD_SUCCESS,
+                data: log }); 
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getWeightLogs(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const clientId = req.user!.id;
+            const logs = await this._getWeightLogsUseCase.execute(clientId); 
+            res.status(HttpStatus.OK).json({
+            status: ResponseStatus.SUCCESS,
+            message: ResponseMessage.WEIGHT_LOGS_FETCH_SUCCESS,
+            data: logs
+        });
+        } catch (error) {
+            next(error);
+        }
+    }
+}
+

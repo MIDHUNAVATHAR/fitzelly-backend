@@ -1,0 +1,77 @@
+import { Attendance } from "../../domain/entities/Attendance";
+import { IAttendanceRepository } from "../../domain/repositories/IAttendanceRepository";
+import { IAttendanceDocument } from "../../../../shared/database/mongoose/types/IAttendanceDocument";
+import { AttendanceModel } from "../models/AttendanceModel";
+import { BaseRepository } from "../../../../shared/database/BaseRepository";
+import { AttendanceMapper } from "../models/AttendanceMapper";
+
+export class AttendanceRepository
+    extends BaseRepository<Attendance, IAttendanceDocument>
+    implements IAttendanceRepository
+{
+    constructor() {
+        super(AttendanceModel);
+    }
+
+    protected toEntity(doc: IAttendanceDocument): Attendance {
+        return AttendanceMapper.toEntity(doc);
+    }
+
+    protected toDocument(entity: Attendance): Partial<IAttendanceDocument> {
+        return AttendanceMapper.toDocument(entity);
+    }
+
+    async findByUserAndDate(
+        userId: string,
+        date: Date,
+    ): Promise<Attendance | null> {
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const doc = await AttendanceModel.findOne({
+            userId,
+            date: startOfDay,
+            isDeleted: false,
+        });
+
+        return doc ? this.toEntity(doc) : null;
+    }
+
+    async getDailyAttendance(
+        gymId: string,
+        date: Date,
+        userType?: "CLIENT" | "TRAINER",
+    ): Promise<Attendance[]> {
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const filter: Record<string, unknown> = {
+            gymId,
+            date: startOfDay,
+            isDeleted: false,
+            userType: "CLIENT",
+        };
+
+        if (userType) {
+            filter.userType = userType;
+        }
+
+        const docs = await AttendanceModel.find(filter);
+        return docs.map((doc) => this.toEntity(doc));
+    }
+
+    async countPresentDaysInYear(
+        userId: string,
+        year: number,
+    ): Promise<number> {
+        return await AttendanceModel.countDocuments({
+            userId,
+            date: {
+                $gte: new Date(year, 0, 1),
+                $lte: new Date(year, 11, 31, 23, 59, 59),
+            },
+            status: "PRESENT",
+            isDeleted: false,
+        });
+    }
+}

@@ -1,0 +1,57 @@
+import { IGymRepository } from "../../domain/repositories/IGymRepository";
+import { IReApplyGymUseCase } from "../interfaces/IReApplyGymUseCase";
+import { Gym } from "../../domain/entities/Gym";
+import { AppError } from "../../../../shared/errors/AppError";
+import { AddNotificationUseCase } from "../../../notifications/application/use-cases/NotificationUseCases";
+import { ROLES } from "../../../../shared/constants/roles.constants";
+
+export class ReApplyGymUseCase implements IReApplyGymUseCase {
+    constructor(
+        private _gymRepository: IGymRepository,
+        private _addNotificationUseCase: AddNotificationUseCase
+    ) {}
+
+    async execute(gymId: string): Promise<Gym> {
+        const gym = await this._gymRepository.findById(gymId);
+        if (!gym) {
+            throw new AppError("Gym not found", 404);
+        }
+
+        if (gym.approvalStatus !== 'Rejected') {
+            throw new AppError("Only rejected gyms can re-apply", 400);
+        }
+
+        // Check if profile is complete
+        const isComplete = 
+            gym.logoUrl && 
+            gym.gymName && 
+            gym.phoneNumber && 
+            gym.address && 
+            gym.description && 
+            gym.location && 
+            gym.location.latitude !== 0 && 
+            gym.location.longitude !== 0 &&
+            gym.certificates && 
+            gym.certificates.length > 0;
+
+        if (!isComplete) {
+            throw new AppError("Profile is incomplete. Please fill all details before re-applying.", 400);
+        }
+
+        // Update status to Reapplied
+        const updatedGym = await this._gymRepository.updateStatus(gymId, {
+            approvalStatus: 'Reapplied',
+            rejectionReason: '' // Clear rejection reason
+        });
+
+        // Add notification for super admin
+        await this._addNotificationUseCase.execute(
+            gymId,
+            `Gym "${gym.gymName}" has re-applied for approval.`,
+            'GYM_REAPPLIED',
+            ROLES.SUPERADMIN
+        );
+
+        return updatedGym;
+    }
+}

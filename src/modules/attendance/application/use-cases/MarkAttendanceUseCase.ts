@@ -1,0 +1,216 @@
+import { Attendance } from "../../domain/entities/Attendance";
+import { IAttendanceRepository } from "../../domain/repositories/IAttendanceRepository";
+import { IGymRepository } from "../../../gyms/domain/repositories/IGymRepository";
+import {
+    MarkAttendanceRequestDTO,
+    AttendanceResponseDTO,
+} from "../dtos/AttendanceDTO";
+import { BadRequestError } from "../../../../shared/errors/AppError";
+import { IMarkAttendanceUseCase } from "../interfaces/IMarkAttendanceUseCase";
+import { isWithinAttendanceRadius } from "../../../../shared/utils/location.util";
+import { ISocketService } from "../../../../shared/services/ISocketService";
+import { IMembershipRepository } from "../../../memberships/domain/repositories/IMembershipRepository";
+import { logger } from "../../../../shared/logger/logger";
+
+export class MarkAttendenceUseCase implements IMarkAttendanceUseCase {
+    constructor(
+        private _attendanceRepository: IAttendanceRepository,
+        private _gymRepository: IGymRepository,
+        private _socketService: ISocketService,
+        private _membershipRepository: IMembershipRepository,
+    ) {
+        logger.info(
+            "MarkAttendenceUseCase initialized - v3 (with deduction support)",
+        );
+    }
+
+    async execute(
+        data: MarkAttendanceRequestDTO,
+    ): Promise<AttendanceResponseDTO> {
+        logger.info(
+            `[MarkAttendance] Execute called with: ${JSON.stringify(data)}`,
+        );
+        const today = new Date();
+        const startOfDay = new Date(today);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        /**
+         * geofencing check for all actions
+         */
+        const gym = await this._gymRepository.findById(data.gymId);
+        if (!gym) {
+            throw new BadRequestError("Gym not found");
+        }
+
+        if (
+            !Number.isFinite(data.latitude) ||
+            !Number.isFinite(data.longitude)
+        ) {
+            throw new BadRequestError(
+                "Location data is required for mark attendance",
+            );
+        }
+        const userLatitude = data.latitude as number;
+        const userLongitude = data.longitude as number;
+
+        if (
+            gym.location &&
+            (gym.location.latitude !== 0 || gym.location.longitude !== 0)
+        ) {
+            const isNearby = isWithinAttendanceRadius(
+                userLatitude,
+                userLongitude,
+                gym.location.latitude,
+                gym.location.longitude,
+            );
+
+            if (!isNearby) {
+                throw new BadRequestError(
+                    "Wrong location. You must be within 50 meters of the gym to mark attendance",
+                );
+            }
+        }
+
+        let attendance = await this._attendanceRepository.findByUserAndDate(
+            data.userId,
+            startOfDay,
+        );
+
+        const oldStatus = attendance?.status;
+
+        if (data.action === "CHECK_IN") {
+            if (attendance) {
+                const lastLog = attendance.logs[attendance.logs.length - 1];
+                if (lastLog && !lastLog.checkOut) {
+                    throw new BadRequestError(
+                        "You are already checked in. Please check out first",
+                    );
+                }
+                attendance.logs.push({ checkIn: today });
+
+                const updatedAttendance = new Attendance(
+                    attendance.id,
+                    attendance.userId,
+                    attendance.gymId,
+                    attendance.date,
+                    attendance.logs,
+                    "PRESENT",
+                    attendance.userType,
+                    attendance.isDeleted,
+                );
+                await this._attendanceRepository.update(updatedAttendance);
+                attendance = updatedAttendance;
+            } else {
+                const newAttendance = new Attendance(
+                    "",
+                    data.userId,
+                    data.gymId,
+                    startOfDay,
+                    [{ checkIn: today }],
+                    "PRESENT",
+                    data.userType,
+                );
+                const created =
+                    await this._attendanceRepository.create(newAttendance);
+                attendance = created;
+            }
+
+            /**
+             * Decerement one day from membership if day based plan
+             */
+            if (oldStatus !== "PRESENT" && data.userType === "CLIENT") {
+                logger.info(
+                    `[MarkAttendance] Starting deduction process for client ${data.userId}`,
+                );
+                const activeMembership =
+                    await this._membershipRepository.findLatestByClientId(
+                        data.userId,
+                    );
+
+                if (!activeMembership) {
+                    logger.error(
+                        `[MarkAttendance] Deduction Failed: No membership found for client ${data.userId}`,
+                    );
+                } else if (activeMembership.planType !== "DAY_BASED") {
+                    logger.info(
+                        `[MarkAttendance] Skipping deduction: Plan is ${activeMembership.planType}, not DAY_BASED`,
+                    );
+                } else if (activeMembership.status !== "ACTIVE") {
+                    logger.error(
+                        `[MarkAttendance] Deduction Failed: Membership status is ${activeMembership.status}, expected ACTIVE. ID: ${activeMembership.id}`,
+                    );
+                } else {
+                    const currentDays = activeMembership.daysLeft ?? 0;
+                    const newDays = Math.max(0, currentDays - 1);
+                    const newStatus = newDays === 0 ? "EXPIRED" : "ACTIVE";
+
+                    logger.info(
+                        `[MarkAttendance] Proceeding with deduction for ${activeMembership.id}. ${currentDays} -> ${newDays}`,
+                    );
+
+                    await this._membershipRepository.update(
+                        activeMembership.id,
+                        {
+                            daysLeft: newDays,
+                            status: newStatus,
+                        },
+                    );
+                    logger.info(
+                        `[MarkAttendance] Successfully updated membership record`,
+                    );
+                }
+            } else if (oldStatus === "PRESENT") {
+                logger.info(
+                    `[MarkAttendance] Skipping deduction for client ${data.userId} because they have already been marked PRESNT today.`,
+                );
+            }
+        } else if (data.action === "CHECK_OUT") {
+            if (!attendance) {
+                throw new BadRequestError(
+                    "No attendance record found for today.Please check in first",
+                );
+            }
+
+            const lastLog = attendance.logs[attendance.logs.length - 1];
+            if (!lastLog || lastLog.checkOut) {
+                throw new BadRequestError(
+                    "You are already checked out or haven't checked in yet",
+                );
+            }
+
+            /**
+             * duration check -30 minutes
+             */
+            const checkInTime = new Date(lastLog.checkIn).getTime();
+            const currentTime = today.getTime();
+            const minutesElapsed = (currentTime - checkInTime) / (1000 * 60);
+
+            if (minutesElapsed < 30) {
+                const remaining = Math.ceil(30 - minutesElapsed);
+                throw new BadRequestError(
+                    `Minimum session duration is 30 minutes. Please try again in ${remaining} minute(s).`,
+                );
+            }
+
+            lastLog.checkOut = today;
+            await this._attendanceRepository.update(attendance);
+        }
+
+        this._socketService.emitToGym(data.gymId, "attendanceUpdated", {
+            userId: data.userId,
+            status: attendance?.status,
+        });
+
+        return {
+            id: attendance!.id,
+            userId: attendance!.userId,
+            date: attendance!.date.toISOString(),
+            logs: attendance!.logs.map((log) => ({
+                checkIn: log.checkIn.toISOString(),
+                checkOut: log.checkOut?.toISOString(),
+            })),
+            status: attendance!.status,
+            userType: attendance!.userType,
+        };
+    }
+}

@@ -1,0 +1,11 @@
+import { Equipment } from "../../domain/entities/Equipment";
+
+export interface IEquipmentRepository {
+    save(equipment: Equipment): Promise<Equipment>;
+    findById(id: string): Promise<Equipment | null>;
+    findAllByGym(gymId: string, page: number, limit: number, search?: string): Promise<{
+        equipments: Equipment[],
+        total:number
+    }>;
+    findByName(gymId: string, name: string): Promise<Equipment | null>;
+}

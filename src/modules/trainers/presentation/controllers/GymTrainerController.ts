@@ -1,0 +1,218 @@
+import { IAddTrainerUseCase } from "../../application/interfaces/IAddTrainerUseCase";
+import { IGetTrainersUseCase } from "../../application/interfaces/IGetTrainersUseCase";
+import { IGetTrainerByIdUseCase } from "../../application/interfaces/IGetTrainerByIdUseCase";
+import { IUpdateTrainerUseCase } from "../../application/interfaces/IUpdateTrainerUseCase";
+import { IDeleteTrainerUseCase } from "../../application/interfaces/IDeleteTrainerUseCase";
+import { ISendWelcomeEmailUseCase } from "../../../auth/application/interfaces/ISendWelcomeEmailUseCase";
+import { ResponseMessage } from "../../../../shared/constants/response.constants";
+import { HttpStatus, ResponseStatus } from "../../../../shared/constants/statusCodes.constants";
+import { AuthRequest } from "../../../../shared/middleware/protect";
+import { Response, NextFunction } from "express";
+
+import { IS3UploadFile } from "../../../../shared/services/IS3Service";
+export class GymTrainerController {
+    constructor(
+        private _addTrainerUseCase: IAddTrainerUseCase,
+        private _getTrainersUseCase: IGetTrainersUseCase,
+        private _getTrainerByIdUseCase: IGetTrainerByIdUseCase,
+        private _updateTrainerUseCase: IUpdateTrainerUseCase,
+        private _deleteTrainerUseCase: IDeleteTrainerUseCase,
+        private _sendWelcomeEmailUseCase: ISendWelcomeEmailUseCase
+    ) { }
+
+    async addTrainer(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = req.user;
+            if (!user) {
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: ResponseMessage.ACCESS_TOKEN_MISSING
+                })
+
+            }
+            const gymId = user.id;
+            const { fullName, email, phoneNumber, salary, specialization, dateOfBirth, qualification, address } = req.body;
+
+            let certificateFiles: IS3UploadFile[] = [];
+            if (req.files && Array.isArray(req.files)) {
+                certificateFiles = req.files as unknown as IS3UploadFile[];
+            }
+
+            await this._addTrainerUseCase.execute({
+                gymId, fullName, email, phoneNumber, salary, specialization, dateOfBirth, qualification, address, certificateFiles
+            })
+
+            res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.TRAINER_ADD_SUCCESS
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getTrainers(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = req.user;
+            if (!user) {
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: ResponseMessage.ACCESS_TOKEN_MISSING
+                })
+
+            }
+            const gymId = user.id;
+
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
+            const search = (req.query.search as string) || ""
+
+            const result = await this._getTrainersUseCase.execute(gymId, page, limit, search);
+
+            res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.GET_TRAINERS_SUCCESS,
+                data: {
+                    trainers: result.trainers,
+                    pagination: { total: result.total, page: result.page, limit: result.limit }
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getTrainerById(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = req.user;
+            if (!user) {
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: ResponseMessage.ACCESS_TOKEN_MISSING
+                })
+
+            }
+            const gymId = user.id;
+
+            const trainerId = req.params.id as string;
+            const trainer = await this._getTrainerByIdUseCase.execute(trainerId, gymId);
+
+            res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.GET_TRAINER_SUCCESS,
+                data: trainer
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async updateTrainer(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = req.user;
+            if (!user) {
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: ResponseMessage.ACCESS_TOKEN_MISSING
+                })
+
+            }
+            const gymId = user.id;
+            const trainerId = req.params.id as string;
+            const { fullName, phoneNumber, salary, specialization, dateOfBirth, email, qualification, address } = req.body;
+
+            // Handle certificates
+            let existingCertificates: string[] = [];
+            const certsInput = req.body.existingCertificates || req.body.certificates;
+            if (certsInput) {
+                try {
+                    if (typeof certsInput === 'string') {
+                        existingCertificates = JSON.parse(certsInput);
+                    } else if (Array.isArray(certsInput)) {
+                        existingCertificates = certsInput;
+                    }
+                } catch {
+                    if (typeof certsInput === 'string') {
+                        existingCertificates = [certsInput];
+                    } else if (Array.isArray(certsInput)) {
+                        existingCertificates = certsInput;
+                    }
+                }
+            }
+
+            let newCertificateFiles: IS3UploadFile[] = [];
+            if (req.files && Array.isArray(req.files)) {
+                newCertificateFiles = req.files as unknown as IS3UploadFile[];
+            }
+
+            const updatedTrainer = await this._updateTrainerUseCase.execute(trainerId, gymId, {
+                fullName, email, phoneNumber, salary, specialization, dateOfBirth, qualification, address, certificates: existingCertificates, newCertificateFiles
+            })
+
+            res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.TRAINER_UPDATE_SUCCESS,
+                data: updatedTrainer
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async deleteTrainer(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = req.user;
+            if (!user) {
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: ResponseMessage.ACCESS_TOKEN_MISSING
+                })
+
+            }
+            const gymId = user.id;
+            const trainerId = req.params.id as string;
+
+            await this._deleteTrainerUseCase.execute(trainerId, gymId);
+
+            res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.TRAINER_DELETE_SUCCESS
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async sendWelcomeEmail(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = req.user;
+            if (!user) {
+
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    status: ResponseStatus.FAIL,
+                    message: ResponseMessage.ACCESS_TOKEN_MISSING
+                })
+
+            }
+            const gymId = user.id;
+
+
+            const trainerId = req.params.id as string;
+
+
+            await this._sendWelcomeEmailUseCase.execute({ userId: trainerId, gymId, role: "trainer" });
+
+            res.status(HttpStatus.OK).json({
+                status: ResponseStatus.SUCCESS,
+                message: ResponseMessage.WELCOME_MAIL_SUCCESS
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+}

@@ -1,0 +1,14 @@
+import bcrypt from "bcryptjs";
+import { IPasswordHasher } from "./IPasswordHasher";
+
+export class PasswordHasher implements IPasswordHasher {
+    private _SALT_ROUNDS = 10;
+
+    async hash(password: string): Promise<string> {
+        return await bcrypt.hash(password, this._SALT_ROUNDS)
+    }
+
+    async compare(password: string, hashedPassword: string): Promise<boolean> {
+        return await bcrypt.compare(password, hashedPassword)
+    }
+}
