@@ -1,5 +1,6 @@
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
+import { FifoFileTransport } from "./FifoFileTransport";
 
 const { combine, timestamp, printf, colorize, errors, json } = winston.format;
 
@@ -52,13 +53,20 @@ export const logger = winston.createLogger({
             zippedArchive: true // compress old logs
         }),
 
-        // Error Logs
+        // Error Logs (FIFO buffer - maximum 50 latest error entries)
+        new FifoFileTransport({
+            filename: "logs/error.log",
+            level: "error",
+            maxLogs: 50
+        }),
+
+        // Error Logs (Daily rotation - maximum 50 log files)
         new DailyRotateFile({
             filename: "logs/error-%DATE%.log",
             datePattern: "YYYY-MM-DD",
             level: "error",
             maxSize: "10m",     // smaller limit for errors
-            maxFiles: "30d",    // keep errors longer
+            maxFiles: 50,       // keep maximum 50 error log files
             zippedArchive: true
         })
     ]
